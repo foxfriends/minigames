@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "bot": "deno run --import-map=import_map.json --allow-read --allow-env --allow-net bin/bot.ts"
+    }
+}
