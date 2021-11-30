@@ -26,11 +26,12 @@ pub async fn create_challenge(
     db: &State<PgPool>,
     body: Json<CreateChallenge>,
 ) -> Response<Json<Challenge>> {
-    let mut conn = db.acquire().await?;
+    let mut conn = db.begin().await?;
     Guild::upsert(body.guild_id, &mut conn).await?;
     User::upsert(body.challenger_id, &mut conn).await?;
     User::upsert(body.challenged_id, &mut conn).await?;
     let game = Game::create(body.guild_id, &body.game, &mut conn).await?;
+    conn.commit().await?;
     let claims = Claims::new_challenge(game.guild_id, game.id);
     let token = claims.sign()?;
     Ok(Json(Challenge { token }))
