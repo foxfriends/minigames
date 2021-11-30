@@ -1,6 +1,8 @@
 name: Deno CI
 on: push
 jobs:
+  defaults:
+    working-directory: bot
   lint:
     name: lint
     runs-on: ubuntu-latest
@@ -21,7 +23,6 @@ jobs:
         deno-version: v1.x
     - name: Run lint
       run: deno lint --config deno.json
-      working-directory: ./minigamesbot
   fmt:
     name: fmt
     runs-on: ubuntu-latest
@@ -42,4 +43,3 @@ jobs:
         deno-version: v1.x
     - name: Run lint
       run: deno fmt --config deno.json --check
-      working-directory: ./minigamesbot

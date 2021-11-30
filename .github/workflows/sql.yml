@@ -4,6 +4,8 @@ jobs:
   migrate:
     name: migrate
     runs-on: ubuntu-latest
+    defaults:
+      working-directory: database
     services:
       postgres:
         image: postgres:14

@@ -4,6 +4,8 @@ jobs:
   clippy:
     name: clippy
     runs-on: ubuntu-latest
+    defaults:
+      working-directory: server
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v2
