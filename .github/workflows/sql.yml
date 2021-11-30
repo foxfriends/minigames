@@ -1,0 +1,44 @@
+name: Database CI
+on: push
+jobs:
+  migrate:
+    name: migrate
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: minigames
+          POSTGRES_USER: minigames
+          POSTGRES_DB: minigames
+          DB_PORT: 5432
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+      - name: Install SQLx
+        run: cargo install sqlx-cli
+      - name: Create database
+        run: sqlx database create
+        env:
+          DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
+      - name: Migrate database
+        run: sqlx migrate run
+        env:
+          DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
+      - name: Check sqlx-data.json
+        run: cargo sqlx prepare --check
+        env:
+          DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
