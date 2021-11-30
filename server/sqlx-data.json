@@ -1,3 +1,82 @@
 {
-  "db": "PostgreSQL"
+  "db": "PostgreSQL",
+  "2aa0cfabe78d3a53eed639618a21d3c5ecdb6543072e5f10390cbb50073c7c7e": {
+    "query": "\n            INSERT INTO users (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id as \"id: _\"\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false
+      ]
+    }
+  },
+  "9345c0407593cbd2a8f7ef20d9b4a8acc4204734eb2bd684e3c869561f74c83d": {
+    "query": "\n            INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id as \"id: _\"\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false
+      ]
+    }
+  },
+  "bf6cd9e1057828d671b1ef4ccb30c70f54d0676a883a4d77540b718b45b27de8": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2) RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "guild_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "game",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "state",
+          "type_info": "Jsonb"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Varchar"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  }
 }

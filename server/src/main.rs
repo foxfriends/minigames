@@ -1,9 +1,11 @@
-mod game_id;
+mod game;
+mod guild;
 mod postgres;
 mod redis;
+mod response;
 mod routes;
 mod token;
-mod user_id;
+mod user;
 
 #[rocket::main]
 async fn main() -> anyhow::Result<()> {
@@ -15,7 +17,7 @@ async fn main() -> anyhow::Result<()> {
         .mount(
             "/",
             rocket::routes![
-                routes::challenge::challenge,
+                routes::challenge::create_challenge,
                 routes::leaderboard::leaderboard
             ],
         )

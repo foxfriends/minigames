@@ -1,8 +1,7 @@
 use sqlx::postgres::PgPoolOptions;
-use sqlx::{Pool, Postgres};
 use std::env;
 
-type PgPool = Pool<Postgres>;
+pub use sqlx::postgres::PgPool;
 
 pub async fn connect() -> anyhow::Result<PgPool> {
     let postgres_url = env::var("DATABASE_URL")?;
