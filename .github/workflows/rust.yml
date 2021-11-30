@@ -24,6 +24,7 @@ jobs:
           components: clippy
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
+        working-directory: server
         with:
           command: clippy
           args: -- -D warnings
@@ -47,6 +48,7 @@ jobs:
           components: rustfmt
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
+        working-directory: server
         with:
           command: fmt
           args: -- --check
@@ -68,6 +70,7 @@ jobs:
         with:
           toolchain: stable
       - name: Run cargo check
+        working-directory: server
         uses: actions-rs/cargo@v1
         with:
           command: check
@@ -89,6 +92,7 @@ jobs:
         with:
           toolchain: stable
       - name: Run cargo test
+        working-directory: server
         uses: actions-rs/cargo@v1
         with:
           command: test
