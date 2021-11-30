@@ -3,7 +3,9 @@
         "~/": "./",
         "lib/": "./lib/",
         "discordeno": "https://deno.land/x/discordeno/mod.ts",
-        "dotenv": "https://deno.land/x/dotenv/mod.ts"
+        "dotenv": "https://deno.land/x/dotenv/mod.ts",
+        "ramda": "https://deno.land/x/ramda/mod.ts",
+        "fmt/": "https://deno.land/std/fmt/"
     },
     "scopes": {}
 }
