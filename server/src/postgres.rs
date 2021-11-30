@@ -1,6 +1,6 @@
-use std::env;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{Pool, Postgres};
+use std::env;
 
 type PgPool = Pool<Postgres>;
 

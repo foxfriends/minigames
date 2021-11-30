@@ -1,9 +1,9 @@
 mod game_id;
+mod postgres;
+mod redis;
 mod routes;
 mod token;
 mod user_id;
-mod redis;
-mod postgres;
 
 #[rocket::main]
 async fn main() -> anyhow::Result<()> {
@@ -11,7 +11,14 @@ async fn main() -> anyhow::Result<()> {
     let redis_pool = redis::connect().await?;
     let pg_pool = postgres::connect().await?;
 
-    rocket::build().mount("/", rocket::routes![routes::challenge::challenge, routes::leaderboard::leaderboard])
+    rocket::build()
+        .mount(
+            "/",
+            rocket::routes![
+                routes::challenge::challenge,
+                routes::leaderboard::leaderboard
+            ],
+        )
         .manage(redis_pool)
         .manage(pg_pool)
         .launch()
