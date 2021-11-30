@@ -1,8 +1,5 @@
 name: Rust CI
 on: push
-defaults:
-  run:
-    working-directory: server
 jobs:
   clippy:
     name: clippy
@@ -24,10 +21,9 @@ jobs:
           components: clippy
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
-        working-directory: server
         with:
           command: clippy
-          args: -- -D warnings
+          args: -D warnings --manifest-path server/Cargo.toml
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -48,10 +44,9 @@ jobs:
           components: rustfmt
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
-        working-directory: server
         with:
           command: fmt
-          args: -- --check
+          args: --check --manifest-path server/Cargo.toml
   build:
     name: build
     runs-on: ubuntu-latest
@@ -70,10 +65,10 @@ jobs:
         with:
           toolchain: stable
       - name: Run cargo check
-        working-directory: server
         uses: actions-rs/cargo@v1
         with:
           command: check
+          args: --manifest-path server/Cargo.toml
   test:
     name: test
     runs-on: ubuntu-latest
@@ -92,7 +87,7 @@ jobs:
         with:
           toolchain: stable
       - name: Run cargo test
-        working-directory: server
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --manifest-path server/Cargo.toml
