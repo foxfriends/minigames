@@ -1,5 +1,5 @@
-import { blue, green, red } from 'fmt/colors.ts';
-import { pipe, whereEq } from "ramda";
+import { blue, green, red } from "fmt/colors.ts";
+import { whereEq } from "ramda";
 import { Bot, createApplicationCommand, InteractionTypes } from "discordeno";
 import { DISCORD_DEBUG_GUILD } from "./config.ts";
 import { commands } from "./commands/mod.ts";

@@ -1,10 +1,7 @@
-import { yellow, bold } from "fmt/colors.ts";
+import { bold, yellow } from "fmt/colors.ts";
 import { createBot, startBot } from "discordeno";
-import {
-  DISCORD_TOKEN,
-  DISCORD_CLIENT_ID,
-} from 'lib/config.ts';
-import { prepareMinigamesBot } from 'lib/mod.ts';
+import { DISCORD_CLIENT_ID, DISCORD_TOKEN } from "lib/config.ts";
+import { prepareMinigamesBot } from "lib/mod.ts";
 
 function main() {
   const bot = createBot({
@@ -12,7 +9,7 @@ function main() {
     botId: DISCORD_CLIENT_ID,
     intents: [],
     events: {
-      ready(bot, { user, guilds }) {
+      ready(_bot, { user }) {
         console.log(`${bold(yellow(user.username))} is running!`);
       },
     },

@@ -31,7 +31,7 @@ export const challenge: Command = {
     },
   ],
 
-  async handle(bot, { id, token, user, member, data }) {
+  async handle(bot, { id, token, user, data }) {
     const challengedUserId = userOption(
       data!.options!.find(whereEq({ name: "user" }))!,
     );
@@ -67,12 +67,14 @@ export const challenge: Command = {
     });
   },
 
-  async handleComponent(bot, { id, token, user, member, message, data }) {
-    const result = data!.customId === 'challenge_accepted' ? '**accepted**' : '**rejected**';
+  async handleComponent(bot, { id, token, message, data }) {
+    const result = data!.customId === "challenge_accepted" ? "**accepted**" : "**rejected**";
     await sendInteractionResponse(bot, id, token, {
       type: InteractionResponseTypes.UpdateMessage,
       data: {
-        content: `${message!.content}\n\nThe challenge was ${result}... _but this feature is not yet implemented._`,
+        content: `${
+          message!.content
+        }\n\nThe challenge was ${result}... _but this feature is not yet implemented._`,
         components: [],
       },
     });
