@@ -1,11 +1,12 @@
 name: Database CI
 on: push
+defaults:
+  run:
+    working-directory: database
 jobs:
   migrate:
     name: migrate
     runs-on: ubuntu-latest
-    defaults:
-      working-directory: database
     services:
       postgres:
         image: postgres:14
@@ -42,5 +43,6 @@ jobs:
           DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
       - name: Check sqlx-data.json
         run: cargo sqlx prepare --check
+        working-directory: server
         env:
           DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
