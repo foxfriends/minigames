@@ -23,7 +23,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: -D warnings --manifest-path server/Cargo.toml
+          args: --manifest-path server/Cargo.toml -- -D warnings
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --check --manifest-path server/Cargo.toml
+          args: --manifest-path server/Cargo.toml -- --check
   build:
     name: build
     runs-on: ubuntu-latest
