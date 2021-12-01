@@ -1,4 +1,5 @@
 import { whereEq } from "ramda";
+import type { Redis } from "redis";
 import {
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
@@ -10,8 +11,9 @@ import {
 import { userOption } from "./utils.ts";
 import { pickRandomGame } from "../games.ts";
 import type { Command } from "./types.ts";
-import { invoke, respond, Task, task } from "../runtime.ts";
-import * as api from "../api.ts";
+import { getGameUrl, invoke, redis, respond, Task, task } from "../runtime.ts";
+import * as api from "../api/mod.ts";
+import { shame } from "../shame.ts";
 
 function createChallenge(params: api.CreateChallenge): Task {
   return task(async function* (): AsyncGenerator<Task, string, Response> {
@@ -42,19 +44,23 @@ export const challenge: Command = {
     },
   ],
 
-  handleInteraction({ id, guildId, token, user, data }: DiscordenoInteraction): Task {
+  handleInteraction({ guildId, user, data }: DiscordenoInteraction): Task {
     // deno-lint-ignore no-explicit-any
     return task(async function* (): AsyncGenerator<Task, void, any> {
       const challengedUserId = userOption(data!.options!.find(whereEq({ name: "user" }))!);
       const challengerUserId = user.id;
       const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? pickRandomGame()}`;
-      const _challengeToken: string = yield createChallenge({
+      const challengeToken: string = yield createChallenge({
         guildId: guildId!,
         challengerId: challengerUserId,
         challengedId: challengedUserId,
         game,
       });
-      yield respond(id, token, {
+      const key = crypto.randomUUID();
+      yield redis(async (redis: Redis) => {
+        await redis.set(key, challengeToken, { ex: 15 * 60 });
+      });
+      yield respond({
         type: InteractionResponseTypes.ChannelMessageWithSource,
         data: {
           // deno-fmt-ignore
@@ -76,7 +82,7 @@ export const challenge: Command = {
                 type: MessageComponentTypes.Button,
                 style: ButtonStyles.Success,
                 label: "Yes",
-                customId: "challenge_accepted",
+                customId: key,
               },
             ],
           }],
@@ -85,15 +91,36 @@ export const challenge: Command = {
     });
   },
 
-  handleComponentInteraction({ id, token, message, data }: DiscordenoInteraction): Task {
-    return task(async function* (): AsyncGenerator<Task> {
-      const result = data!.customId === "challenge_rejected" ? "**rejected**" : "**accepted**";
-      yield respond(id, token, {
+  handleComponentInteraction({ message, data }: DiscordenoInteraction): Task {
+    // deno-lint-ignore no-explicit-any
+    return task(async function* (): AsyncGenerator<Task, void, any> {
+      if (data!.customId === "challenge_rejected") {
+        yield respond({
+          type: InteractionResponseTypes.UpdateMessage,
+          data: {
+            content: `${message!.content}\n\nThe challenge was **rejected**... ${shame()}`,
+            components: [],
+          },
+        });
+        return;
+      }
+
+      const key = data!.customId!;
+      const challengeToken: string = yield redis((redis: Redis) => redis.get(key));
+      const url: string = yield getGameUrl({ token: challengeToken });
+
+      yield respond({
         type: InteractionResponseTypes.UpdateMessage,
         data: {
-          // deno-fmt-ignore
-          content: `${message!.content}\n\nThe challenge was ${result}... _but this feature is not yet implemented._`,
-          components: [],
+          content: `${message!.content}\n\nThe challenge was **accepted**.`,
+          components: [
+            {
+              type: MessageComponentTypes.Button,
+              style: ButtonStyles.Primary,
+              label: "Let's Play",
+              url,
+            },
+          ],
         },
       });
     });

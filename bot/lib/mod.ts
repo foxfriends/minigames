@@ -9,7 +9,7 @@ import {
 } from "discordeno";
 import { blue, green, red } from "fmt/colors.ts";
 import { commands } from "./commands/mod.ts";
-import { client } from "./api.ts";
+import { client } from "./api/mod.ts";
 import { runtime } from "./runtime.ts";
 
 type Config = {
@@ -25,7 +25,7 @@ async function prepareMinigamesBot(bot: Bot, {
 }: Config) {
   const invoke = client({ apiUrl });
   const redis = await connect(parseURL(redisUrl));
-  const run = runtime({ invoke, redis });
+  const run = runtime({ invoke, redis, apiUrl });
 
   const { ready, interactionCreate } = bot.events;
   bot.events = Object.assign(
@@ -53,7 +53,7 @@ async function prepareMinigamesBot(bot: Bot, {
           if (command) {
             try {
               const task = command.handleInteraction(interaction);
-              await run(bot, task);
+              await run({ bot }, task);
             } catch (error) {
               const interactionName = blue(interaction.data!.name!);
               console.error(
@@ -72,11 +72,9 @@ async function prepareMinigamesBot(bot: Bot, {
           if (command) {
             try {
               const task = command.handleComponentInteraction?.(interaction);
-              if (task) await run(bot, task);
+              if (task) await run({ bot }, task);
             } catch (error) {
-              const interactionName = blue(
-                interaction.message!.interaction!.name,
-              );
+              const interactionName = blue(interaction.message!.interaction!.name);
               const component = green(`"${interaction.data!.customId}"`);
               // deno-fmt-ignore
               console.error(`Interaction ${interactionName} component ${component} has ${red("failed")}: ${error}`);
