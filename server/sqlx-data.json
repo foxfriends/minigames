@@ -1,5 +1,43 @@
 {
   "db": "PostgreSQL",
+  "a750de0fae8f212b869874ac692854b6411b6e83c8519dc0d633924cc1695b1d": {
+    "query": "SELECT id as \"id: _\", guild_id as \"guild_id: _\", game, state FROM games WHERE id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "guild_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "game",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "state",
+          "type_info": "Jsonb"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "ac8952dee489127a4d849a0d412cab8cc1afee55bf233289ad50d6d581f7db2e": {
     "query": "INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING",
     "describe": {
