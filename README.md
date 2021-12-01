@@ -7,9 +7,10 @@ Minigames for Discord servers. So far does nothing. Will have more info later.
 This project uses [Deno][] (1.16), [Rust][] (1.56), [PostgreSQL][] (14) and [Redis][] (5). Install all
 of those however you like.
 
-Once installed, use those to further install [trex][] and [sqlx-cli][] (with at least the `postgres` feature)
+Once installed, use those to further install [trex][] and [sqlx-cli][] (with at least the `postgres` feature).
 
-In future, hopefully we'll have a Docker or Codespace or something for all of this.
+Soon there will be some UI setup steps too. In future, hopefully we'll have a Docker or Codespace or something
+for all of this.
 
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
