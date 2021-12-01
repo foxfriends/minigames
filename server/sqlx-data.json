@@ -1,47 +1,19 @@
 {
   "db": "PostgreSQL",
-  "2aa0cfabe78d3a53eed639618a21d3c5ecdb6543072e5f10390cbb50073c7c7e": {
-    "query": "\n            INSERT INTO users (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id as \"id: _\"\n        ",
+  "ac8952dee489127a4d849a0d412cab8cc1afee55bf233289ad50d6d581f7db2e": {
+    "query": "INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING",
     "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: _",
-          "type_info": "Int8"
-        }
-      ],
+      "columns": [],
       "parameters": {
         "Left": [
           "Int8"
         ]
       },
-      "nullable": [
-        false
-      ]
+      "nullable": []
     }
   },
-  "9345c0407593cbd2a8f7ef20d9b4a8acc4204734eb2bd684e3c869561f74c83d": {
-    "query": "\n            INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id as \"id: _\"\n        ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: _",
-          "type_info": "Int8"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Int8"
-        ]
-      },
-      "nullable": [
-        false
-      ]
-    }
-  },
-  "bf6cd9e1057828d671b1ef4ccb30c70f54d0676a883a4d77540b718b45b27de8": {
-    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2) RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state\n                ",
+  "d7e9f823d3b031db670a156c831c2d7609c35383ae0b829eaaf5c877d4d0814c": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state\n                ",
     "describe": {
       "columns": [
         {
@@ -77,6 +49,18 @@
         false,
         false
       ]
+    }
+  },
+  "fd61789aa42b29dbcec6fa7b6de14e16c4fe2ac76470fd427e8576014c173138": {
+    "query": "INSERT INTO users (id) VALUES ($1) ON CONFLICT DO NOTHING",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": []
     }
   }
 }
