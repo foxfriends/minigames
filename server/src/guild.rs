@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize, Serializer, Deserializer};
+use serde::de::Error as _;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use sqlx::decode::Decode;
-use serde::de::{Error as _};
 use sqlx::encode::{Encode, IsNull};
 use sqlx::postgres::{PgArgumentBuffer, PgConnection, PgTypeInfo, PgValueRef, Postgres};
 use sqlx::Type;
@@ -17,13 +17,19 @@ impl Display for GuildId {
 }
 
 impl Serialize for GuildId {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         serializer.serialize_str(&self.0.to_string())
     }
 }
 
 impl<'de> Deserialize<'de> for GuildId {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
         let id_str = String::deserialize(deserializer)?;
         Ok(Self(id_str.parse().map_err(D::Error::custom)?))
     }
