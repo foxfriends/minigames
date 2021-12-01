@@ -52,15 +52,13 @@ pub struct Guild {
 }
 
 impl Guild {
-    pub async fn upsert(id: GuildId, conn: &mut PgConnection) -> anyhow::Result<Self> {
-        Ok(sqlx::query_as!(
-            Self,
-            r#"
-            INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id as "id: _"
-        "#,
+    pub async fn upsert(id: GuildId, conn: &mut PgConnection) -> anyhow::Result<()> {
+        sqlx::query!(
+            r#"INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING"#,
             id as GuildId
         )
-        .fetch_one(conn)
-        .await?)
+        .execute(conn)
+        .await?;
+        Ok(())
     }
 }

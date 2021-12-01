@@ -1,8 +1,9 @@
-import type { Bot, CreateGlobalApplicationCommand, DiscordenoInteraction } from "discordeno";
+import type { CreateGlobalApplicationCommand, DiscordenoInteraction } from "discordeno";
+import type { Task } from "../runtime.ts";
 
 interface Command extends CreateGlobalApplicationCommand {
-  handle(bot: Bot, interaction: DiscordenoInteraction): unknown;
-  handleComponent?(bot: Bot, interaction: DiscordenoInteraction): unknown;
+  handleInteraction(interaction: DiscordenoInteraction): Task;
+  handleComponentInteraction?(interaction: DiscordenoInteraction): Task;
 }
 
 export type { Command };

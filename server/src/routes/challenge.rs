@@ -14,6 +14,7 @@ pub struct Challenge {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CreateChallenge {
     guild_id: GuildId,
     challenger_id: UserId,

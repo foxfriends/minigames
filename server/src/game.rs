@@ -32,7 +32,8 @@ impl Game {
             Self,
             r#"
             INSERT INTO games (guild_id, game)
-                VALUES ($1, $2) RETURNING
+                VALUES ($1, $2)
+            RETURNING
                 id as "id: _",
                 guild_id as "guild_id: _",
                 game,

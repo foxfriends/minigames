@@ -5,7 +5,8 @@
     "discordeno": "https://deno.land/x/discordeno/mod.ts",
     "dotenv": "https://deno.land/x/dotenv/mod.ts",
     "ramda": "https://deno.land/x/ramda/mod.ts",
-    "fmt/": "https://deno.land/std/fmt/"
+    "fmt/": "https://deno.land/std/fmt/",
+    "redis": "https://deno.land/x/redis/mod.ts"
   },
   "scopes": {}
 }
