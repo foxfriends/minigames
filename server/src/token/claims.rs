@@ -1,12 +1,10 @@
+use super::Token;
 use crate::game::GameId;
 use crate::guild::GuildId;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Token(String);
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -29,7 +27,6 @@ impl Claims {
         )?))
     }
 
-    #[allow(dead_code)]
     pub fn decode(token: &Token) -> anyhow::Result<Self> {
         Ok(decode(
             &token.0,
@@ -48,5 +45,9 @@ impl Claims {
             .as_secs() as usize,
             sub: game_id.to_string(),
         }
+    }
+
+    pub fn game_id(&self) -> GameId {
+        GameId::new(self.sub.to_owned().parse().unwrap())
     }
 }

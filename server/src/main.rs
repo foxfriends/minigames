@@ -15,8 +15,9 @@ async fn main() -> anyhow::Result<()> {
         .mount(
             "/",
             rocket::routes![
-                routes::challenge::create_challenge,
-                routes::leaderboard::leaderboard
+                routes::create_challenge::create_challenge,
+                routes::get_challenge::get_challenge,
+                routes::leaderboard::leaderboard,
             ],
         )
         .manage(pg_pool)

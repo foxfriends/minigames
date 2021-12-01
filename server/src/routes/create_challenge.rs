@@ -9,13 +9,13 @@ use rocket::State;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-pub struct Challenge {
+pub struct CreateChallengeResponse {
     token: Token,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CreateChallenge {
+pub struct CreateChallengeRequest {
     guild_id: GuildId,
     challenger_id: UserId,
     challenged_id: UserId,
@@ -25,8 +25,8 @@ pub struct CreateChallenge {
 #[rocket::post("/challenge", data = "<body>")]
 pub async fn create_challenge(
     db: &State<PgPool>,
-    body: Json<CreateChallenge>,
-) -> Response<Json<Challenge>> {
+    body: Json<CreateChallengeRequest>,
+) -> Response<Json<CreateChallengeResponse>> {
     let mut conn = db.begin().await?;
     Guild::upsert(body.guild_id, &mut conn).await?;
     User::upsert(body.challenger_id, &mut conn).await?;
@@ -35,5 +35,5 @@ pub async fn create_challenge(
     conn.commit().await?;
     let claims = Claims::new_challenge(game.guild_id, game.id);
     let token = claims.sign()?;
-    Ok(Json(Challenge { token }))
+    Ok(Json(CreateChallengeResponse { token }))
 }

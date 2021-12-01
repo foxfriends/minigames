@@ -9,6 +9,12 @@ use uuid::Uuid;
 #[sqlx(transparent)]
 pub struct GameId(Uuid);
 
+impl GameId {
+    pub fn new(id: Uuid) -> Self {
+        Self(id)
+    }
+}
+
 impl Display for GameId {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         self.0.fmt(f)
@@ -44,6 +50,13 @@ impl Game {
         )
         .fetch_one(conn)
         .await?;
+        Ok(game)
+    }
+
+    pub async fn load(game_id: GameId, conn: &mut PgConnection) -> anyhow::Result<Self> {
+        let game = sqlx::query_as!(Self, r#"SELECT id as "id: _", guild_id as "guild_id: _", game, state FROM games WHERE id = $1"#, game_id as GameId)
+            .fetch_one(conn)
+            .await?;
         Ok(game)
     }
 }

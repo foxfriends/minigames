@@ -49,7 +49,7 @@ impl Encode<'_, Postgres> for UserId {
 
 impl Decode<'_, Postgres> for UserId {
     fn decode(value: PgValueRef) -> Result<Self, Box<dyn Error + Send + Sync + 'static>> {
-        Ok(UserId(i64::decode(value)? as u64))
+        Ok(Self(i64::decode(value)? as u64))
     }
 }
 
