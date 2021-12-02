@@ -1,0 +1,53 @@
+version: "2.4"
+services:
+  bot:
+    build: "./bot"
+    init: true
+    environment:
+      - "REDIS_URL=redis://redis:6379"
+      - "API_URL=http://server:8000"
+      - "WEB_URL=http://localhost:8000"
+    env_file:
+      - "./bot/.env"
+    depends_on:
+      - "redis"
+      - "server"
+  server:
+    build: "./server"
+    init: true
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://minigames:minigames@postgres:5432/minigames"
+    env_file:
+      - "./server/.env"
+    depends_on:
+      - "database"
+  redis:
+    image: "redis:5-alpine"
+    init: true
+    ports:
+      - "6379"
+    volumes:
+      - "redis:/data"
+  postgres:
+    image: "postgres:14-alpine"
+    init: true
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: "minigames"
+      POSTGRES_PASSWORD: "minigames"
+      POSTGRES_DB: "minigames"
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+  database:
+    build: "./database"
+    init: true
+    environment:
+      DATABASE_URL: "postgresql://minigames:minigames@postgres:5432/minigames"
+    depends_on:
+      - "postgres"
+volumes:
+  postgres:
+  redis:
