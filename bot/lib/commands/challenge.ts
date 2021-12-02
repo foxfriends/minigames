@@ -1,5 +1,5 @@
-import { whereEq } from "ramda";
-import type { Redis } from "redis";
+import { whereEq } from "../../deps/ramda.ts";
+import type { Redis } from "../../deps/redis.ts";
 import {
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
@@ -7,7 +7,7 @@ import {
   DiscordenoInteraction,
   InteractionResponseTypes,
   MessageComponentTypes,
-} from "discordeno";
+} from "../../deps/discordeno.ts";
 import { userOption } from "./utils.ts";
 import { pickRandomGame } from "../games.ts";
 import type { Command } from "./types.ts";
@@ -107,20 +107,21 @@ export const challenge: Command = {
 
       const key = data!.customId!;
       const challengeToken: string = yield redis((redis: Redis) => redis.get(key));
-      const url: string = yield getGameUrl({ token: challengeToken });
+      const url: string = yield getGameUrl(challengeToken);
 
       yield respond({
         type: InteractionResponseTypes.UpdateMessage,
         data: {
           content: `${message!.content}\n\nThe challenge was **accepted**.`,
-          components: [
-            {
+          components: [{
+            type: 1,
+            components: [{
               type: MessageComponentTypes.Button,
               style: ButtonStyles.Primary,
               label: "Let's Play",
               url,
-            },
-          ],
+            }],
+          }],
         },
       });
     });

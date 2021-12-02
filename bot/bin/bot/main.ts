@@ -1,8 +1,9 @@
-import { Bot, createBot, startBot } from "discordeno";
-import { bold, yellow } from "fmt/colors.ts";
-import { prepareMinigamesBot } from "lib/mod.ts";
+import { Bot, createBot, startBot } from "../../deps/discordeno.ts";
+import { bold, yellow } from "../../deps/colors.ts";
+import { prepareMinigamesBot } from "../../lib/mod.ts";
 import {
   API_URL,
+  WEB_URL,
   DISCORD_CLIENT_ID,
   DISCORD_DEBUG_GUILD,
   DISCORD_TOKEN,
@@ -19,12 +20,12 @@ async function main() {
         console.log(`${bold(yellow(user.username))} is running!`);
       },
     },
-    cache: { isAsync: false },
   });
 
   await prepareMinigamesBot(bot, {
     redisUrl: REDIS_URL,
     apiUrl: API_URL,
+    webUrl: WEB_URL,
     guild: DISCORD_DEBUG_GUILD,
   });
 

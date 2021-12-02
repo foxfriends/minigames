@@ -1,14 +1,14 @@
-import type { Redis } from "redis";
-import type { ApiRequest, Client } from "./api/mod.ts";
+import type { Redis } from "../deps/redis.ts";
 import {
   Bot,
   DiscordenoInteraction,
   DiscordenoInteractionResponse,
   sendInteractionResponse,
-} from "discordeno";
+} from "../deps/discordeno.ts";
+import type { ApiRequest, Client } from "./api/mod.ts";
 
 export type RuntimeConfig = {
-  apiUrl: string;
+  webUrl: string;
   redis: Redis;
   invoke: Client;
 };
@@ -22,7 +22,7 @@ export type Context = RuntimeConfig & RuntimeContext;
 
 export type Task = (context: Context) => Promise<unknown>;
 export type TaskGenerator = () => AsyncGenerator<Task, unknown, unknown>;
-export type Runner = (bot: Bot, task: Task) => unknown;
+export type Runner = (context: RuntimeContext, task: Task) => unknown;
 
 function chain(transform: (value: unknown) => Promise<Task>, task: Task): Task {
   return async (context: Context) => {
@@ -45,7 +45,7 @@ export function respond(options: DiscordenoInteractionResponse): Task {
 }
 
 export function getGameUrl(token: string): Task {
-  return ({ apiUrl }) => Promise.resolve(`${apiUrl}/challenge?token=${token}`);
+  return ({ webUrl }) => Promise.resolve(`${webUrl}/challenge?token=${token}`);
 }
 
 export function task(generator: TaskGenerator): Task {

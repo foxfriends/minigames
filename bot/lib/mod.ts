@@ -1,31 +1,33 @@
-import { whereEq } from "ramda";
-import { connect, parseURL } from "redis";
+import { whereEq } from "../deps/ramda.ts";
+import { connect, parseURL } from "../deps/redis.ts";
 import {
   Bot,
   createApplicationCommand,
   createEventHandlers,
   DiscordenoInteraction,
   InteractionTypes,
-} from "discordeno";
-import { blue, green, red } from "fmt/colors.ts";
+} from "../deps/discordeno.ts";
+import { blue, green, red } from "../deps/colors.ts";
 import { commands } from "./commands/mod.ts";
 import { client } from "./api/mod.ts";
 import { runtime } from "./runtime.ts";
 
 type Config = {
   apiUrl: string;
+  webUrl: string;
   redisUrl: string;
   guild?: bigint;
 };
 
 async function prepareMinigamesBot(bot: Bot, {
   apiUrl,
+  webUrl,
   redisUrl,
   guild,
 }: Config) {
   const invoke = client({ apiUrl });
   const redis = await connect(parseURL(redisUrl));
-  const run = runtime({ invoke, redis, apiUrl });
+  const run = runtime({ invoke, redis, webUrl });
 
   const { ready, interactionCreate } = bot.events;
   bot.events = Object.assign(
@@ -53,7 +55,7 @@ async function prepareMinigamesBot(bot: Bot, {
           if (command) {
             try {
               const task = command.handleInteraction(interaction);
-              await run({ bot }, task);
+              await run({ bot, interaction }, task);
             } catch (error) {
               const interactionName = blue(interaction.data!.name!);
               console.error(
@@ -72,7 +74,7 @@ async function prepareMinigamesBot(bot: Bot, {
           if (command) {
             try {
               const task = command.handleComponentInteraction?.(interaction);
-              if (task) await run({ bot }, task);
+              if (task) await run({ bot, interaction }, task);
             } catch (error) {
               const interactionName = blue(interaction.message!.interaction!.name);
               const component = green(`"${interaction.data!.customId}"`);

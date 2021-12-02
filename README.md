@@ -7,17 +7,14 @@ Minigames for Discord servers. So far does nothing. Will have more info later.
 This project uses [Deno][] (1.16), [Rust][] (1.56), [PostgreSQL][] (14) and [Redis][] (5). Install all
 of those however you like.
 
-Once installed, use those to further install [trex][] and [sqlx-cli][] (with at least the `postgres` feature).
-
-Soon there will be some UI setup steps too. In future, hopefully we'll have a Docker or Codespace or something
-for all of this.
+Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `postgres` feature).
 
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
 4.  Create the database with `sqlx database create`.
 5.  Migrate the database with `sqlx migrate run`.
-6.  Add the bot to the Discord server you wish to add it to by visiting the link output by `trex run add`.
+6.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
 
 ## Running
 
@@ -25,13 +22,12 @@ Once all setup steps have been completed, you can run the app. To have it fully 
 Redis and PostgreSQL are running already, then:
 1.  *If migrations have changed*, before starting the server run `sqlx migrate run`.
 2.  Run the server with `cargo run` in the `server` directory.
-3.  Run the bot with `trex run bot` in the `bot` directory.
+3.  Run the bot with `bot/scripts/bot`.
 
 [Deno]: https://deno.land/
 [Rust]: http://rust-lang.org/
 [PostgreSQL]: https://www.postgresql.org/
 [Redis]: https://redis.io/
-[trex]: https://deno.land/x/trex
 [sqlx-cli]: https://crates.io/crates/sqlx-cli
 [Discord Developer Portal]: https://discord.com/developers/
 
