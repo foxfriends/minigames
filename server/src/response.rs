@@ -32,7 +32,6 @@ impl<E: std::fmt::Display> From<E> for ResponseError {
 }
 
 impl ResponseError {
-    #[allow(dead_code)]
     pub fn new(status: Status, code: String, message: String) -> Self {
         Self {
             status,

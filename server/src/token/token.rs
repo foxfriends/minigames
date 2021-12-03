@@ -1,6 +1,7 @@
 use super::Claims;
 use rocket::form::{self, FromFormField, ValueField};
 use serde::{Deserialize, Serialize};
+use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Token(pub(super) String);
@@ -8,6 +9,12 @@ pub struct Token(pub(super) String);
 impl Token {
     pub fn decode(&self) -> anyhow::Result<Claims> {
         Claims::decode(self)
+    }
+}
+
+impl Display for Token {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        self.0.fmt(f)
     }
 }
 

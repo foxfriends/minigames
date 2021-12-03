@@ -3,11 +3,11 @@ import { bold, yellow } from "../../deps/colors.ts";
 import { prepareMinigamesBot } from "../../lib/mod.ts";
 import {
   API_URL,
-  WEB_URL,
   DISCORD_CLIENT_ID,
   DISCORD_DEBUG_GUILD,
   DISCORD_TOKEN,
   REDIS_URL,
+  WEB_URL,
 } from "./config.ts";
 
 async function main() {

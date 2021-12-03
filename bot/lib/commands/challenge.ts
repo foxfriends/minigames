@@ -117,7 +117,7 @@ export const challenge: Command = {
             type: 1,
             components: [{
               type: MessageComponentTypes.Button,
-              style: ButtonStyles.Primary,
+              style: ButtonStyles.Link,
               label: "Let's Play",
               url,
             }],
