@@ -7,6 +7,10 @@ use std::fmt::{self, Display, Formatter};
 pub struct Token(pub(super) String);
 
 impl Token {
+    pub fn new(contents: String) -> Self {
+        Self(contents)
+    }
+
     pub fn decode(&self) -> anyhow::Result<Claims> {
         Claims::decode(self)
     }

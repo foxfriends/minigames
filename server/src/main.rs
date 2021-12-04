@@ -17,6 +17,7 @@ async fn main() -> anyhow::Result<()> {
             rocket::routes![
                 routes::create_challenge::create_challenge,
                 routes::get_challenge::get_challenge,
+                routes::get_challenge::complete_oauth2,
                 routes::leaderboard::leaderboard,
             ],
         )
