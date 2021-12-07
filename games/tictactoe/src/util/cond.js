@@ -5,6 +5,6 @@ export default function cond(cases) {
     }
     return undefined;
   };
-};
+}
 
 export function otherwise() { return true; }

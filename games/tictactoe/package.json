@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node -r dotenv/config server",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "author": "Cameron Eldridge",
   "license": "ISC",
@@ -21,6 +22,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.1.0",
+    "eslint": "^8.4.1",
+    "eslint-plugin-react": "^7.27.1",
     "vite": "^2.6.14"
   }
 }
