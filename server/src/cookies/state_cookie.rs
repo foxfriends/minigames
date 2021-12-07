@@ -28,7 +28,7 @@ impl<'r> StateCookie<'r> {
         let mut cookie = Cookie::new(OAUTH_STATE_COOKIE, value);
         cookie.set_http_only(true);
         cookie.set_secure(true);
-        cookie.set_same_site(Some(SameSite::Strict));
+        cookie.set_same_site(Some(SameSite::Lax));
         cookie.set_max_age(Some(Duration::seconds(60 * 5)));
         cookie_jar.add(cookie);
     }

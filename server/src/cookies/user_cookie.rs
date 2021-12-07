@@ -32,7 +32,7 @@ impl<'r> UserCookie<'r> {
         let secret = token.access_token().secret();
         let mut cookie = Cookie::new(DISCORD_USER_COOKIE, secret.to_owned());
         cookie.set_http_only(true);
-        cookie.set_same_site(Some(SameSite::Strict));
+        cookie.set_same_site(Some(SameSite::Lax));
         cookie.set_max_age(
             token
                 .expires_in()

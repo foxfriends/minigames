@@ -28,7 +28,7 @@ impl GameCookie {
     pub fn add_to(cookie_jar: &CookieJar, value: Token) {
         let mut cookie = Cookie::new(GAME_TOKEN_COOKIE, value.to_string());
         cookie.set_http_only(true);
-        cookie.set_same_site(Some(SameSite::Strict));
+        cookie.set_same_site(Some(SameSite::Lax));
         cookie.set_max_age(Some(Duration::seconds(60 * 5)));
         cookie_jar.add(cookie);
     }
