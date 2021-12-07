@@ -1,0 +1,8 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  background-color: var(--color--background);
+  color: var(--color--foreground);
+}
