@@ -7,14 +7,14 @@ import config from './vite.config.js';
 const { NODE_ENV = 'development', PORT, PUBLIC_URL, API_URL, API_KEY } = process.env;
 
 export async function createServer() {
-  const app = express();
-  const vite = await createViteServer(config);
   if (NODE_ENV === 'development') {
-    app.use(vite.middlewares);
+    const vite = await createViteServer(config);
+    return vite.httpServer;
   } else {
+    const app = express();
     app.use(express.static('dist'));
+    return app;
   }
-  return app;
 }
 
 createServer().then((app) => {
