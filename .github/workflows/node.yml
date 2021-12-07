@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: [minigames/tictactoe]
+        game: ['minigames/tictactoe']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
           ${{ runner.os }}-
     - name: Install node modules
       run: npm ci
-      working-directory: ${{ game }}
+      working-directory: ${{ matrix.game }}
     - name: Run lint
       run: npm lint
-      working-directory: ${{ game }}
+      working-directory: ${{ matrix.game }}
