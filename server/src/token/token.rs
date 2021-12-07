@@ -3,7 +3,7 @@ use rocket::form::{self, FromFormField, ValueField};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Token(pub(super) String);
 
 impl Token {
