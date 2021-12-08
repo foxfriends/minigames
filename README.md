@@ -57,6 +57,26 @@ Pull Requests and Issues are always welcome. Do note that this project is in ver
 so things will be moving quickly. You may want to wait until it settles down a bit. If you want
 to get involved though, do reach out and a roadmap can be set out.
 
-Do keep to a consistent style, as enforced by `trex run fmt` and `cargo fmt`. Pull requests will
-not be accepted until CI passes, which includes those mentioned formats, as well as `trex run lint`,
-`cargo clippy`, and `cargo sqlx prepare --check` to all succeed.
+Do keep to a consistent style, as enforced by CI. The projects within this repository are set up
+with standard linting and formatting practices for their respective languages.
+
+Pull requests will not be accepted until CI passes. For each type of project, these are the commands
+you need to ensure succeed:
+
+```sh
+# Rust
+cargo clippy
+cargo fmt
+cargo check
+cargo sqlx prepare
+
+# Deno
+deno lint
+deno fmt
+
+# Node
+npm run lint
+npm run stylelint
+npm run fmt
+npm run build
+```
