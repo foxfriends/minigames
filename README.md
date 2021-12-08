@@ -2,13 +2,19 @@
 
 Minigames for Discord servers. So far does nothing. Will have more info later.
 
-## Environment Setup
+## Development Environment Setup
 
-This project uses [Deno][] (1.16), [Rust][] (1.56), [Node.js][] (17), [PostgreSQL][] (14) and [Redis][] (5).
+### Server and Bot
+
+[Deno][] (1.16),
+
+The server uses [Rust][] (1.56) and [PostgreSQL][] (14) and [Redis][] (5).
 Install all of those however you like.
 
 Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `postgres` feature).
 
+The server and bot need to be set up first, as they are really the only "mandatory" part of this
+whole project:
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
@@ -24,13 +30,26 @@ Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `
 [sqlx-cli]: https://crates.io/crates/sqlx-cli
 [Discord Developer Portal]: https://discord.com/developers/
 
-## Running
-
 Once all setup steps have been completed, you can run the app. To have it fully working requires that
 Redis and PostgreSQL are running already, then:
 1.  *If migrations have changed*, before starting the server run `sqlx migrate run`.
 2.  Run the server with `cargo run` in the `server` directory.
 3.  Run the bot with `bot/scripts/bot`.
+
+### Games
+
+Games are developed independently of the server, and can really be built in any way you choose, so long
+as it can interact with the server via HTTP.
+
+For now, games have been developed using [Node.js][] (17), so ensure that is installed before attempting
+to develop the games.
+
+From there, follow the directions in each game's individual README to get them set up and running:
+*   [Tic-tac-toe](./games/tictactoe/README.md)
+
+For more information on how to build a game and connect it with a running server, see the [Guide][].
+
+[Guide]: GUIDE.md
 
 ## Contributing
 
