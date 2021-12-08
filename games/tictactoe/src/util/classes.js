@@ -1,1 +1,1 @@
-export default (classes) => classes.join(' ');
+export default (classes) => classes.join(" ");

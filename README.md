@@ -4,8 +4,8 @@ Minigames for Discord servers. So far does nothing. Will have more info later.
 
 ## Environment Setup
 
-This project uses [Deno][] (1.16), [Rust][] (1.56), [PostgreSQL][] (14) and [Redis][] (5). Install all
-of those however you like.
+This project uses [Deno][] (1.16), [Rust][] (1.56), [Node.js][] (17), [PostgreSQL][] (14) and [Redis][] (5).
+Install all of those however you like.
 
 Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `postgres` feature).
 
@@ -16,6 +16,14 @@ Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `
 5.  Migrate the database with `sqlx migrate run`.
 6.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
 
+[Node.js]: https://nodejs.org/en/
+[Deno]: https://deno.land/
+[Rust]: http://rust-lang.org/
+[PostgreSQL]: https://www.postgresql.org/
+[Redis]: https://redis.io/
+[sqlx-cli]: https://crates.io/crates/sqlx-cli
+[Discord Developer Portal]: https://discord.com/developers/
+
 ## Running
 
 Once all setup steps have been completed, you can run the app. To have it fully working requires that
@@ -23,13 +31,6 @@ Redis and PostgreSQL are running already, then:
 1.  *If migrations have changed*, before starting the server run `sqlx migrate run`.
 2.  Run the server with `cargo run` in the `server` directory.
 3.  Run the bot with `bot/scripts/bot`.
-
-[Deno]: https://deno.land/
-[Rust]: http://rust-lang.org/
-[PostgreSQL]: https://www.postgresql.org/
-[Redis]: https://redis.io/
-[sqlx-cli]: https://crates.io/crates/sqlx-cli
-[Discord Developer Portal]: https://discord.com/developers/
 
 ## Contributing
 

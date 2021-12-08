@@ -4,7 +4,9 @@
   padding: 0;
 }
 
-:root, body, #app {
+:root,
+body,
+#app {
   position: relative;
   width: 100%;
   height: 100%;

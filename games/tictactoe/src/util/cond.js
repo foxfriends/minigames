@@ -7,4 +7,6 @@ export default function cond(cases) {
   };
 }
 
-export function otherwise() { return true; }
+export function otherwise() {
+  return true;
+}

@@ -1,1 +1,1 @@
-export { default, useGameState } from './GameStateProvider.jsx';
+export { default, useGameState } from "./GameStateProvider.jsx";

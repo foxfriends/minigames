@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { createContext, useContext, useState } from 'react';
+import * as React from "react";
+import { createContext, useContext, useState } from "react";
 
 const DEFAULT = {
   cells: [
@@ -13,7 +13,7 @@ const DEFAULT = {
     { value: null },
     { value: null },
   ],
-}
+};
 
 const GameStateContext = createContext(DEFAULT);
 
@@ -29,4 +29,4 @@ export default function GameStateProvider({ children }) {
       {children}
     </GameStateContext.Provider>
   );
-};
+}
