@@ -7,10 +7,6 @@ import {
   DiscordenoInteraction,
   InteractionResponseTypes,
   InteractionTypes,
-<<<<<<< Updated upstream
-  InteractionResponseTypes,
-=======
->>>>>>> Stashed changes
   sendInteractionResponse,
 } from "../deps/discordeno.ts";
 import { blue, green, red } from "../deps/colors.ts";
