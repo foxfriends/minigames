@@ -4,7 +4,24 @@ export default function useWebSocket(url) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(url);
+    let ws;
+
+    connect();
+
+    return () => {
+      ws.removeEventListener("open", onOpen);
+      ws.removeEventListener("close", onClose);
+      ws.close();
+      setSocket(null);
+    };
+
+    function connect() {
+      console.log("Connecting WebSocket");
+      ws = new WebSocket(url);
+      ws.addEventListener("open", onOpen);
+      ws.addEventListener("close", onClose);
+      setSocket(ws);
+    }
 
     function onOpen() {
       console.log("Socket connected");
@@ -12,19 +29,8 @@ export default function useWebSocket(url) {
 
     function onClose() {
       console.warn("Socket connection lost... attempting to reconnect");
-      // TODO: attempt to reconnect...
+      connect();
     }
-
-    ws.addEventListener("open", onOpen);
-    ws.addEventListener("close", onClose);
-
-    setSocket(ws);
-
-    return () => {
-      ws.close();
-      ws.removeEventListener("close", onClose);
-      setSocket(null);
-    };
   }, []);
 
   return socket;
