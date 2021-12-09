@@ -56,7 +56,13 @@ async fn handle_connection(
         .filter_map(|event| async move {
             let msg = event.ok()?;
             let text = msg.into_text().ok()?;
-            serde_json::from_str(&text).ok()
+            match serde_json::from_str(&text) {
+                Ok(value) => Some(value),
+                Err(..) => {
+                    eprintln!("Received invalid message: {}", text);
+                    None
+                }
+            }
         })
         .for_each({
             // Not that it matters... it's just a few Arc anyway.
