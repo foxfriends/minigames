@@ -37,7 +37,7 @@ pub async fn actually_get_challenge(
 pub async fn start_oauth2(token: Token, cookies: &CookieJar<'_>) -> Response<Redirect> {
     let client = get_client()?.set_redirect_uri(RedirectUrl::new(format!(
         "{}/challenge",
-        env::var("PUBLIC_URL")?,
+        env::var("PUBLIC_HTTP_URL")?,
     ))?);
     let (auth_url, state) = client
         .authorize_url(CsrfToken::new_random)

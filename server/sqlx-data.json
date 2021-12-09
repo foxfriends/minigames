@@ -1,7 +1,7 @@
 {
   "db": "PostgreSQL",
-  "a750de0fae8f212b869874ac692854b6411b6e83c8519dc0d633924cc1695b1d": {
-    "query": "SELECT id as \"id: _\", guild_id as \"guild_id: _\", game, state FROM games WHERE id = $1",
+  "26542e7900f4de8f480f4b7f5493eb0a7db8c12c1def4b0527c101eb2255c742": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state as \"state: _\"\n                ",
     "describe": {
       "columns": [
         {
@@ -21,7 +21,46 @@
         },
         {
           "ordinal": 3,
-          "name": "state",
+          "name": "state: _",
+          "type_info": "Jsonb"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Varchar"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "377daf910982d8b79ea9ea0ad86b2ba46d182348a8d36fb51279aed7550e3daf": {
+    "query": "SELECT id as \"id: _\", guild_id as \"guild_id: _\", game, state as \"state: _\" FROM games WHERE id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "guild_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "game",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "state: _",
           "type_info": "Jsonb"
         }
       ],
@@ -48,45 +87,6 @@
         ]
       },
       "nullable": []
-    }
-  },
-  "d7e9f823d3b031db670a156c831c2d7609c35383ae0b829eaaf5c877d4d0814c": {
-    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state\n                ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: _",
-          "type_info": "Uuid"
-        },
-        {
-          "ordinal": 1,
-          "name": "guild_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "game",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 3,
-          "name": "state",
-          "type_info": "Jsonb"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Int8",
-          "Varchar"
-        ]
-      },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
     }
   },
   "fd61789aa42b29dbcec6fa7b6de14e16c4fe2ac76470fd427e8576014c173138": {

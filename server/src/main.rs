@@ -1,29 +1,20 @@
 mod cookies;
 mod game;
 mod guild;
+mod http;
 mod postgres;
 mod response;
-mod routes;
 mod token;
 mod user;
+mod ws;
 
-#[rocket::main]
+#[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenv::dotenv().ok();
+    dotenv::dotenv()?;
     let pg_pool = postgres::connect().await?;
-
-    rocket::build()
-        .mount(
-            "/",
-            rocket::routes![
-                routes::create_challenge::create_challenge,
-                routes::get_challenge::get_challenge,
-                routes::get_challenge::complete_oauth2,
-                routes::leaderboard::leaderboard,
-            ],
-        )
-        .manage(pg_pool)
-        .launch()
-        .await?;
+    let http_server = http::server(pg_pool.clone());
+    let ws_server = ws::server(pg_pool);
+    futures::pin_mut!(http_server, ws_server);
+    futures::future::select(http_server, ws_server).await;
     Ok(())
 }

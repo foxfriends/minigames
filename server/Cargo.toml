@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 dotenv = "0.15"
+futures = "0.3"
 jsonwebtoken = "7.2.0"
 oauth2 = "4.1.0"
 rocket = { version = "0.5.0-rc.1", features = ["json", "secrets"] }
@@ -13,4 +14,9 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sqlx = { version = "0.5.9", features = ["runtime-tokio-rustls", "postgres", "offline", "uuid", "json", "migrate"] }
 time = "0.2"
+tokio = { version = "1.14", features = ["rt", "rt-multi-thread", "macros", "net", "sync"] }
+tokio-tungstenite = "0.16"
+tokio-stream = "0.1"
+tungstenite = "0.16"
 uuid = { version = "0.8.2", features = ["serde", "v4"] }
+websocket = { version = "0.26", features = ["async"] }

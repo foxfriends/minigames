@@ -5,7 +5,7 @@ use sqlx::postgres::PgConnection;
 use std::fmt::{self, Display, Formatter};
 use uuid::Uuid;
 
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, sqlx::Type)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash, sqlx::Type)]
 #[sqlx(transparent)]
 pub struct GameId(Uuid);
 
@@ -21,11 +21,15 @@ impl Display for GameId {
     }
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, sqlx::Type)]
+#[sqlx(transparent)]
+pub struct GameState(Value);
+
 pub struct Game {
     pub id: GameId,
     pub guild_id: GuildId,
     pub game: String,
-    pub state: Value,
+    pub state: GameState,
 }
 
 impl Game {
@@ -43,10 +47,10 @@ impl Game {
                 id as "id: _",
                 guild_id as "guild_id: _",
                 game,
-                state
+                state as "state: _"
                 "#,
             guild_id as GuildId,
-            game
+            game,
         )
         .fetch_one(conn)
         .await?;
@@ -54,9 +58,24 @@ impl Game {
     }
 
     pub async fn load(game_id: GameId, conn: &mut PgConnection) -> anyhow::Result<Self> {
-        let game = sqlx::query_as!(Self, r#"SELECT id as "id: _", guild_id as "guild_id: _", game, state FROM games WHERE id = $1"#, game_id as GameId)
+        let game = sqlx::query_as!(Self, r#"SELECT id as "id: _", guild_id as "guild_id: _", game, state as "state: _" FROM games WHERE id = $1"#, game_id as GameId)
             .fetch_one(conn)
             .await?;
         Ok(game)
+    }
+
+    pub async fn update(
+        game_id: GameId,
+        state: GameState,
+        conn: &mut PgConnection,
+    ) -> anyhow::Result<()> {
+        sqlx::query!(
+            r#"UPDATE games SET state = $1 WHERE id = $2"#,
+            state as GameState,
+            game_id as GameId,
+        )
+        .execute(conn)
+        .await?;
+        Ok(())
     }
 }
