@@ -21,7 +21,7 @@ async function main() {
     },
   });
 
-  await prepareMinigamesBot(bot, {
+  prepareMinigamesBot(bot, {
     apiUrl: API_URL,
     webUrl: WEB_URL,
     guild: DISCORD_DEBUG_GUILD,

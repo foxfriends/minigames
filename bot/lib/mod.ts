@@ -19,7 +19,7 @@ type Config = {
   guild?: bigint;
 };
 
-async function prepareMinigamesBot(bot: Bot, {
+function prepareMinigamesBot(bot: Bot, {
   apiUrl,
   webUrl,
   guild,
