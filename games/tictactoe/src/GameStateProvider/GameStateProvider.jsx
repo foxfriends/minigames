@@ -1,5 +1,11 @@
 import * as React from "react";
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import useWebSocket from "../hooks/useWebSocket";
 import useEvent from "../hooks/useEvent";
 import * as event from "./event";
@@ -28,17 +34,20 @@ export default function GameStateProvider({ gameId, children }) {
   const [state, setState] = useState(DEFAULT);
   const socket = useWebSocket(import.meta.env.VITE_SOCKET_URL);
 
-  const onMessage = useCallback((message) => {
-    const data = JSON.parse(message.data);
-    if (data.payload?.Update) {
-      setState(data.payload.Update);
-    } else {
-      console.error('Unexpected WebSocket event:', data);
-    }
-  }, [setState]);
+  const onMessage = useCallback(
+    (message) => {
+      const data = JSON.parse(message.data);
+      if (data.payload?.Update) {
+        setState(data.payload.Update);
+      } else {
+        console.error("Unexpected WebSocket event:", data);
+      }
+    },
+    [setState],
+  );
 
-  useEvent(socket, 'message', onMessage);
-  useEvent(socket, 'open', () => {
+  useEvent(socket, "message", onMessage);
+  useEvent(socket, "open", () => {
     socket.send(event.subscribe(gameId));
     socket.send(event.get(gameId));
   });

@@ -1,10 +1,10 @@
-const createEventId = (() => {
+const createEventId = () => {
   let i = 0;
 
   return function createEventId() {
     return `${++i}`;
   };
-});
+};
 
 export function subscribe(gameId) {
   return {
