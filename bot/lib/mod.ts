@@ -5,8 +5,12 @@ import {
   createApplicationCommand,
   createEventHandlers,
   DiscordenoInteraction,
-  InteractionTypes,
   InteractionResponseTypes,
+  InteractionTypes,
+<<<<<<< Updated upstream
+  InteractionResponseTypes,
+=======
+>>>>>>> Stashed changes
   sendInteractionResponse,
 } from "../deps/discordeno.ts";
 import { blue, green, red } from "../deps/colors.ts";
@@ -65,7 +69,7 @@ async function prepareMinigamesBot(bot: Bot, {
                 type: InteractionResponseTypes.ChannelMessageWithSource,
                 private: true,
                 data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
-              })
+              });
             }
             return;
           }
@@ -89,7 +93,7 @@ async function prepareMinigamesBot(bot: Bot, {
                 type: InteractionResponseTypes.ChannelMessageWithSource,
                 private: true,
                 data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
-              })
+              });
             }
             return;
           }
