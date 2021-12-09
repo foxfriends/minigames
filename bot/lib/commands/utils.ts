@@ -1,4 +1,7 @@
-import { ApplicationCommandOptionTypes, InteractionDataOption } from "../../deps/discordeno.ts";
+import {
+  ApplicationCommandOptionTypes,
+  InteractionDataOption,
+} from "../../deps/discordeno.ts";
 
 export function userOption(option: InteractionDataOption): bigint {
   if (option.type !== ApplicationCommandOptionTypes.User) {

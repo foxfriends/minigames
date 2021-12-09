@@ -6,7 +6,7 @@ Minigames for Discord servers. So far does nothing. Will have more info later.
 
 ### Server and Bot
 
-The server uses [Rust][] (1.56) and [PostgreSQL][] (14). The bot uses [Deno][] (1.16) and [Redis][] (5).
+The server uses [Rust][] (1.56) and [PostgreSQL][] (14). The bot uses [Deno][] (1.16).
 Install all of those however you like.
 
 Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `postgres` feature).
@@ -22,12 +22,11 @@ Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `
 [Deno]: https://deno.land/
 [Rust]: http://rust-lang.org/
 [PostgreSQL]: https://www.postgresql.org/
-[Redis]: https://redis.io/
 [sqlx-cli]: https://crates.io/crates/sqlx-cli
 [Discord Developer Portal]: https://discord.com/developers/
 
 Once all setup steps have been completed, you can run the app. To have it fully working requires that
-Redis and PostgreSQL are running already, then:
+PostgreSQL is running already, then:
 1.  *If migrations have changed*, before starting the server run `sqlx migrate run`.
 2.  Run the server with `cargo run` in the `server` directory.
 3.  Run the bot with `bot/scripts/bot`.

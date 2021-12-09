@@ -6,7 +6,6 @@ import {
   DISCORD_CLIENT_ID,
   DISCORD_DEBUG_GUILD,
   DISCORD_TOKEN,
-  REDIS_URL,
   WEB_URL,
 } from "./config.ts";
 
@@ -23,7 +22,6 @@ async function main() {
   });
 
   await prepareMinigamesBot(bot, {
-    redisUrl: REDIS_URL,
     apiUrl: API_URL,
     webUrl: WEB_URL,
     guild: DISCORD_DEBUG_GUILD,

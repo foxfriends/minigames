@@ -23,7 +23,7 @@ impl<E: std::fmt::Display> From<E> for ResponseError {
         Self {
             status: Status::InternalServerError,
             body: Some(Json(ResponseErrorBody {
-                code: String::from("UnknownError"),
+                code: std::any::type_name::<E>().to_owned(),
                 message: error.to_string(),
                 data: None,
             })),

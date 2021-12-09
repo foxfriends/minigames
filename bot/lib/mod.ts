@@ -1,5 +1,4 @@
 import { whereEq } from "../deps/ramda.ts";
-import { connect, parseURL } from "../deps/redis.ts";
 import {
   Bot,
   createApplicationCommand,
@@ -17,19 +16,16 @@ import { runtime } from "./runtime.ts";
 type Config = {
   apiUrl: string;
   webUrl: string;
-  redisUrl: string;
   guild?: bigint;
 };
 
 async function prepareMinigamesBot(bot: Bot, {
   apiUrl,
   webUrl,
-  redisUrl,
   guild,
 }: Config) {
   const invoke = client({ apiUrl });
-  const redis = await connect(parseURL(redisUrl));
-  const run = runtime({ invoke, redis, webUrl });
+  const run = runtime({ invoke, webUrl });
 
   const { ready, interactionCreate } = bot.events;
   bot.events = Object.assign(
@@ -60,12 +56,23 @@ async function prepareMinigamesBot(bot: Bot, {
               await run({ bot, interaction }, task);
             } catch (error) {
               const interactionName = blue(interaction.data!.name!);
-              console.error(`Interaction ${interactionName} has ${red("failed")}:`, error);
-              await sendInteractionResponse(bot, interaction.id, interaction.token, {
-                type: InteractionResponseTypes.ChannelMessageWithSource,
-                private: true,
-                data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
-              });
+              console.error(
+                `Interaction ${interactionName} has ${red("failed")}:`,
+                error,
+              );
+              await sendInteractionResponse(
+                bot,
+                interaction.id,
+                interaction.token,
+                {
+                  type: InteractionResponseTypes.ChannelMessageWithSource,
+                  private: true,
+                  data: {
+                    content:
+                      `Sorry, looks like there was a problem: **${error.message}**`,
+                  },
+                },
+              );
             }
             return;
           }
@@ -81,15 +88,25 @@ async function prepareMinigamesBot(bot: Bot, {
               const task = command.handleComponentInteraction?.(interaction);
               if (task) await run({ bot, interaction }, task);
             } catch (error) {
-              const interactionName = blue(interaction.message!.interaction!.name);
+              const interactionName = blue(
+                interaction.message!.interaction!.name,
+              );
               const component = green(`"${interaction.data!.customId}"`);
               // deno-fmt-ignore
               console.error(`Interaction ${interactionName} component ${component} has ${red("failed")}:`, error);
-              await sendInteractionResponse(bot, interaction.id, interaction.token, {
-                type: InteractionResponseTypes.ChannelMessageWithSource,
-                private: true,
-                data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
-              });
+              await sendInteractionResponse(
+                bot,
+                interaction.id,
+                interaction.token,
+                {
+                  type: InteractionResponseTypes.ChannelMessageWithSource,
+                  private: true,
+                  data: {
+                    content:
+                      `Sorry, looks like there was a problem: **${error.message}**`,
+                  },
+                },
+              );
             }
             return;
           }

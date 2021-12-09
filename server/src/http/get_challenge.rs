@@ -1,8 +1,7 @@
 use crate::cookies::{GameCookie, StateCookie, UserCookie};
-use crate::game::{Game, GameRegistry};
+use crate::game::{Game, GameId, GameRegistry};
 use crate::postgres::PgPool;
 use crate::response::{Response, ResponseError};
-use crate::token::Token;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
     ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl,
@@ -20,20 +19,23 @@ fn get_client() -> anyhow::Result<BasicClient> {
         Some(TokenUrl::new(
             "https://discord.com/api/oauth2/token".to_owned(),
         )?),
-    ))
+    )
+    .set_redirect_uri(RedirectUrl::new(format!(
+        "{}/challenge",
+        env::var("PUBLIC_HTTP_URL")?,
+    ))?))
 }
 
 pub async fn actually_get_challenge(
     _discord_user_token: String,
-    token: Token,
+    game_id: GameId,
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
 ) -> Response<Redirect> {
-    let game_id = token.decode()?.game_id();
     let mut conn = db.acquire().await?;
     let game = Game::load(game_id, &mut conn).await?;
     if let Some(url) = registry.locate(&game.game).await {
-        Ok(Redirect::to(format!("{}/?token={}", url, token)))
+        Ok(Redirect::to(format!("{}/?game_id={}", url, game_id)))
     } else {
         Err(ResponseError::new(
             Status::NotFound,
@@ -43,33 +45,30 @@ pub async fn actually_get_challenge(
     }
 }
 
-pub async fn start_oauth2(token: Token, cookies: &CookieJar<'_>) -> Response<Redirect> {
-    let client = get_client()?.set_redirect_uri(RedirectUrl::new(format!(
-        "{}/challenge",
-        env::var("PUBLIC_HTTP_URL")?,
-    ))?);
+pub async fn start_oauth2(game_id: GameId, cookies: &CookieJar<'_>) -> Response<Redirect> {
+    let client = get_client()?;
     let (auth_url, state) = client
         .authorize_url(CsrfToken::new_random)
         .add_scope(Scope::new("identify".to_owned()))
         .url();
 
     StateCookie::add_to(cookies, state.secret().to_owned());
-    GameCookie::add_to(cookies, token);
+    GameCookie::add_to(cookies, game_id);
     Ok(Redirect::to(String::from(auth_url)))
 }
 
-#[rocket::get("/challenge?<token>", rank = 1)]
+#[rocket::get("/challenge?<game_id>", rank = 1)]
 pub async fn get_challenge<'r>(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
     cookies: &CookieJar<'r>,
-    token: Token,
+    game_id: GameId,
     user_cookie: Option<UserCookie<'r>>,
 ) -> Response<Redirect> {
     if let Some(discord_user_token) = user_cookie {
-        actually_get_challenge(discord_user_token.value().to_owned(), token, db, registry).await
+        actually_get_challenge(discord_user_token.value().to_owned(), game_id, db, registry).await
     } else {
-        start_oauth2(token, cookies).await
+        start_oauth2(game_id, cookies).await
     }
 }
 
@@ -94,6 +93,7 @@ pub async fn complete_oauth2<'r>(
     let client = get_client()?;
     let discord_user_token = client
         .exchange_code(AuthorizationCode::new(code))
+        .add_extra_param("grant_type", "authorization_code")
         .request_async(async_http_client)
         .await?;
 

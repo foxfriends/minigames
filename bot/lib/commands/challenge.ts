@@ -1,5 +1,4 @@
 import { whereEq } from "../../deps/ramda.ts";
-import type { Redis } from "../../deps/redis.ts";
 import {
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
@@ -11,7 +10,7 @@ import {
 import { userOption } from "./utils.ts";
 import { pickRandomGame } from "../games.ts";
 import type { Command } from "./types.ts";
-import { getGameUrl, invoke, redis, respond, Task, task } from "../runtime.ts";
+import { getGameUrl, invoke, respond, Task, task } from "../runtime.ts";
 import * as api from "../api/mod.ts";
 import { shame } from "../shame.ts";
 
@@ -19,8 +18,8 @@ function createChallenge(params: api.CreateChallenge): Task {
   return task(async function* (): AsyncGenerator<Task, string, Response> {
     const response: Response = yield invoke(api.createChallenge(params));
     if (response.status === 200) {
-      const { token } = await response.json();
-      return token;
+      const { gameId } = await response.json();
+      return gameId;
     } else {
       throw await response.json();
     }
@@ -49,18 +48,19 @@ export const challenge: Command = {
   handleInteraction({ guildId, user, data }: DiscordenoInteraction): Task {
     // deno-lint-ignore no-explicit-any
     return task(async function* (): AsyncGenerator<Task, void, any> {
-      const challengedUserId = userOption(data!.options!.find(whereEq({ name: "user" }))!);
+      const challengedUserId = userOption(
+        data!.options!.find(whereEq({ name: "user" }))!,
+      );
       const challengerUserId = user.id;
-      const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? pickRandomGame()}`;
-      const challengeToken: string = yield createChallenge({
+      const game = `${
+        data?.options?.find(whereEq({ name: "game" }))?.value ??
+          pickRandomGame()
+      }`;
+      const gameId: string = yield createChallenge({
         guildId: guildId!,
         challengerId: challengerUserId,
         challengedId: challengedUserId,
         game,
-      });
-      const key = crypto.randomUUID();
-      yield redis(async (redis: Redis) => {
-        await redis.set(key, challengeToken, { ex: 15 * 60 });
       });
       yield respond({
         type: InteractionResponseTypes.ChannelMessageWithSource,
@@ -84,7 +84,7 @@ export const challenge: Command = {
                 type: MessageComponentTypes.Button,
                 style: ButtonStyles.Success,
                 label: "Yes",
-                customId: key,
+                customId: gameId,
               },
             ],
           }],
@@ -100,16 +100,17 @@ export const challenge: Command = {
         yield respond({
           type: InteractionResponseTypes.UpdateMessage,
           data: {
-            content: `${message!.content}\n\nThe challenge was **rejected**... ${shame()}`,
+            content: `${
+              message!.content
+            }\n\nThe challenge was **rejected**... ${shame()}`,
             components: [],
           },
         });
         return;
       }
 
-      const key = data!.customId!;
-      const challengeToken: string = yield redis((redis: Redis) => redis.get(key));
-      const url: string = yield getGameUrl(challengeToken);
+      const gameId = data!.customId!;
+      const url: string = yield getGameUrl(gameId);
 
       yield respond({
         type: InteractionResponseTypes.UpdateMessage,

@@ -1,4 +1,3 @@
-import type { Redis } from "../deps/redis.ts";
 import {
   Bot,
   DiscordenoInteraction,
@@ -9,7 +8,6 @@ import type { ApiRequest, Client } from "./api/mod.ts";
 
 export type RuntimeConfig = {
   webUrl: string;
-  redis: Redis;
   invoke: Client;
 };
 
@@ -36,16 +34,13 @@ export function invoke(request: ApiRequest): Task {
   return ({ invoke }) => invoke(request);
 }
 
-export function redis(callback: (redis: Redis) => Promise<unknown>): Task {
-  return ({ redis }) => callback(redis);
-}
-
 export function respond(options: DiscordenoInteractionResponse): Task {
-  return ({ bot, interaction: { id, token } }) => sendInteractionResponse(bot, id, token, options);
+  return ({ bot, interaction: { id, token } }) =>
+    sendInteractionResponse(bot, id, token, options);
 }
 
 export function getGameUrl(token: string): Task {
-  return ({ webUrl }) => Promise.resolve(`${webUrl}/challenge?token=${token}`);
+  return ({ webUrl }) => Promise.resolve(`${webUrl}/challenge?game_id=${token}`);
 }
 
 export function task(generator: TaskGenerator): Task {
@@ -65,5 +60,6 @@ export function task(generator: TaskGenerator): Task {
 }
 
 export function runtime(config: RuntimeConfig): Runner {
-  return (context: RuntimeContext, task: Task) => task({ ...context, ...config });
+  return (context: RuntimeContext, task: Task) =>
+    task({ ...context, ...config });
 }

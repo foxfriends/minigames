@@ -1,3 +1,4 @@
+use rocket::form::{self, Errors, FromFormField, ValueField};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 use uuid::Uuid;
@@ -15,5 +16,14 @@ impl GameId {
 impl Display for GameId {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl<'r> FromFormField<'r> for GameId {
+    fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
+        match field.value.parse() {
+            Ok(value) => Ok(Self(value)),
+            Err(..) => Err(Errors::from(vec![field.unexpected()])),
+        }
     }
 }
