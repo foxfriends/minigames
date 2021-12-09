@@ -1,3 +1,4 @@
+#[allow(clippy::module_inception)]
 mod game;
 mod game_id;
 mod game_name;
