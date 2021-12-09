@@ -1,7 +1,7 @@
 {
   "db": "PostgreSQL",
-  "26542e7900f4de8f480f4b7f5493eb0a7db8c12c1def4b0527c101eb2255c742": {
-    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game,\n                state as \"state: _\"\n                ",
+  "4fec749a8a4ea0ba85eca8c58ebea86613784b351ce8f242269eb19db9efeaa3": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n                ",
     "describe": {
       "columns": [
         {
@@ -16,7 +16,7 @@
         },
         {
           "ordinal": 2,
-          "name": "game",
+          "name": "game: _",
           "type_info": "Varchar"
         },
         {
@@ -39,8 +39,8 @@
       ]
     }
   },
-  "377daf910982d8b79ea9ea0ad86b2ba46d182348a8d36fb51279aed7550e3daf": {
-    "query": "SELECT id as \"id: _\", guild_id as \"guild_id: _\", game, state as \"state: _\" FROM games WHERE id = $1",
+  "6dced4b0bf1fa7445c3268e8551994a060588b269b0c6936fb15e0a83683edae": {
+    "query": "\n            SELECT\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n            FROM games\n            WHERE id = $1\n            ",
     "describe": {
       "columns": [
         {
@@ -55,7 +55,7 @@
         },
         {
           "ordinal": 2,
-          "name": "game",
+          "name": "game: _",
           "type_info": "Varchar"
         },
         {
@@ -84,6 +84,19 @@
       "parameters": {
         "Left": [
           "Int8"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "b91c22b6ac289754ff5840413b0d475d6b1fce97914abe300875f9b8e9d7b46c": {
+    "query": "UPDATE games SET state = $1 WHERE id = $2",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Jsonb",
+          "Uuid"
         ]
       },
       "nullable": []

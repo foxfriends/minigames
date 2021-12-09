@@ -1,41 +1,20 @@
+use super::GameId;
+use super::GameName;
+use super::GameState;
 use crate::guild::GuildId;
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use sqlx::postgres::PgConnection;
-use std::fmt::{self, Display, Formatter};
-use uuid::Uuid;
-
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash, sqlx::Type)]
-#[sqlx(transparent)]
-pub struct GameId(Uuid);
-
-impl GameId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-}
-
-impl Display for GameId {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, sqlx::Type)]
-#[sqlx(transparent)]
-pub struct GameState(Value);
 
 pub struct Game {
     pub id: GameId,
     pub guild_id: GuildId,
-    pub game: String,
+    pub game: GameName,
     pub state: GameState,
 }
 
 impl Game {
     pub async fn create(
         guild_id: GuildId,
-        game: &str,
+        game: GameName,
         conn: &mut PgConnection,
     ) -> anyhow::Result<Self> {
         let game = sqlx::query_as!(
@@ -46,11 +25,11 @@ impl Game {
             RETURNING
                 id as "id: _",
                 guild_id as "guild_id: _",
-                game,
+                game as "game: _",
                 state as "state: _"
                 "#,
             guild_id as GuildId,
-            game,
+            game as GameName,
         )
         .fetch_one(conn)
         .await?;
@@ -58,9 +37,21 @@ impl Game {
     }
 
     pub async fn load(game_id: GameId, conn: &mut PgConnection) -> anyhow::Result<Self> {
-        let game = sqlx::query_as!(Self, r#"SELECT id as "id: _", guild_id as "guild_id: _", game, state as "state: _" FROM games WHERE id = $1"#, game_id as GameId)
-            .fetch_one(conn)
-            .await?;
+        let game = sqlx::query_as!(
+            Self,
+            r#"
+            SELECT
+                id as "id: _",
+                guild_id as "guild_id: _",
+                game as "game: _",
+                state as "state: _"
+            FROM games
+            WHERE id = $1
+            "#,
+            game_id as GameId
+        )
+        .fetch_one(conn)
+        .await?;
         Ok(game)
     }
 

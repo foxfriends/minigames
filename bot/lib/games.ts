@@ -1,3 +1,3 @@
 export function pickRandomGame() {
-  return "Chess";
+  return "tictactoe";
 }

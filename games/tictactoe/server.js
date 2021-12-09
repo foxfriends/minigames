@@ -23,10 +23,10 @@ export async function createServer() {
   }
 }
 
-createServer().then((app) => {
-  const server = app.listen(PORT, async () => {
+createServer().then(async (app) => {
+  const server = await app.listen(PORT, async () => {
     console.log(`${chalk.yellow("tictactoe")} is running on port ${PORT}`);
-    await fetch(`${API_URL}/game/tictactoe`, {
+    await fetch(`${API_URL}/games/tictactoe`, {
       method: "POST",
       headers: { Authorization: `Bearer ${API_KEY}` },
       body: JSON.stringify({ url: PUBLIC_URL }),
@@ -35,7 +35,7 @@ createServer().then((app) => {
 
   async function shutdown() {
     console.log(`Shutting down ${chalk.yellow("tictactoe")}`);
-    await fetch(`${API_URL}/game/tictactoe`, {
+    await fetch(`${API_URL}/games/tictactoe`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${API_KEY}` },
     });

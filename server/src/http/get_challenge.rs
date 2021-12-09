@@ -1,5 +1,5 @@
 use crate::cookies::{GameCookie, StateCookie, UserCookie};
-use crate::game::Game;
+use crate::game::{Game, GameRegistry};
 use crate::postgres::PgPool;
 use crate::response::{Response, ResponseError};
 use crate::token::Token;
@@ -27,11 +27,20 @@ pub async fn actually_get_challenge(
     _discord_user_token: String,
     token: Token,
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
 ) -> Response<Redirect> {
     let game_id = token.decode()?.game_id();
     let mut conn = db.acquire().await?;
-    let _game = Game::load(game_id, &mut conn).await?;
-    Ok(Redirect::to("gameurl"))
+    let game = Game::load(game_id, &mut conn).await?;
+    if let Some(url) = registry.locate(&game.game).await {
+        Ok(Redirect::to(format!("{}/?token={}", url, token)))
+    } else {
+        Err(ResponseError::new(
+            Status::NotFound,
+            "GameNotRegistered".to_owned(),
+            format!("Server for {} could not be located", game.game),
+        ))
+    }
 }
 
 pub async fn start_oauth2(token: Token, cookies: &CookieJar<'_>) -> Response<Redirect> {
@@ -52,12 +61,13 @@ pub async fn start_oauth2(token: Token, cookies: &CookieJar<'_>) -> Response<Red
 #[rocket::get("/challenge?<token>", rank = 1)]
 pub async fn get_challenge<'r>(
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
     cookies: &CookieJar<'r>,
     token: Token,
     user_cookie: Option<UserCookie<'r>>,
 ) -> Response<Redirect> {
     if let Some(discord_user_token) = user_cookie {
-        actually_get_challenge(discord_user_token.value().to_owned(), token, db).await
+        actually_get_challenge(discord_user_token.value().to_owned(), token, db, registry).await
     } else {
         start_oauth2(token, cookies).await
     }
@@ -66,6 +76,7 @@ pub async fn get_challenge<'r>(
 #[rocket::get("/challenge?<code>&<state>", rank = 2)]
 pub async fn complete_oauth2<'r>(
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
     cookies: &CookieJar<'r>,
     code: String,
     state: String,
@@ -90,5 +101,5 @@ pub async fn complete_oauth2<'r>(
     StateCookie::remove_from(cookies);
     GameCookie::remove_from(cookies);
     let secret = discord_user_token.access_token().secret().to_owned();
-    actually_get_challenge(secret, game_cookie.value().clone(), db).await
+    actually_get_challenge(secret, game_cookie.value().clone(), db, registry).await
 }
