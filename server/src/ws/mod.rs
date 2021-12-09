@@ -44,6 +44,7 @@ async fn handle_connection(
     stream: TcpStream,
     addr: SocketAddr,
 ) -> anyhow::Result<()> {
+    println!("WebSocket connection from: {}", addr);
     let stream = tokio_tungstenite::accept_async(stream).await?;
 
     let (send, recv) = unbounded_channel();
@@ -63,6 +64,7 @@ async fn handle_connection(
             move |Event { id, payload }: Event<Action>| {
                 let context = context.to_handler_context(addr, id);
                 async move {
+                    println!("Message received from {}: {:?}", addr, payload);
                     if let Err(error) = handle_action(&context, payload).await {
                         // TODO: real errors?
                         context.respond_error(error.to_string()).await;
@@ -80,6 +82,7 @@ async fn handle_connection(
 
     pin_mut!(receiver, sender);
     future::select(receiver, sender).await;
+    println!("Closing WebSocket connection from: {}", addr);
     context.peer_map().remove(addr).await;
     Ok(())
 }
@@ -90,7 +93,6 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
     let context = Context::new(pg_pool);
 
     while let Ok((stream, addr)) = listener.accept().await {
-        println!("WebSocket connection from: {}", addr);
         tokio::spawn(handle_connection(context.clone(), stream, addr));
     }
 
