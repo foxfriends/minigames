@@ -6,6 +6,8 @@ import {
   createEventHandlers,
   DiscordenoInteraction,
   InteractionTypes,
+  InteractionResponseTypes,
+  sendInteractionResponse,
 } from "../deps/discordeno.ts";
 import { blue, green, red } from "../deps/colors.ts";
 import { commands } from "./commands/mod.ts";
@@ -58,9 +60,12 @@ async function prepareMinigamesBot(bot: Bot, {
               await run({ bot, interaction }, task);
             } catch (error) {
               const interactionName = blue(interaction.data!.name!);
-              console.error(
-                `Interaction ${interactionName} has ${red("failed")}: ${error}`,
-              );
+              console.error(`Interaction ${interactionName} has ${red("failed")}:`, error);
+              await sendInteractionResponse(bot, interaction.id, interaction.token, {
+                type: InteractionResponseTypes.ChannelMessageWithSource,
+                private: true,
+                data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
+              })
             }
             return;
           }
@@ -79,7 +84,12 @@ async function prepareMinigamesBot(bot: Bot, {
               const interactionName = blue(interaction.message!.interaction!.name);
               const component = green(`"${interaction.data!.customId}"`);
               // deno-fmt-ignore
-              console.error(`Interaction ${interactionName} component ${component} has ${red("failed")}: ${error}`);
+              console.error(`Interaction ${interactionName} component ${component} has ${red("failed")}:`, error);
+              await sendInteractionResponse(bot, interaction.id, interaction.token, {
+                type: InteractionResponseTypes.ChannelMessageWithSource,
+                private: true,
+                data: { content: `Sorry, looks like there was a problem: **${error.message}**` },
+              })
             }
             return;
           }

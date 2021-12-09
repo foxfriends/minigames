@@ -18,8 +18,12 @@ import { shame } from "../shame.ts";
 function createChallenge(params: api.CreateChallenge): Task {
   return task(async function* (): AsyncGenerator<Task, string, Response> {
     const response: Response = yield invoke(api.createChallenge(params));
-    const { token } = await response.json();
-    return token;
+    if (response.status === 200) {
+      const { token } = await response.json();
+      return token;
+    } else {
+      throw await response.json();
+    }
   });
 }
 
@@ -33,14 +37,12 @@ export const challenge: Command = {
       name: "user",
       description: "Who to challenge",
       required: true,
-      autocomplete: true,
     },
     {
       type: ApplicationCommandOptionTypes.String,
       name: "game",
       description: "Which game to play",
-      autocomplete: true,
-      // choices: [/* TODO: list all known games */],
+      autocomplete: true, // TODO: implement this autocomplete
     },
   ],
 
