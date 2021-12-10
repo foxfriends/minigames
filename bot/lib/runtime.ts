@@ -35,8 +35,7 @@ export function invoke(request: ApiRequest): Task {
 }
 
 export function respond(options: DiscordenoInteractionResponse): Task {
-  return ({ bot, interaction: { id, token } }) =>
-    sendInteractionResponse(bot, id, token, options);
+  return ({ bot, interaction: { id, token } }) => sendInteractionResponse(bot, id, token, options);
 }
 
 export function getGameUrl(token: string): Task {
@@ -60,6 +59,5 @@ export function task(generator: TaskGenerator): Task {
 }
 
 export function runtime(config: RuntimeConfig): Runner {
-  return (context: RuntimeContext, task: Task) =>
-    task({ ...context, ...config });
+  return (context: RuntimeContext, task: Task) => task({ ...context, ...config });
 }

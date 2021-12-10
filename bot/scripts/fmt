@@ -1,5 +1,4 @@
 #!/bin/bash
 set -e
 cd "$(dirname "$0")/.."
-shift
 deno fmt --config deno.json $@

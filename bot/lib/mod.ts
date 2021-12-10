@@ -68,8 +68,7 @@ function prepareMinigamesBot(bot: Bot, {
                   type: InteractionResponseTypes.ChannelMessageWithSource,
                   private: true,
                   data: {
-                    content:
-                      `Sorry, looks like there was a problem: **${error.message}**`,
+                    content: `Sorry, looks like there was a problem: **${error.message}**`,
                   },
                 },
               );
@@ -102,8 +101,7 @@ function prepareMinigamesBot(bot: Bot, {
                   type: InteractionResponseTypes.ChannelMessageWithSource,
                   private: true,
                   data: {
-                    content:
-                      `Sorry, looks like there was a problem: **${error.message}**`,
+                    content: `Sorry, looks like there was a problem: **${error.message}**`,
                   },
                 },
               );

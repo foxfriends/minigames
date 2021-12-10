@@ -100,9 +100,7 @@ export const challenge: Command = {
         yield respond({
           type: InteractionResponseTypes.UpdateMessage,
           data: {
-            content: `${
-              message!.content
-            }\n\nThe challenge was **rejected**... ${shame()}`,
+            content: `${message!.content}\n\nThe challenge was **rejected**... ${shame()}`,
             components: [],
           },
         });
