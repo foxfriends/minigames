@@ -3,6 +3,7 @@ use crate::postgres::PgPool;
 
 mod create_challenge;
 mod get_challenge;
+mod get_public_key;
 mod leaderboard;
 mod list_games;
 mod register_game;
@@ -16,6 +17,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 create_challenge::create_challenge,
                 get_challenge::get_challenge,
                 get_challenge::complete_oauth2,
+                get_public_key::get_public_key,
                 leaderboard::leaderboard,
                 register_game::register_game,
                 unregister_game::unregister_game,

@@ -11,18 +11,25 @@ Install all of those however you like.
 
 Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `postgres` feature).
 
+You'll also be needing an ES256 key, which is easiest generated with [OpenSSL][], so maybe install that too.
+
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
-4.  Create the database with `sqlx database create`.
-5.  Migrate the database with `sqlx migrate run`.
-6.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
+4.  Use OpenSSL to generate the ES256 key for signing JWTs: 
+    ```sh
+    openssl ecparam -genkey -noout -name prime256v1 | openssl pkcs8 -topk8 -nocrypt -out jwt.pem
+    ```
+5.  Create the database with `sqlx database create`.
+6.  Migrate the database with `sqlx migrate run`.
+7.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
 
 [Node.js]: https://nodejs.org/en/
 [Deno]: https://deno.land/
 [Rust]: http://rust-lang.org/
 [PostgreSQL]: https://www.postgresql.org/
 [sqlx-cli]: https://crates.io/crates/sqlx-cli
+[OpenSSL]: https://www.openssl.org/
 [Discord Developer Portal]: https://discord.com/developers/
 
 Once all setup steps have been completed, you can run the app. To have it fully working requires that

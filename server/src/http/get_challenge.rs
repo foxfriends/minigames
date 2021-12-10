@@ -1,7 +1,9 @@
 use crate::cookies::{GameCookie, StateCookie, UserCookie};
+use crate::discord;
 use crate::game::{Game, GameId, GameRegistry};
 use crate::postgres::PgPool;
 use crate::response::{Response, ResponseError};
+use crate::token::Claims;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
     ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl,
@@ -27,15 +29,20 @@ fn get_client() -> anyhow::Result<BasicClient> {
 }
 
 pub async fn actually_get_challenge(
-    _discord_user_token: String,
+    discord_user_token: String,
     game_id: GameId,
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
 ) -> Response<Redirect> {
+    let discord_user = discord::get_current_user(discord_user_token).await?;
     let mut conn = db.acquire().await?;
     let game = Game::load(game_id, &mut conn).await?;
+    let user_token = Claims::new(game.game.clone(), discord_user.id).sign()?;
     if let Some(url) = registry.locate(&game.game).await {
-        Ok(Redirect::to(format!("{}/?game_id={}", url, game_id)))
+        Ok(Redirect::to(format!(
+            "{}?game_id={}&token={}",
+            url, game_id, user_token
+        )))
     } else {
         Err(ResponseError::new(
             Status::NotFound,

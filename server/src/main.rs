@@ -1,9 +1,11 @@
 mod cookies;
+mod discord;
 mod game;
 mod guild;
 mod http;
 mod postgres;
 mod response;
+mod token;
 mod user;
 mod ws;
 
