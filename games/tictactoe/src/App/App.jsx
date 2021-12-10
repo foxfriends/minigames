@@ -3,9 +3,9 @@ import Layout from "../Layout";
 import Board from "../Board";
 import GameStateProvider from "../GameStateProvider";
 
-export default function App() {
+export default function App({ gameId }) {
   return (
-    <GameStateProvider>
+    <GameStateProvider gameId={gameId}>
       <Layout>
         <Board />
       </Layout>

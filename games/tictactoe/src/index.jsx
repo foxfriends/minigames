@@ -3,4 +3,6 @@ import { render } from "react-dom";
 import App from "./App";
 import "./index.css";
 
-render(<App />, document.querySelector("#app"));
+const gameId = new URLSearchParams(window.location.search).get("game_id");
+
+render(<App gameId={gameId} />, document.querySelector("#app"));
