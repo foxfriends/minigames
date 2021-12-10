@@ -109,6 +109,10 @@ This is the only request which has an explicit response.
 Include the `<game_id>` which was provided in the query parameters when navigating to
 the game.
 
+Note that the state will be `null` if the game has not yet been initialized. In this 
+situation, it is the responsibility of the game client to generate a default state,
+and send that state back to the server if necessary.
+
 #### Set
 
 ```javascript
