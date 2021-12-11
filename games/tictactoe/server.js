@@ -16,7 +16,7 @@ async function tryFetch(...params) {
   try {
     const response = await fetch(...params);
     if (response.status !== 200) {
-      const { code, message, data } = await response.json();
+      const { message } = await response.json();
       throw new Error(message);
     }
     return response;
