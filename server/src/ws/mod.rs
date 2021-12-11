@@ -56,9 +56,9 @@ async fn handle_connection(
             .uri()
             .query()
             .into_iter()
-            .flat_map(|query| query.split("&"))
+            .flat_map(|query| query.split('&'))
             .map(|pairs| {
-                let mut pair = pairs.split("=");
+                let mut pair = pairs.split('=');
                 (pair.next().unwrap(), pair.next().unwrap_or(""))
             })
             .filter(|&(name, _)| name == "token")
