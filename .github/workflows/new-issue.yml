@@ -4,13 +4,13 @@ on:
     types: [opened]
 env:
   PROJECT_NUMBER: 2
+  GITHUB_TOKEN: ${{ secrets.PROJECT_TOKEN }}
 jobs:
   add_to_project:
     runs-on: ubuntu-latest
     steps:
       - name: Get project info
         env:
-          GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
           PROJECT_USER: ${{ github.repository_owner }}
         run: |
           project_id=$(gh api graphql \
@@ -21,7 +21,6 @@ jobs:
           echo 'PROJECT_ID='${project_id} >> $GITHUB_ENV
       - name: Add issue to project
         env:
-          GITHUB_TOKEN: ${{ secrets.PROJECT_TOKEN }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
         run: |
           gh api graphql \
