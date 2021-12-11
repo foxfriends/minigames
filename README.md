@@ -1,6 +1,13 @@
 # Minigames
 
-Minigames for Discord servers. So far does nothing. Will have more info later.
+[Roadmap][] | [Guide][] | [Manual][] | Install (Unavailable)
+
+[Roadmap]: https://github.com/users/foxfriends/projects/2
+[Guide]: ./GUIDE.md
+[Manual]: ./USAGE.md
+
+Minigames and leaderboard for Discord servers. Challenge your friends to games, and determine who is
+the best (mini)gamer once and for all.
 
 ## Development Environment Setup
 
@@ -16,7 +23,7 @@ You'll also be needing an ES256 key, which is easiest generated with [OpenSSL][]
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
-4.  Use OpenSSL to generate the RS256 key for signing JWTs: 
+4.  Use OpenSSL to generate the RS256 key for signing JWTs:
     ```sh
     openssl genrsa -out jwt.pem
     ```
