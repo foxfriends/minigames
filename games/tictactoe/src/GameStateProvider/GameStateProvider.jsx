@@ -37,7 +37,7 @@ export default function GameStateProvider({ gameId, children }) {
   const onMessage = useCallback(
     (message) => {
       const data = JSON.parse(message.data);
-      if ('Update' in data.payload) {
+      if ("Update" in data.payload) {
         setState(data.payload.Update ?? DEFAULT);
       } else {
         console.error("Unexpected WebSocket event:", data);
