@@ -6,6 +6,7 @@ env:
   PROJECT_ID: 2
 jobs:
   add_to_project:
+    runs_on: ubuntu-latest
     steps:
       - name: Add issue to project
         env:
