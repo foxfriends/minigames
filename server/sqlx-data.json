@@ -1,5 +1,39 @@
 {
   "db": "PostgreSQL",
+  "05f5362eb6f6ac8031edac4468c5e18a80da225a645ca941b07fe2295b28d18c": {
+    "query": "INSERT INTO game_participants (game_id, user_id, is_challenger) VALUES ($1, $2, true)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "1ba6449200a0e1aa95cb7d97b0cec73b9e92b2192b14c3e6af6fb728d8fbab7c": {
+    "query": "SELECT EXISTS (SELECT 1 FROM game_participants WHERE game_id = $1 AND user_id = $2)",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "exists",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        null
+      ]
+    }
+  },
   "4fec749a8a4ea0ba85eca8c58ebea86613784b351ce8f242269eb19db9efeaa3": {
     "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n                ",
     "describe": {
@@ -37,6 +71,19 @@
         false,
         false
       ]
+    }
+  },
+  "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
+    "query": "INSERT INTO game_participants (game_id, user_id) VALUES ($1, $2)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": []
     }
   },
   "6dced4b0bf1fa7445c3268e8551994a060588b269b0c6936fb15e0a83683edae": {
