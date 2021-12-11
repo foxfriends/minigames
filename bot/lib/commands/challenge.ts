@@ -8,11 +8,25 @@ import {
   MessageComponentTypes,
 } from "../../deps/discordeno.ts";
 import { userOption } from "./utils.ts";
-import { pickRandomGame } from "../games.ts";
 import type { Command } from "./types.ts";
 import { getGameUrl, invoke, respond, Task, task } from "../runtime.ts";
 import * as api from "../api/mod.ts";
 import { shame } from "../shame.ts";
+
+function pickRandomGame(): Task {
+  return task(async function* (): AsyncGenerator<Task, string, Response> {
+    const response: Response = yield invoke(api.listGames());
+    if (response.status === 200) {
+      const games = await response.json();
+      if (games.length === 0) {
+        throw new Error("No games are available to be played right now.");
+      }
+      return games[Math.floor(Math.random() * games.length)];
+    } else {
+      throw await response.json();
+    }
+  });
+}
 
 function createChallenge(params: api.CreateChallenge): Task {
   return task(async function* (): AsyncGenerator<Task, string, Response> {
@@ -52,10 +66,8 @@ export const challenge: Command = {
         data!.options!.find(whereEq({ name: "user" }))!,
       );
       const challengerUserId = user.id;
-      const game = `${
-        data?.options?.find(whereEq({ name: "game" }))?.value ??
-          pickRandomGame()
-      }`;
+      // deno-fmt-ignore
+      const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? (yield pickRandomGame())}`;
       const gameId: string = yield createChallenge({
         guildId: guildId!,
         challengerId: challengerUserId,
