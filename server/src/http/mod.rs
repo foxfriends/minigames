@@ -1,6 +1,11 @@
 use crate::game::GameRegistry;
 use crate::postgres::PgPool;
 
+mod authorization;
+mod cookies;
+mod response;
+
+mod complete_game;
 mod create_challenge;
 mod get_challenge;
 mod get_public_key;
@@ -14,14 +19,15 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
         .mount(
             "/",
             rocket::routes![
+                complete_game::complete_game,
                 create_challenge::create_challenge,
                 get_challenge::get_challenge,
                 get_challenge::complete_oauth2,
                 get_public_key::get_public_key,
                 leaderboard::leaderboard,
+                list_games::list_games,
                 register_game::register_game,
                 unregister_game::unregister_game,
-                list_games::list_games,
             ],
         )
         .manage(pg_pool)

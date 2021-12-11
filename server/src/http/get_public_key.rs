@@ -1,5 +1,5 @@
+use super::response::Response;
 use crate::key::SPKI;
-use crate::response::Response;
 use rocket::response::content::Plain;
 
 #[rocket::get("/.well-known/openid-configuration")]

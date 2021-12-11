@@ -1,5 +1,5 @@
+use super::response::Response;
 use crate::game::{GameName, GameRegistry};
-use crate::response::Response;
 use rocket::serde::json::Json;
 use rocket::State;
 

@@ -77,6 +77,47 @@ impl Game {
         .unwrap_or(false))
     }
 
+    pub async fn vote_result(
+        &self,
+        voter_id: UserId,
+        winner_id: Option<UserId>,
+        conn: &mut PgConnection,
+    ) -> anyhow::Result<()> {
+        sqlx::query!(
+            "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
+            self.id as GameId,
+            voter_id as UserId,
+            winner_id as Option<UserId>,
+        ).execute(conn).await?;
+        Ok(())
+    }
+
+    pub async fn check_winner<Conn>(&self, mut conn: Conn) -> anyhow::Result<Option<Option<UserId>>>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        let participants = sqlx::query!(
+            "SELECT count(user_id) as count FROM game_participants WHERE game_id = $1",
+            self.id as GameId
+        )
+        .fetch_one(&mut *conn)
+        .await?
+        .count
+        .unwrap();
+        let votes = sqlx::query!(
+            r#"SELECT user_id, winner_id as "winner_id: UserId" FROM game_complete_votes WHERE game_id = $1"#,
+            self.id as GameId
+        )
+        .fetch_all(&mut *conn)
+        .await?;
+        if participants as usize != votes.len() {
+            Ok(None)
+        } else {
+            Ok(Some(votes[0].winner_id))
+        }
+    }
+
     pub async fn load(game_id: GameId, conn: &mut PgConnection) -> anyhow::Result<Self> {
         let game = sqlx::query_as!(
             Self,

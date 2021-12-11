@@ -1,8 +1,8 @@
-use crate::cookies::{GameCookie, StateCookie, UserCookie};
+use super::cookies::{GameCookie, StateCookie, UserCookie};
+use super::response::{Response, ResponseError};
 use crate::discord;
 use crate::game::{Game, GameId, GameRegistry};
 use crate::postgres::PgPool;
-use crate::response::{Response, ResponseError};
 use crate::token::Claims;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,

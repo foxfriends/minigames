@@ -1,7 +1,7 @@
+use super::response::{Response, ResponseError};
 use crate::game::{Game, GameId, GameName, GameRegistry};
 use crate::guild::{Guild, GuildId};
 use crate::postgres::PgPool;
-use crate::response::{Response, ResponseError};
 use crate::user::{User, UserId};
 use rocket::http::Status;
 use rocket::serde::json::Json;
