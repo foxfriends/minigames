@@ -16,9 +16,9 @@ You'll also be needing an ES256 key, which is easiest generated with [OpenSSL][]
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
 2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
-4.  Use OpenSSL to generate the ES256 key for signing JWTs: 
+4.  Use OpenSSL to generate the RS256 key for signing JWTs: 
     ```sh
-    openssl ecparam -genkey -noout -name prime256v1 | openssl pkcs8 -topk8 -nocrypt -out jwt.pem
+    openssl genrsa -out jwt.pem
     ```
 5.  Create the database with `sqlx database create`.
 6.  Migrate the database with `sqlx migrate run`.

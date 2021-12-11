@@ -1,19 +1,14 @@
 use super::Token;
 use crate::game::GameName;
+use crate::key::JWT_KEY;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use serde::{Deserialize, Serialize};
 use std::env;
-use std::fs::File;
-use std::io::Read;
 
 lazy_static::lazy_static! {
-    static ref JWT_ENCODING_KEY: EncodingKey = {
-        let key_path = env::var("JWT_PEM").unwrap();
-        let mut file = File::open(key_path).unwrap();
-        let mut buf = Vec::new();
-        file.read_to_end(&mut buf).unwrap();
-        EncodingKey::from_ec_pem(&buf).unwrap()
-    };
+    static ref JWT_ENCODING_KEY: EncodingKey =
+        EncodingKey::from_rsa_pem(&JWT_KEY).unwrap()
+    ;
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -37,7 +32,7 @@ impl Claims {
 
     pub fn sign(&self) -> anyhow::Result<Token> {
         Ok(Token(encode(
-            &Header::new(Algorithm::ES256),
+            &Header::new(Algorithm::RS256),
             self,
             &JWT_ENCODING_KEY,
         )?))

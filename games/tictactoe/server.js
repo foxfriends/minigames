@@ -8,7 +8,7 @@ const {
   NODE_ENV = "development",
   PORT,
   PUBLIC_URL,
-  API_URL,
+  VITE_API_URL,
   API_KEY,
 } = process.env;
 
@@ -26,7 +26,7 @@ export async function createServer() {
 createServer().then(async (app) => {
   const server = await app.listen(PORT, async () => {
     console.log(`${chalk.yellow("tictactoe")} is running on port ${PORT}`);
-    await fetch(`${API_URL}/games/tictactoe`, {
+    await fetch(`${VITE_API_URL}/games/tictactoe`, {
       method: "POST",
       headers: { Authorization: `Bearer ${API_KEY}` },
       body: JSON.stringify({ url: PUBLIC_URL }),
@@ -35,7 +35,7 @@ createServer().then(async (app) => {
 
   async function shutdown() {
     console.log(`Shutting down ${chalk.yellow("tictactoe")}`);
-    await fetch(`${API_URL}/games/tictactoe`, {
+    await fetch(`${VITE_API_URL}/games/tictactoe`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${API_KEY}` },
     });

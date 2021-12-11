@@ -3,6 +3,7 @@ mod discord;
 mod game;
 mod guild;
 mod http;
+mod key;
 mod postgres;
 mod response;
 mod token;
