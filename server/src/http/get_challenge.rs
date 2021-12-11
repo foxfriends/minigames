@@ -108,5 +108,5 @@ pub async fn complete_oauth2<'r>(
     StateCookie::remove_from(cookies);
     GameCookie::remove_from(cookies);
     let secret = discord_user_token.access_token().secret().to_owned();
-    actually_get_challenge(secret, game_cookie.value().clone(), db, registry).await
+    actually_get_challenge(secret, game_cookie.value(), db, registry).await
 }

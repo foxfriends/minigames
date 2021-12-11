@@ -26,8 +26,8 @@ impl<'r> FromRequest<'r> for GameCookie {
 }
 
 impl GameCookie {
-    pub fn value(&self) -> &GameId {
-        &self.0
+    pub fn value(&self) -> GameId {
+        self.0
     }
 
     pub fn add_to(cookie_jar: &CookieJar, value: GameId) {
