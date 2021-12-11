@@ -19,7 +19,7 @@ async function tryFetch(...params) {
       const { code, message, data } = await response.json();
       throw new Error(message);
     }
-    return await response.json();
+    return response;
   } catch (error) {
     if (error.name === 'FetchError') {
       console.log(`${chalk.red('Error')}: Could not connect to the main server at ${chalk.cyan(VITE_API_URL)}. Ensure the server is running and that the ${chalk.green('VITE_API_URL')} environment variable is set correctly.`);

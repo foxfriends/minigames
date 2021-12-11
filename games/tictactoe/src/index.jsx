@@ -8,9 +8,10 @@ async function main() {
   try {
     const params = new URLSearchParams(window.location.search);
     const gameId = params.get("game_id");
-    const { userId } = await validate(params.get("token"));
+    const token = params.get("token");
+    const { userId } = await validate(token);
     render(
-      <App gameId={gameId} userId={userId} />,
+      <App gameId={gameId} userId={userId} token={token} />,
       document.querySelector("#app"),
     );
   } catch (error) {

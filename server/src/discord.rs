@@ -1,9 +1,10 @@
+use crate::user::UserId;
 use reqwest::{Client, Method};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct DiscordUser {
-    pub id: String,
+    pub id: UserId,
     pub username: String,
 }
 

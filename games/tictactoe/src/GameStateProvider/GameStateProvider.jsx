@@ -30,9 +30,9 @@ export function useGameState() {
   return useContext(GameStateContext);
 }
 
-export default function GameStateProvider({ gameId, children }) {
+export default function GameStateProvider({ gameId, token, children }) {
   const [state, setState] = useState(DEFAULT);
-  const socket = useWebSocket(import.meta.env.VITE_SOCKET_URL);
+  const socket = useWebSocket(`${import.meta.env.VITE_SOCKET_URL}?token=${token}`);
 
   const onMessage = useCallback(
     (message) => {

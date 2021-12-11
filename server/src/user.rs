@@ -53,18 +53,19 @@ impl Decode<'_, Postgres> for UserId {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct User {
     pub id: UserId,
 }
 
 impl User {
-    pub async fn upsert(id: UserId, conn: &mut PgConnection) -> anyhow::Result<()> {
+    pub async fn upsert(id: UserId, conn: &mut PgConnection) -> anyhow::Result<User> {
         sqlx::query!(
             r#"INSERT INTO users (id) VALUES ($1) ON CONFLICT DO NOTHING"#,
             id as UserId
         )
         .execute(conn)
         .await?;
-        Ok(())
+        Ok(User { id })
     }
 }

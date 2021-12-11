@@ -5,6 +5,12 @@ use std::fmt::{self, Display, Formatter};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Token(pub(super) String);
 
+impl From<&str> for Token {
+    fn from(s: &str) -> Self {
+        Self(s.to_owned())
+    }
+}
+
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         self.0.fmt(f)

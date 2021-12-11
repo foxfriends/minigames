@@ -1,10 +1,11 @@
 use super::event::{Event, EventId, Response};
 use super::peer_map::PeerMap;
 use super::subscription_map::SubscriptionMap;
-use crate::game::{GameId, GameState};
+use crate::game::{Game, GameId, GameState};
 use crate::postgres::PgPool;
+use crate::token::Claims;
 use sqlx::pool::PoolConnection;
-use sqlx::postgres::Postgres;
+use sqlx::postgres::{PgConnection, Postgres};
 use std::net::SocketAddr;
 
 #[derive(Clone)]
@@ -27,22 +28,29 @@ impl Context {
         &self.peer_map
     }
 
-    pub fn to_handler_context(&self, addr: SocketAddr, event_id: EventId) -> HandlerContext {
+    pub fn to_handler_context<'c>(
+        &self,
+        addr: SocketAddr,
+        claims: Option<&'c Claims>,
+        event_id: EventId,
+    ) -> HandlerContext<'c> {
         HandlerContext {
             addr,
             context: self.clone(),
             event_id,
+            claims,
         }
     }
 }
 
-pub struct HandlerContext {
+pub struct HandlerContext<'c> {
     addr: SocketAddr,
     context: Context,
     event_id: EventId,
+    claims: Option<&'c Claims>,
 }
 
-impl HandlerContext {
+impl HandlerContext<'_> {
     async fn send(&self, to_addr: SocketAddr, response: Event<Response>) {
         self.context.peer_map.send_to(to_addr, response).await;
     }
@@ -87,6 +95,20 @@ impl HandlerContext {
 
     pub async fn conn(&self) -> anyhow::Result<PoolConnection<Postgres>> {
         Ok(self.context.pg_pool.acquire().await?)
+    }
+
+    pub async fn is_participant(
+        &self,
+        game: &Game,
+        conn: &mut PgConnection,
+    ) -> anyhow::Result<bool> {
+        match self.claims {
+            Some(claims) => {
+                Ok(claims.is_game(&game.game)
+                    && game.is_participant(claims.user_id(), conn).await?)
+            }
+            None => Ok(false),
+        }
     }
 
     pub async fn subscribe(&self, game_id: GameId) {
