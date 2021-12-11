@@ -42,5 +42,25 @@ jobs:
       uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
-    - name: Run lint
+    - name: Run fmt
       run: deno fmt --config deno.json --check
+  cache:
+    name: cache
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Cache Deno
+      uses: actions/cache@v2
+      with:
+        key: ${{ runner.os }}-deno-${{ hashFiles('**/*') }}
+        restore-keys: ${{ runner.os }}-deno-
+        path: |
+          /home/runner/.deno
+          /home/runner/.cache/deno/deps/https/deno.land
+    - name: Set up Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+    - name: Run cache
+      run: deno cache ./bin/bot/main.ts
