@@ -17,7 +17,7 @@ jobs:
             -f query='query($user: String!, $number: Int!) { user(login: $user) { projectNext(number: $number) { id } } }' \
             -f user=$PROJECT_USER \
             -F number=$PROJECT_NUMBER \
-            -jq .data.user.projectNext.id)
+            -q .data.user.projectNext.id)
           echo 'PROJECT_ID='${project_id} >> $GITHUB_ENV
       - name: Add issue to project
         env:
