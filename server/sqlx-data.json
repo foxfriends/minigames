@@ -124,6 +124,26 @@
       ]
     }
   },
+  "80635965f624d4a998381c650503c1b1fc8dfcbb58c74b9ebf3c153c5067b778": {
+    "query": "SELECT count(user_id) as count FROM game_participants WHERE game_id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "count",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        null
+      ]
+    }
+  },
   "ac8952dee489127a4d849a0d412cab8cc1afee55bf233289ad50d6d581f7db2e": {
     "query": "INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING",
     "describe": {
@@ -147,6 +167,46 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "da8dd4f29f44ba2ba5538584d803fa1c16032e77789e3355655aa24611a802fb": {
+    "query": "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8",
+          "Uuid"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "fd2c038a22c9ea4e2d976f4cff29575e7b077ace4325ee5c7b632a853f7eae08": {
+    "query": "SELECT user_id, winner_id as \"winner_id: UserId\" FROM game_complete_votes WHERE game_id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "user_id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "winner_id: UserId",
+          "type_info": "Uuid"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        true
+      ]
     }
   },
   "fd61789aa42b29dbcec6fa7b6de14e16c4fe2ac76470fd427e8576014c173138": {
