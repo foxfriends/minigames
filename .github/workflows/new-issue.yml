@@ -1,0 +1,15 @@
+name: New Issue
+on:
+  issues:
+    types: [opened]
+env:
+  PROJECT_ID: 2
+jobs:
+  add_to_project:
+    steps:
+      - name: Add issue to project
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+        run: |
+          gh api graphql -f query='mutation($project: ID!, $issue: ID!) { addProjectNextItem(input: {projectId: $project, contentId: $issue}) { projectNextItem { id } } }' -F project=$PROJECT_ID -f issue=$ISSUE_ID
