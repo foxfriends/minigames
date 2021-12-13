@@ -59,13 +59,32 @@ export const challenge: Command = {
     },
   ],
 
-  handleInteraction({ guildId, user, data }: DiscordenoInteraction): Task {
+  handleInteraction({ guildId, user, data, ...interaction }: DiscordenoInteraction): Task {
     // deno-lint-ignore no-explicit-any
     return task(async function* (): AsyncGenerator<Task, void, any> {
-      const challengedUserId = userOption(
-        data!.options!.find(whereEq({ name: "user" }))!,
-      );
+      const challengedUserId = userOption(data!.options!.find(whereEq({ name: "user" }))!);
       const challengerUserId = user.id;
+      if (challengedUserId === challengerUserId) {
+        yield respond({
+          type: InteractionResponseTypes.ChannelMessageWithSource,
+          private: true,
+          data: {
+            content: "You cannot challenge yourself, that would be too easy.",
+          },
+        });
+        return;
+      }
+      const challengedUser = data!.resolved!.users!.get(challengedUserId);
+      if (challengedUser?.bot) {
+        yield respond({
+          type: InteractionResponseTypes.ChannelMessageWithSource,
+          private: true,
+          data: {
+            content: "You cannot challenge a bot, they wouldn't stand a chance.",
+          },
+        });
+        return;
+      }
       // deno-fmt-ignore
       const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? (yield pickRandomGame())}`;
       const gameId: string = yield createChallenge({
