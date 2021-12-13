@@ -59,7 +59,7 @@ export const challenge: Command = {
     },
   ],
 
-  handleInteraction({ guildId, user, data, ...interaction }: DiscordenoInteraction): Task {
+  handleInteraction({ guildId, user, data }: DiscordenoInteraction): Task {
     // deno-lint-ignore no-explicit-any
     return task(async function* (): AsyncGenerator<Task, void, any> {
       const challengedUserId = userOption(data!.options!.find(whereEq({ name: "user" }))!);
