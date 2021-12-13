@@ -9,7 +9,7 @@ async function confirmUser(token) {
     const { userId } = await validate(token);
     return userId;
   } catch (error) {
-    console.warn('User could not be determined:', error);
+    console.warn("User could not be determined:", error);
     return null;
   }
 }
