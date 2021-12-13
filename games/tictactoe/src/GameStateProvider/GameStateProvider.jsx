@@ -32,9 +32,8 @@ export function useGameState() {
 
 export default function GameStateProvider({ gameId, token, children }) {
   const [state, setState] = useState(DEFAULT);
-  const socket = useWebSocket(
-    `${import.meta.env.VITE_SOCKET_URL}?token=${token}`,
-  );
+  // prettier-ignore
+  const socket = useWebSocket(`${import.meta.env.VITE_SOCKET_URL}?token=${token}`);
 
   const onMessage = useCallback(
     (message) => {
