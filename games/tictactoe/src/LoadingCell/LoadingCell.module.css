@@ -1,0 +1,12 @@
+@keyframes LoadingCell {
+  0% { background-color: var(--color--background); }
+  40% { background-color: transparent; }
+  80% { background-color: var(--color--background); }
+}
+
+.cell {
+  background-color: var(--color--background);
+  animation-name: LoadingCell;
+  animation-duration: 2000ms;
+  animation-iteration-count: infinite;
+}

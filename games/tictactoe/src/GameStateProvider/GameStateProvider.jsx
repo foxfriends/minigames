@@ -24,14 +24,14 @@ const DEFAULT = {
   ],
 };
 
-const GameStateContext = createContext(DEFAULT);
+const GameStateContext = createContext();
 
 export function useGameState() {
   return useContext(GameStateContext);
 }
 
 export default function GameStateProvider({ gameId, token, children }) {
-  const [state, setState] = useState(DEFAULT);
+  const [state, setState] = useState();
   // prettier-ignore
   const socket = useWebSocket(`${import.meta.env.VITE_SOCKET_URL}?token=${token}`);
 
