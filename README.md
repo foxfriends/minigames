@@ -21,15 +21,16 @@ Once installed, use `cargo` to further install [sqlx-cli][] (with at least the `
 You'll also be needing an ES256 key, which is easiest generated with [OpenSSL][], so maybe install that too.
 
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
-2.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
-3.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
-4.  Use OpenSSL to generate the RS256 key for signing JWTs:
+2.  Set up an OAuth2 redirect for the `/play` route of where you will be running the server (likely `http://localhost:8000/play`)
+3.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
+4.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
+5.  Use OpenSSL to generate the RS256 key for signing JWTs:
     ```sh
     openssl genrsa -out jwt.pem
     ```
-5.  Create the database with `sqlx database create`.
-6.  Migrate the database with `sqlx migrate run`.
-7.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
+6.  Create the database with `sqlx database create`.
+7.  Migrate the database with `sqlx migrate run`.
+8.  Add the bot to the Discord server you wish to add it to by visiting the link output by `bot/scripts/add`.
 
 [Node.js]: https://nodejs.org/en/
 [Deno]: https://deno.land/
