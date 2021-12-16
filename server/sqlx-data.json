@@ -73,6 +73,32 @@
       ]
     }
   },
+  "5ca0e08ec97421b61a2fe30c0da9aede0efc78102c45f5af0857c03cff22474a": {
+    "query": "SELECT user_id as \"user_id: UserId\", is_challenger FROM game_participants WHERE game_id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "user_id: UserId",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "is_challenger",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false
+      ]
+    }
+  },
   "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
     "query": "INSERT INTO game_participants (game_id, user_id) VALUES ($1, $2)",
     "describe": {

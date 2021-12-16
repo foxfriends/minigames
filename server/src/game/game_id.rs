@@ -1,6 +1,8 @@
 use rocket::form::{self, Errors, FromFormField, ValueField};
+use rocket::request::FromParam;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 use uuid::Uuid;
 
 #[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash, sqlx::Type)]
@@ -25,5 +27,13 @@ impl<'r> FromFormField<'r> for GameId {
             Ok(value) => Ok(Self(value)),
             Err(..) => Err(Errors::from(vec![field.unexpected()])),
         }
+    }
+}
+
+impl<'a> FromParam<'a> for GameId {
+    type Error = <Uuid as FromStr>::Err;
+
+    fn from_param(param: &'a str) -> Result<Self, Self::Error> {
+        Ok(Self(param.parse()?))
     }
 }

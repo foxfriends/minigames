@@ -1,6 +1,4 @@
-use super::GameId;
-use super::GameName;
-use super::GameState;
+use super::{GameId, GameName, GameParticipant, GameState};
 use crate::guild::GuildId;
 use crate::user::{User, UserId};
 use sqlx::postgres::{PgConnection, Postgres};
@@ -75,6 +73,19 @@ impl Game {
         .await?
         .exists
         .unwrap_or(false))
+    }
+
+    pub async fn participants(
+        &self,
+        conn: &mut PgConnection,
+    ) -> anyhow::Result<Vec<GameParticipant>> {
+        Ok(sqlx::query_as!(
+            GameParticipant,
+            r#"SELECT user_id as "user_id: UserId", is_challenger FROM game_participants WHERE game_id = $1"#,
+            self.id as GameId,
+        )
+        .fetch_all(conn)
+        .await?)
     }
 
     pub async fn vote_result(
