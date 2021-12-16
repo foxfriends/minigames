@@ -75,38 +75,40 @@ async fn handle_connection(
     context.peer_map().add(addr, send).await;
 
     let receiver = from_socket
-        .filter_map(|event| async move {
-            let msg = event.ok()?;
-            let text = msg.into_text().ok()?;
-            match serde_json::from_str(&text) {
-                Ok(value) => Some(value),
-                Err(..) => {
-                    eprintln!("Received invalid message: {}", text);
-                    None
-                }
-            }
-        })
+        .filter_map(|event| async move { event.ok() })
         .for_each({
-            // Not that it matters... it's just a few Arc anyway.
-            let context = context.clone();
-            let claims = claims.as_ref();
-            move |Event { id, payload }: Event<Action>| {
-                let context = context.to_handler_context(addr, claims, id);
+            |message| {
+                let context = context.clone();
+                let claims = claims.as_ref();
                 async move {
-                    println!("Message received from {}: {:?}", addr, payload);
-                    if let Err(error) = handle_action(&context, payload).await {
-                        // TODO: real errors?
-                        context.respond_error(error.to_string()).await;
+                    match message {
+                        Message::Ping(payload) => context.send(addr, Message::Pong(payload)).await,
+                        Message::Text(ref json) => {
+                            let Event { id, payload } = match serde_json::from_str(json) {
+                                Ok(value) => value,
+                                Err(..) => {
+                                    eprintln!("Received invalid JSON in message: {}", json);
+                                    return;
+                                }
+                            };
+
+                            let context = context.to_handler_context(addr, claims, id);
+                            println!("Message received from {}: {:?}", addr, payload);
+                            if let Err(error) = handle_action(&context, payload).await {
+                                // TODO: real errors?
+                                context.respond_error(error.to_string()).await;
+                            }
+                        }
+                        _ => {
+                            eprintln!("Received unexpected message: {:?}", message);
+                        }
                     }
                 }
             }
         });
 
     let sender = UnboundedReceiverStream::new(recv)
-        .map(|event| {
-            let json = serde_json::to_string(&event).unwrap();
-            Ok(Message::text(json))
-        })
+        .map(Ok)
         .forward(to_socket);
 
     pin_mut!(receiver, sender);

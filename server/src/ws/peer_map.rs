@@ -1,11 +1,11 @@
-use super::event::{Event, Response};
 use std::collections::{HashMap, HashSet};
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::mpsc::UnboundedSender;
 use tokio::sync::Mutex;
+use tungstenite::Message;
 
-pub type Responder = UnboundedSender<Event<Response>>;
+pub type Responder = UnboundedSender<Message>;
 
 #[derive(Clone, Default)]
 pub struct PeerMap(Arc<Mutex<HashMap<SocketAddr, Responder>>>);
@@ -16,7 +16,7 @@ impl PeerMap {
         map.insert(addr, responder);
     }
 
-    pub async fn send_to(&self, addr: SocketAddr, event: Event<Response>) {
+    pub async fn send_to(&self, addr: SocketAddr, event: Message) {
         let map = self.0.lock().await;
         if let Some(responder) = map.get(&addr) {
             responder.send(event).ok();

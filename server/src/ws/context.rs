@@ -7,6 +7,7 @@ use crate::token::Claims;
 use sqlx::pool::PoolConnection;
 use sqlx::postgres::{PgConnection, Postgres};
 use std::net::SocketAddr;
+use tungstenite::Message;
 
 #[derive(Clone)]
 pub struct Context {
@@ -22,6 +23,10 @@ impl Context {
             peer_map: PeerMap::default(),
             subscription_map: SubscriptionMap::default(),
         }
+    }
+
+    pub async fn send(&self, to_addr: SocketAddr, message: Message) {
+        self.peer_map.send_to(to_addr, message).await;
     }
 
     pub fn peer_map(&self) -> &PeerMap {
@@ -51,8 +56,9 @@ pub struct HandlerContext<'c> {
 }
 
 impl HandlerContext<'_> {
-    async fn send(&self, to_addr: SocketAddr, response: Event<Response>) {
-        self.context.peer_map.send_to(to_addr, response).await;
+    async fn send(&self, to_addr: SocketAddr, event: Event<Response>) {
+        let json = serde_json::to_string(&event).unwrap();
+        self.context.send(to_addr, Message::Text(json)).await;
     }
 
     pub async fn broadcast_state(&self, game_id: GameId, data: GameState) {
