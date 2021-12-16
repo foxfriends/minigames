@@ -99,6 +99,7 @@ async fn handle_connection(
                                 context.respond_error(error.to_string()).await;
                             }
                         }
+                        Message::Close(..) => {}
                         _ => {
                             eprintln!("Received unexpected message: {:?}", message);
                         }

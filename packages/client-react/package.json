@@ -1,0 +1,15 @@
+{
+  "name": "client-react",
+  "version": "1.0.0",
+  "description": "Minigames client for React",
+  "module": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cameron Eldridge",
+  "license": "ISC",
+  "dependencies": {
+    "jose": "^4.3.7",
+    "react": "^17.0.2"
+  }
+}

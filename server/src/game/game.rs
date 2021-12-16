@@ -81,7 +81,7 @@ impl Game {
     ) -> anyhow::Result<Vec<GameParticipant>> {
         Ok(sqlx::query_as!(
             GameParticipant,
-            r#"SELECT user_id as "user_id: UserId", is_challenger FROM game_participants WHERE game_id = $1"#,
+            r#"SELECT user_id as "id: UserId", is_challenger FROM game_participants WHERE game_id = $1"#,
             self.id as GameId,
         )
         .fetch_all(conn)
