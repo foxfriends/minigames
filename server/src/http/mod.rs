@@ -7,10 +7,10 @@ mod response;
 
 mod complete_game;
 mod create_challenge;
-mod get_challenge;
 mod get_public_key;
 mod leaderboard;
 mod list_games;
+mod play_game;
 mod register_game;
 mod unregister_game;
 
@@ -21,8 +21,8 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
             rocket::routes![
                 complete_game::complete_game,
                 create_challenge::create_challenge,
-                get_challenge::get_challenge,
-                get_challenge::complete_oauth2,
+                play_game::play_game,
+                play_game::complete_oauth2,
                 get_public_key::get_public_key,
                 leaderboard::leaderboard,
                 list_games::list_games,

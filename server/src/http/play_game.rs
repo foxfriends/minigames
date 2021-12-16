@@ -23,12 +23,12 @@ fn get_client() -> anyhow::Result<BasicClient> {
         )?),
     )
     .set_redirect_uri(RedirectUrl::new(format!(
-        "{}/play",
+        "{}/challenge",
         env::var("PUBLIC_HTTP_URL")?,
     ))?))
 }
 
-pub async fn actually_play_game(
+pub async fn actually_get_challenge(
     discord_user_token: String,
     game_id: GameId,
     db: &State<PgPool>,
@@ -64,8 +64,8 @@ pub async fn start_oauth2(game_id: GameId, cookies: &CookieJar<'_>) -> Response<
     Ok(Redirect::to(String::from(auth_url)))
 }
 
-#[rocket::get("/play?<game_id>", rank = 1)]
-pub async fn play_game<'r>(
+#[rocket::get("/challenge?<game_id>", rank = 1)]
+pub async fn get_challenge<'r>(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
     cookies: &CookieJar<'r>,
@@ -73,13 +73,13 @@ pub async fn play_game<'r>(
     user_cookie: Option<UserCookie<'r>>,
 ) -> Response<Redirect> {
     if let Some(discord_user_token) = user_cookie {
-        actually_play_game(discord_user_token.value().to_owned(), game_id, db, registry).await
+        actually_get_challenge(discord_user_token.value().to_owned(), game_id, db, registry).await
     } else {
         start_oauth2(game_id, cookies).await
     }
 }
 
-#[rocket::get("/play?<code>&<state>", rank = 2)]
+#[rocket::get("/challenge?<code>&<state>", rank = 2)]
 pub async fn complete_oauth2<'r>(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
@@ -108,5 +108,5 @@ pub async fn complete_oauth2<'r>(
     StateCookie::remove_from(cookies);
     GameCookie::remove_from(cookies);
     let secret = discord_user_token.access_token().secret().to_owned();
-    actually_play_game(secret, game_cookie.value(), db, registry).await
+    actually_get_challenge(secret, game_cookie.value(), db, registry).await
 }

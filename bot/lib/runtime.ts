@@ -39,7 +39,7 @@ export function respond(options: DiscordenoInteractionResponse): Task {
 }
 
 export function getGameUrl(token: string): Task {
-  return ({ webUrl }) => Promise.resolve(`${webUrl}/challenge?game_id=${token}`);
+  return ({ webUrl }) => Promise.resolve(`${webUrl}/play?game_id=${token}`);
 }
 
 export function task(generator: TaskGenerator): Task {
