@@ -1,1 +1,1 @@
-export { default, useMinigame } from './Minigame';
+export { default, useMinigame } from "./Minigame";

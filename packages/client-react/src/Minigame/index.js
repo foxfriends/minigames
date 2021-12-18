@@ -1,1 +1,1 @@
-export { default, useMinigame } from './Minigame.jsx';
+export { default, useMinigame } from "./Minigame.jsx";
