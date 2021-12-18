@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe']
+        game: ['games/tictactoe', 'packages/client-react']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe']
+        game: ['games/tictactoe', 'packages/client-react']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
