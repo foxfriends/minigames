@@ -15,20 +15,21 @@ services:
     init: true
     ports:
       - "8000:8000"
+      - "8001:8001"
     env_file:
       - "./server/.env"
     environment:
       DATABASE_URL: "postgresql://minigames:minigames@postgres:5432/minigames"
       JWT_PEM: "/jwt.pem"
     volumes:
-      - "${PWD}/server/jwt.pem:/jwt.pem"
+      - "./server/jwt.pem:/jwt.pem"
     depends_on:
       - "database"
   postgres:
     image: "postgres:14-alpine"
     init: true
     ports:
-      - "5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: "minigames"
       POSTGRES_PASSWORD: "minigames"

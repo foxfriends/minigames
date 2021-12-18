@@ -6,16 +6,16 @@ use std::io::Read;
 
 lazy_static::lazy_static! {
     pub static ref JWT_KEY: Vec<u8> = {
-        let key_path = env::var("JWT_PEM").unwrap();
-        let mut file = File::open(key_path).unwrap();
+        let key_path = env::var("JWT_PEM").expect("Environment variable JWT_PEM is missing");
+        let mut file = File::open(key_path).expect("File indicated by JWT_PEM could not be found");
         let mut buf = Vec::new();
-        file.read_to_end(&mut buf).unwrap();
+        file.read_to_end(&mut buf).expect("Failed to read JWT_PEM file");
         buf
     };
 
     pub static ref SPKI: String = {
-        let private_key = Rsa::<Private>::private_key_from_pem(&JWT_KEY).unwrap();
-        let public_key_pem = private_key.public_key_to_pem().unwrap();
+        let private_key = Rsa::<Private>::private_key_from_pem(&JWT_KEY).expect("Failed to read private key from JWT_PEM");
+        let public_key_pem = private_key.public_key_to_pem().expect("Failed to extract public key from JWT_PEM");
         String::from_utf8(public_key_pem).unwrap()
     };
 }

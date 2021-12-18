@@ -10,5 +10,6 @@ RUN cargo install --path .
 FROM debian:bullseye-slim
 EXPOSE 8000
 COPY --from=builder /usr/local/cargo/bin/server /usr/local/bin/server
+RUN apt-get update && apt-get install ca-certificates -y && apt-get clean
 
 CMD ["server"]
