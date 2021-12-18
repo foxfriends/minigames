@@ -10,7 +10,7 @@ mod ws;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenv::dotenv()?;
+    dotenv::dotenv().ok();
     let pg_pool = postgres::connect().await?;
     let http_server = http::server(pg_pool.clone());
     let ws_server = ws::server(pg_pool);
