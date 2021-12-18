@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe', 'packages/client-react']
+        directory: ['games/tictactoe', 'packages/client-react']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -26,15 +26,15 @@ jobs:
           ${{ runner.os }}-
     - name: Install node modules
       run: npm ci
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
     - name: Run lint
       run: npm run lint
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
   stylelint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe']
+        directory: ['games/tictactoe']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -53,17 +53,20 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Prepare local packages
+      run: npm ci
+      working-directory: packages/client-react
     - name: Install node modules
       run: npm ci
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
     - name: Run stylelint
       run: npm run stylelint
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe']
+        directory: ['games/tictactoe']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -84,15 +87,15 @@ jobs:
           ${{ runner.os }}-
     - name: Install node modules
       run: npm ci
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
     - name: Run build
       run: npm run build
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
   fmt:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: ['games/tictactoe', 'packages/client-react']
+        directory: ['games/tictactoe', 'packages/client-react']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -113,7 +116,7 @@ jobs:
           ${{ runner.os }}-
     - name: Install node modules
       run: npm ci
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
     - name: Run fmt
       run: npm run fmt -- --check
-      working-directory: ${{ matrix.game }}
+      working-directory: ${{ matrix.directory }}
