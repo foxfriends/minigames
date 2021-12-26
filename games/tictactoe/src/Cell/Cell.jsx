@@ -11,7 +11,7 @@ export default function Cell({ value, onClick }) {
     [canSelect],
   );
 
-  const mineClass = mine === X ? x : o;
+  const mineClass = myTurn && (mine === X ? x : o);
   return (
     <div
       className={classes([cell, mineClass, canSelect && available])}

@@ -44,8 +44,15 @@ export default function TicTacToe({ children }) {
     };
   });
 
-  const mine = gameState && gameState.x === me ? X : O;
-  const theirs = gameState && gameState.x === me ? O : X;
+  let mine;
+  let theirs;
+  if (gameState.x === me) {
+    mine = X;
+    theirs = O;
+  } else if (gameState.o === me) {
+    mine = O;
+    theirs = X;
+  }
   const myTurn = gameState?.turn === mine;
 
   function cellLens(cellIndex) {
