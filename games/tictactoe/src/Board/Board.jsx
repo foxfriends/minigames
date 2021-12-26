@@ -12,5 +12,6 @@ export default function Board() {
     gameState?.cells?.map((cell, i) => (
       <Cell key={i} {...cell} onClick={() => select(i)} />
     )) ?? range(0, 9).map((i) => <LoadingCell key={i} index={i} />);
+
   return <div className={board}>{cells}</div>;
 }

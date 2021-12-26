@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from "react";
-import { useMinigame, useInitialState } from "@minigames/react";
+import { useInitialState, useGameInfo, useGameState } from "@minigames/react";
+import { version } from "../../package.json";
 import { X, O } from "./constants";
 import * as lens from "../util/lens";
 import * as fn from "../util/fn";
@@ -11,7 +12,8 @@ export function useTicTacToe() {
 }
 
 export default function TicTacToe({ children }) {
-  const { gameState, setGameState, players, me } = useMinigame();
+  const [gameState, setGameState] = useGameState();
+  const { players, me } = useGameInfo();
 
   function updateGameState(fn) {
     setGameState(fn(gameState));
@@ -20,6 +22,7 @@ export default function TicTacToe({ children }) {
   useInitialState(() => {
     const x = Math.floor(Math.random() * 2);
     return {
+      version,
       turn: X,
       x: players[x].id,
       o: players[1 - x].id,

@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import { useMinigame } from "../Minigame";
+import { useGameState } from "../GameStateProvider";
+import { useGameInfo } from "../GameInfoProvider";
 
 export default function useInitialState(makeState) {
-  const { gameState, setGameState, loading, players, me } = useMinigame();
+  const [gameState, setGameState] = useGameState();
+  const { loading, players, me } = useGameInfo();
 
   useEffect(async () => {
     if (

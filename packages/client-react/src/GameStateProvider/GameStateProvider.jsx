@@ -1,9 +1,17 @@
-import { useCallback, useState } from "react";
+import React, { createContext, useContext, useCallback, useState } from "react";
 import * as event from "../common/event";
-import useEvent from "./useEvent";
-import useWebSocket from "./useWebSocket";
+import useEvent from "../hooks/useEvent";
+import useWebSocket from "../hooks/useWebSocket";
+import { useGameMetaData } from "../GameMetaDataProvider";
 
-export default function useGameState(gameId, { socketUrl, token }) {
+const GameStateContext = createContext();
+
+export function useGameState() {
+  return useContext(GameStateContext);
+}
+
+export default function GameStateProvider({ children }) {
+  const { gameId, socketUrl, token } = useGameMetaData();
   const [state, setState] = useState();
   const socket = useWebSocket(`${socketUrl}?token=${token}`);
 
@@ -29,5 +37,9 @@ export default function useGameState(gameId, { socketUrl, token }) {
     socket.send(event.set(gameId, newState));
   }
 
-  return [state, setGameState];
+  return (
+    <GameStateContext.Provider value={[state, setGameState]}>
+      {children}
+    </GameStateContext.Provider>
+  );
 }
