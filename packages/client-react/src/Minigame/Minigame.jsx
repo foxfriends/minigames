@@ -12,17 +12,23 @@ export default function Minigame({
   // React
   children,
 }) {
-  if (process.env.NODE_ENV === 'development') {
-    useEffect(() => console.log(`%c${name}%c is running in debug mode. Be sure not to deploy development mode to a real server!`, 'font-weight: bold', 'font-weight: default'), []);
+  if (process.env.NODE_ENV === "development") {
+    useEffect(
+      () =>
+        console.log(
+          `%c${name}%c is running in debug mode. Be sure not to deploy development mode to a real server!`,
+          "font-weight: bold",
+          "font-weight: default",
+        ),
+      [],
+    );
     // TODO: expose some debug stuff?
   }
 
   return (
     <GameMetaDataProvider name={name} socketUrl={socketUrl} apiUrl={apiUrl}>
       <GameInfoProvider>
-        <GameStateProvider>
-          {children}
-        </GameStateProvider>
+        <GameStateProvider>{children}</GameStateProvider>
       </GameInfoProvider>
     </GameMetaDataProvider>
   );

@@ -12,7 +12,7 @@ export default function useInitialState(makeState) {
       !loading &&
       players?.find(({ id }) => id === me)?.isChallenger
     ) {
-      setGameState(await makeState())
+      setGameState(await makeState());
     }
   }, [gameState, loading]);
 }

@@ -11,7 +11,7 @@ export default function useWinner(computeWinner) {
         }),
       });
       if (response.status !== 200) {
-        console.error(await response.json())
+        console.error(await response.json());
         return;
       }
     }
