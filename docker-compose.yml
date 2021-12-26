@@ -5,7 +5,6 @@ services:
     init: true
     environment:
       - "API_URL=http://server:8000"
-      - "WEB_URL=http://localhost:8000"
     env_file:
       - "./bot/.env"
     depends_on:
