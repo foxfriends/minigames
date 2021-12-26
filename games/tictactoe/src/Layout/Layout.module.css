@@ -5,7 +5,7 @@
   grid-template:
     ".   prompt ." 1fr
     ".   board  ." auto
-    ".   .      ." 1fr
+    ".   player ." 1fr
     / 1fr auto 1fr;
   gap: 2rem;
 }
@@ -20,4 +20,12 @@
   justify-self: center;
   font-size: 2rem;
   color: var(--color--foreground);
+}
+
+.player {
+  grid-area: player;
+  align-self: start;
+  justify-self: center;
+  color: var(--color--foreground);
+  opacity: 0.5;
 }

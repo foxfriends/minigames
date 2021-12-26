@@ -5,7 +5,7 @@ import Board from "../Board";
 import Slot from "../Slot";
 
 export default function App() {
-  const { gameState } = useTicTacToe();
+  const { gameState, mine } = useTicTacToe();
 
   let prompt = "";
   if (gameState) {
@@ -15,8 +15,8 @@ export default function App() {
   return (
     <Layout>
       <Slot name="prompt">{prompt}</Slot>
-
       <Board />
+      <Slot name="player">You are {mark(mine)}</Slot>
     </Layout>
   );
 }
