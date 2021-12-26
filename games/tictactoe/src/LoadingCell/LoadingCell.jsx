@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { cell } from "./LoadingCell.module.css";
 
 export default function LoadingCell({ index }) {

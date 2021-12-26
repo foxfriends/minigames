@@ -6,3 +6,19 @@
   background-color: var(--color--background);
   color: var(--color--foreground);
 }
+
+.available {
+  cursor: pointer;
+}
+
+.available.x:hover::after {
+  content: "✕";
+}
+
+.available.o:hover::after {
+  content: "◯";
+}
+
+.available::after {
+  opacity: 0.25;
+}

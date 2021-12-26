@@ -1,6 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
 import Minigame from "@minigames/react";
+import TicTacToe from "./TicTacToe";
 import App from "./App";
 import "./index.css";
 
@@ -10,7 +11,9 @@ render(
     apiUrl={import.meta.env.VITE_API_URL}
     socketUrl={import.meta.env.VITE_SOCKET_URL}
   >
-    <App />
+    <TicTacToe>
+      <App />
+    </TicTacToe>
   </Minigame>,
   document.querySelector("#app"),
 );

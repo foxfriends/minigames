@@ -1,38 +1,21 @@
-import React, { useEffect } from "react";
-import { useMinigame } from "@minigames/react";
+import React from "react";
+import { useTicTacToe, mark } from "../TicTacToe";
 import Layout from "../Layout";
 import Board from "../Board";
+import Slot from "../Slot";
 
 export default function App() {
-  const { gameState, setGameState, me, players } = useMinigame();
+  const { gameState } = useTicTacToe();
 
-  // TODO: this is not a particularly elegant way to set up the initial state...
-  useEffect(() => {
-    if (
-      gameState === null &&
-      players?.find(({ id }) => id === me)?.isChallenger
-    ) {
-      const x = Math.floor(Math.random() * 2);
-      setGameState({
-        x: players[x].id,
-        o: players[1 - x].id,
-        cells: [
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-          { value: null },
-        ],
-      });
-    }
-  }, [gameState, me, players]);
+  let prompt = "";
+  if (gameState) {
+    prompt = `${mark(gameState.turn)}'s turn`;
+  }
 
   return (
     <Layout>
+      <Slot name="prompt">{prompt}</Slot>
+
       <Board />
     </Layout>
   );

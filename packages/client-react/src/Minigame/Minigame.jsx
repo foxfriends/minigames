@@ -22,6 +22,7 @@ export default function Minigame({
   const token = params.get("token");
 
   const [gameState, setGameState] = useGameState(gameId, { socketUrl, token });
+
   const [gameInfo, setGameInfo] = useState(null);
 
   useEffect(async () => {
@@ -44,6 +45,11 @@ export default function Minigame({
     gameState,
     setGameState,
   };
+
+  if (process.env.NODE_ENV === 'development') {
+    useEffect(() => console.log(`%c${name}%c is running in debug mode. Global variable "_MinigamesDebug_" describes internal game state. Be sure not to run in development mode on production!`, 'font-weight: bold', 'font-weight: default'), []);
+    useEffect(() => window._MinigamesDebug_ = minigame, [minigame]);
+  }
 
   return (
     <MinigameContext.Provider value={minigame}>
