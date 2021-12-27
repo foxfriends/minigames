@@ -1,9 +1,11 @@
 import React, { createContext, useContext } from "react";
-import { useInitialState, useGameInfo, useGameState } from "@minigames/react";
-import { version } from "../../package.json";
+import { useGameInfo, useGameState } from "@minigames/react";
+import useInitialTicTacToeState from "./components/initialState";
+import useTicTacToeWinner from "./components/winner";
 import { X, O } from "./constants";
 import * as lens from "../util/lens";
 import * as fn from "../util/fn";
+import win from "./win";
 
 const TicTacToeContext = createContext();
 
@@ -12,47 +14,28 @@ export function useTicTacToe() {
 }
 
 export default function TicTacToe({ children }) {
+  useInitialTicTacToeState();
+  useTicTacToeWinner();
+
   const [gameState, setGameState] = useGameState();
-  const { players, me } = useGameInfo();
+  const { me } = useGameInfo();
 
   function updateGameState(fn) {
     setGameState(fn(gameState));
   }
 
-  useInitialState(() => {
-    const x = Math.floor(Math.random() * 2);
-    return {
-      version,
-      turn: X,
-      x: players[x].id,
-      o: players[1 - x].id,
-      // The board is arranged this way:
-      //   0 1 2
-      //   3 4 5
-      //   6 7 8
-      cells: [
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-        { value: null },
-      ],
-    };
-  });
-
   let mine;
   let theirs;
-  if (gameState.x === me) {
-    mine = X;
-    theirs = O;
-  } else if (gameState.o === me) {
-    mine = O;
-    theirs = X;
+  if (gameState) {
+    if (gameState.x === me) {
+      mine = X;
+      theirs = O;
+    } else if (gameState.o === me) {
+      mine = O;
+      theirs = X;
+    }
   }
+
   const myTurn = gameState?.turn === mine;
 
   function cellLens(cellIndex) {
@@ -74,12 +57,17 @@ export default function TicTacToe({ children }) {
     );
   }
 
+  const winningCells = gameState && win(gameState);
+  const winner = gameState?.cells?.[winningCells?.[0]]?.value;
+
   const tictactoe = {
     gameState,
     mine,
     theirs,
     myTurn,
     select,
+    winningCells,
+    winner,
   };
 
   return (

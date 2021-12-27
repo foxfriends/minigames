@@ -4,8 +4,8 @@ import { cell, available, x, o } from "./Cell.module.css";
 import classes from "../util/classes";
 
 export default function Cell({ value, onClick }) {
-  const { gameState, mine, myTurn } = useTicTacToe();
-  const canSelect = myTurn && !value;
+  const { gameState, mine, myTurn, winner } = useTicTacToe();
+  const canSelect = myTurn && !value && !winner;
   const selectIfAvailable = useCallback(
     () => canSelect && onClick(),
     [canSelect],
