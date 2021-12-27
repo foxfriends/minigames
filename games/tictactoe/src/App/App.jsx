@@ -18,11 +18,16 @@ export default function App() {
     prompt = `${mark(gameState.turn)}'s turn`;
   }
 
+  let playerLabel = "";
+  if (gameState) {
+    playerLabel = `You are ${player(mine)}`;
+  }
+
   return (
     <Layout>
       <Slot name="prompt">{prompt}</Slot>
       <Board />
-      <Slot name="player">You are {player(mine)}</Slot>
+      <Slot name="player">{playerLabel}</Slot>
     </Layout>
   );
 }
