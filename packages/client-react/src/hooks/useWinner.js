@@ -9,15 +9,19 @@ export default function useWinner(computeWinner) {
   const [gameState] = useGameState();
 
   useEffect(async () => {
-    if (!players?.find((player) => player.id === me)) { return; }
-    if (!gameState) { return; }
+    if (!players?.find((player) => player.id === me)) {
+      return;
+    }
+    if (!gameState) {
+      return;
+    }
     const winnerId = await computeWinner(gameState);
     if (winnerId) {
       const response = await fetch(`${apiUrl}/complete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ gameId, winnerId }),
       });
