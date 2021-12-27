@@ -118,5 +118,5 @@ jobs:
       run: npm ci
       working-directory: ${{ matrix.directory }}
     - name: Run fmt
-      run: npm run fmt -- --check
+      run: npx prettier . --check
       working-directory: ${{ matrix.directory }}
