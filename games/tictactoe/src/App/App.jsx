@@ -8,7 +8,7 @@ export default function App() {
   const { gameState, mine, winner } = useTicTacToe();
 
   function player(symbol) {
-    return mark(symbol) ?? 'spectating';
+    return mark(symbol) ?? "spectating";
   }
 
   let prompt = "";
