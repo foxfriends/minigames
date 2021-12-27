@@ -203,7 +203,7 @@
         "Left": [
           "Uuid",
           "Int8",
-          "Uuid"
+          "Int8"
         ]
       },
       "nullable": []
@@ -221,7 +221,7 @@
         {
           "ordinal": 1,
           "name": "winner_id: UserId",
-          "type_info": "Uuid"
+          "type_info": "Int8"
         }
       ],
       "parameters": {
