@@ -12,6 +12,6 @@ const WIN = [
 export default function win({ cells }) {
   return WIN.find((pattern) => {
     const values = new Set(pattern.map((i) => cells[i].value));
-    return values.size === 1;
+    return values.size === 1 && !values.has(null);
   });
 }

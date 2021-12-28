@@ -12,6 +12,7 @@
 
 .board {
   grid-area: board;
+  position: relative;
 }
 
 .prompt {

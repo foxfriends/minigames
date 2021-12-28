@@ -5,3 +5,15 @@
   gap: 2px;
   background-color: var(--color--divider);
 }
+
+.line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  stroke: var(--color--foreground);
+  stroke-width: 0.05;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
