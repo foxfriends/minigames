@@ -1,5 +1,6 @@
 use super::response::Response;
 use crate::game::{Game, GameId, GameName, GameParticipant};
+use crate::user::UserId;
 use crate::postgres::PgPool;
 use rocket::serde::json::Json;
 use rocket::State;
@@ -9,6 +10,8 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct GetGameResponse {
     players: Vec<GameParticipant>,
+    is_complete: bool,
+    winner_id: Option<UserId>,
 }
 
 #[rocket::get("/games/<_game>/<id>")]
@@ -22,6 +25,11 @@ pub async fn get_game(
     let mut conn = db.acquire().await?;
     let game = Game::load(id, &mut conn).await?;
     let players = game.participants(&mut conn).await?;
+    let winner_id = game.check_winner(&mut conn).await?;
 
-    Ok(Json(GetGameResponse { players }))
+    Ok(Json(GetGameResponse {
+        players,
+        is_complete: winner_id.is_some(),
+        winner_id: winner_id.flatten(),
+    }))
 }
