@@ -14,6 +14,8 @@ export default function App() {
   let prompt = "";
   if (winner) {
     prompt = `${mark(winner)} wins`;
+  } else if (gameState?.cells.every((cell) => cell.value)) {
+    prompt = "It's a draw";
   } else if (gameState) {
     prompt = `${mark(gameState.turn)}'s turn`;
   }
