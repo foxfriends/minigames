@@ -22,7 +22,12 @@ export default function Board() {
 
     winningLine = (
       <svg className={line} viewBox="0 0 6 6">
-        <line x1={left * 2 + 1} y1={top * 2 + 1} x2={right * 2 + 1} y2={bottom * 2 + 1} />
+        <line
+          x1={left * 2 + 1}
+          y1={top * 2 + 1}
+          x2={right * 2 + 1}
+          y2={bottom * 2 + 1}
+        />
       </svg>
     );
   }
