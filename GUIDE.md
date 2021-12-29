@@ -108,6 +108,11 @@ other technology, you will need to implement the following pieces yourself.
 
 [React]: https://reactjs.org
 
+### Validate the token
+
+> 🚧 This section is a work in progress. The method by which tokens are validated is
+> likely to change soon.
+
 ### Retrieve game information
 
 The minigame client will likely need to know some information about the game, which
@@ -130,12 +135,12 @@ Content-Type: application/json
     // The user's Discord ID.
     "id": string,
     // Whether this player was the one that initiated the challenge via the Discord bot
-    "is_challenger": boolean 
+    "isChallenger": boolean
   },
   // Whether this game is completed
-  "is_complete": boolean,
+  "isComplete": boolean,
   // The Discord user ID of the winner, or null in the case of a draw or if the game is not complete
-  "winner_id": string | null,
+  "winnerId": string | null,
 }
 ```
 
