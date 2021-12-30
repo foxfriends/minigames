@@ -15,7 +15,7 @@
   "author": "Cameron Eldridge",
   "license": "ISC",
   "dependencies": {
-    "@minigames/react": "file:../../packages/client-react",
+    "@foxfriends/minigames-client-react": "^1.0.0",
     "chalk": "^5.0.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

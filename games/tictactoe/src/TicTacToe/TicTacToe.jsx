@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { useGameInfo, useGameState } from "@minigames/react";
+import { useGameInfo, useGameState } from "@foxfriends/minigames-client-react";
 import useInitialTicTacToeState from "./components/initialState";
 import useTicTacToeWinner from "./components/winner";
 import { X, O } from "./constants";

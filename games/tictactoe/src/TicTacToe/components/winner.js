@@ -1,4 +1,4 @@
-import { useWinner } from "@minigames/react";
+import { useWinner } from "@foxfriends/minigames-client-react";
 import win from "../win";
 
 export default function useTicTacToeWinner() {

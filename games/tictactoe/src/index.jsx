@@ -1,6 +1,6 @@
 import * as React from "react";
 import { render } from "react-dom";
-import Minigame from "@minigames/react";
+import Minigame from "@foxfriends/minigames-client-react";
 import TicTacToe from "./TicTacToe";
 import App from "./App";
 import "./index.css";
