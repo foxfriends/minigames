@@ -28,7 +28,7 @@ jobs:
       run: npm ci
       working-directory: ${{ matrix.directory }}
       env:
-        NPM_TOKEN: ${{ GITHUB_TOKEN }}
+        NPM_TOKEN: ${GITHUB_TOKEN}
     - name: Run lint
       run: npm run lint
       working-directory: ${{ matrix.directory }}
@@ -59,7 +59,7 @@ jobs:
       run: npm ci
       working-directory: ${{ matrix.directory }}
       env:
-        NPM_TOKEN: ${{ GITHUB_TOKEN }}
+        NPM_TOKEN: ${GITHUB_TOKEN}
     - name: Run stylelint
       run: npm run stylelint
       working-directory: ${{ matrix.directory }}
@@ -90,7 +90,7 @@ jobs:
       run: npm ci
       working-directory: ${{ matrix.directory }}
       env:
-        NPM_TOKEN: ${{ GITHUB_TOKEN }}
+        NPM_TOKEN: ${GITHUB_TOKEN}
     - name: Run build
       run: npm run build
       working-directory: ${{ matrix.directory }}
@@ -121,7 +121,7 @@ jobs:
       run: npm ci
       working-directory: ${{ matrix.directory }}
       env:
-        NPM_TOKEN: ${{ GITHUB_TOKEN }}
+        NPM_TOKEN: ${GITHUB_TOKEN}
     - name: Run fmt
       run: npx prettier . --check
       working-directory: ${{ matrix.directory }}
