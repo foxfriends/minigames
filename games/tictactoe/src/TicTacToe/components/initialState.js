@@ -1,4 +1,7 @@
-import { useInitialState, useGameInfo } from "@foxfriends/minigames-client-react";
+import {
+  useInitialState,
+  useGameInfo,
+} from "@foxfriends/minigames-client-react";
 import { version } from "../../../package.json";
 import { X } from "../constants";
 

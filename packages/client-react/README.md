@@ -8,7 +8,6 @@ This package is currently published on the Github NPM registry. To use it, follo
 the [instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-packages-from-other-organizations)
 on how to configure your NPM for the Github NPM registry, then install `@foxfriends/minigames-client-react`
 
-
 ```sh
 npm install @foxfriends/minigames-client-react
 ```
