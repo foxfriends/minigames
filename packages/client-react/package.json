@@ -1,5 +1,5 @@
 {
-  "name": "client-react",
+  "name": "@foxfriends/minigames-client-react",
   "version": "1.0.0",
   "description": "Minigames client for React",
   "module": "src/index.js",
@@ -8,6 +8,7 @@
     "fmt": "prettier . --write"
   },
   "author": "Cameron Eldridge",
+  "repository": "git://github.com/foxfriends/minigames.git",
   "license": "ISC",
   "dependencies": {
     "jose": "^4.3.7",
@@ -18,5 +19,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.27.1",
     "prettier": "^2.5.1"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   }
 }
