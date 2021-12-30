@@ -4,15 +4,14 @@ Client library for developing games for the Discord bot.
 
 ## Installation
 
-This package is **not** currently published on NPM. Instead, install it from the
-repository (using GitPkg) as follows:
+This package is currently published on the Github NPM registry. To use it, follow
+the [instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-packages-from-other-organizations)
+on how to configure your NPM for the Github NPM registry, then install `@foxfriends/minigames-client-react`
+
 
 ```sh
-npm install "@minigames/react@https://gitpkg.now.sh/foxfriends/minigames/packages/client-react?main"
+npm install @foxfriends/minigames-client-react
 ```
-
-> For games developed in this repository, you can use `file://` instead, to install it
-> directly. Just be sure to run `npm install` in the `packages/client-react` directory.
 
 ## Usage
 
@@ -28,7 +27,7 @@ usage is as follows:
 ```javascript
 import * as React from "react";
 import { render } from "react-dom";
-import Minigame from "@minigames/react";
+import Minigame from "@foxfriends/minigames-client-react";
 import App from "./App.jsx";
 
 render(
@@ -56,6 +55,8 @@ will be able to interact with the minigame using the following hooks.
 Returns some general information about the game.
 
 ```typescript
+import { useGameInfo } from "@foxfriends/minigames-client-react";
+
 type PlayerInfo = {
   // The Discord user ID of this player.
   id: string;
@@ -91,6 +92,8 @@ Similar to the standard `useState()` hook, the `useGameState()` hook provides a
 way to both get and set the game's current state.
 
 ```typescript
+import { useGameState } from "@foxfriends/minigames-client-react";
+
 const [gameState, setGameState]: [T, (T) => void] = useGameState();
 ```
 
@@ -111,6 +114,8 @@ to ensure that this only gets called once among all clients, and only if the
 game is in fact not initialized.
 
 ```typescript
+import { useInitialState } from "@foxfriends/minigames-client-react";
+
 useInitialState((): T => {
   /* ... */
 });
@@ -136,6 +141,8 @@ time the game state changes, but that's it, so if the win condition relies
 on external data, it might be missed.
 
 ```typescript
+import { useWinner } from "@foxfriends/minigames-client-react";
+
 useWinner((gameState: T): string | null | undefined => {
   /* ... */
 });
