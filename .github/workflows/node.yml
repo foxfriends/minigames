@@ -27,6 +27,8 @@ jobs:
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
+      env:
+        NPM_TOKEN: ${{ GITHUB_TOKEN }}
     - name: Run lint
       run: npm run lint
       working-directory: ${{ matrix.directory }}
@@ -56,6 +58,8 @@ jobs:
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
+      env:
+        NPM_TOKEN: ${{ GITHUB_TOKEN }}
     - name: Run stylelint
       run: npm run stylelint
       working-directory: ${{ matrix.directory }}
@@ -82,12 +86,11 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Prepare local packages
-      run: npm ci
-      working-directory: packages/client-react
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
+      env:
+        NPM_TOKEN: ${{ GITHUB_TOKEN }}
     - name: Run build
       run: npm run build
       working-directory: ${{ matrix.directory }}
@@ -117,6 +120,8 @@ jobs:
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
+      env:
+        NPM_TOKEN: ${{ GITHUB_TOKEN }}
     - name: Run fmt
       run: npx prettier . --check
       working-directory: ${{ matrix.directory }}
