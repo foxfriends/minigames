@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "fmt": "prettier . --write",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
