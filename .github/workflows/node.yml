@@ -24,6 +24,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Patch .npmrc
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+      working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
@@ -55,6 +59,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Patch .npmrc
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+      working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
@@ -86,6 +94,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Patch .npmrc
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+      working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
@@ -117,6 +129,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Patch .npmrc
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+      working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
