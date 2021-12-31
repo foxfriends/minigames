@@ -1,8 +1,8 @@
+import minigame from "@foxfriends/minigames-server-express";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import chalk from "chalk";
 import config from "./vite.config.js";
-import minigame from "@foxfriends/minigames-server-express";
 
 const {
   NODE_ENV = "development",
