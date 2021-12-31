@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "Minigame server components for Express",
   "module": "lib/index.js",
+  "main": "lib/index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint .",
