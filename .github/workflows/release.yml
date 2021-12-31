@@ -38,6 +38,6 @@ jobs:
         with:
           context: ${{ matrix.directory }}
           push: true
-          tags: foxfriends/${{ matrix.image }}:latest
+          tags: ghcr.io/foxfriends/${{ matrix.image }}:latest
           build-args: |
             NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}
