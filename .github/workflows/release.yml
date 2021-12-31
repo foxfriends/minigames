@@ -40,3 +40,5 @@ jobs:
           context: ${{ matrix.directory }}
           push: true
           tags: latest
+          build-args: |
+            NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}
