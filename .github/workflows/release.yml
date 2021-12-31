@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    branches: ['release']
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ['bot', 'server', 'database', 'games/tictactoe']
+        include:
+          - directory: bot
+            image: minigames-bot
+          - directory: server
+            image: minigames-server
+          - directory: database
+            image: minigames-database
+          - directory: games/tictactoe
+            image: minigame-tictactoe
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Log in to the Container registry
+        uses: docker/login-action
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action
+        with:
+          context: ${{ matrix.directory }}
+          push: true
+          tags: [latest]
