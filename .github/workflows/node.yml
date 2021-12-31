@@ -26,13 +26,11 @@ jobs:
           ${{ runner.os }}-
     - name: Patch .npmrc
       run: |
-        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
       working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Run lint
       run: npm run lint
       working-directory: ${{ matrix.directory }}
@@ -61,13 +59,11 @@ jobs:
           ${{ runner.os }}-
     - name: Patch .npmrc
       run: |
-        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
       working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Run stylelint
       run: npm run stylelint
       working-directory: ${{ matrix.directory }}
@@ -96,13 +92,11 @@ jobs:
           ${{ runner.os }}-
     - name: Patch .npmrc
       run: |
-        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
       working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Run build
       run: npm run build
       working-directory: ${{ matrix.directory }}
@@ -131,13 +125,11 @@ jobs:
           ${{ runner.os }}-
     - name: Patch .npmrc
       run: |
-        echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
       working-directory: ${{ matrix.directory }}
     - name: Install node modules
       run: npm ci
       working-directory: ${{ matrix.directory }}
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Run fmt
       run: npx prettier . --check
       working-directory: ${{ matrix.directory }}
