@@ -1,0 +1,39 @@
+{
+  "name": "@foxfriends/minigames-server-express",
+  "version": "1.0.0",
+  "description": "Minigame server components for Express",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "tslint -p tslint.json",
+    "fmt": "prettier . --write",
+    "prepare": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/foxfriends/minigames.git"
+  },
+  "author": "Cameron Eldridge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/foxfriends/minigames/issues"
+  },
+  "homepage": "https://github.com/foxfriends/minigames#readme",
+  "dependencies": {
+    "node-fetch": "^3.1.0"
+  },
+  "engines": {
+    "node": "17.*",
+    "npm": "8.*"
+  },
+  "devDependencies": {
+    "@types/connect": "^3.4.35",
+    "@types/node": "^17.0.5",
+    "@types/node-fetch": "^3.0.3",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.5.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.4"
+  },
+  "files": ["lib/*"]
+}
