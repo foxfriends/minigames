@@ -18,9 +18,9 @@ export default function minigame({
 }: Options) {
   return function run(
     app: Server,
-    callback: (error?: any) => () => {} | undefined,
+    callback: (error?: unknown) => (() => unknown) | undefined,
   ) {
-    let onclose: () => {} | undefined;
+    let onclose: (() => unknown) | undefined;
 
     const server = app.listen(port, async () => {
       try {
