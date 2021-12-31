@@ -39,4 +39,4 @@ jobs:
         with:
           context: ${{ matrix.directory }}
           push: true
-          tags: [latest]
+          tags: latest
