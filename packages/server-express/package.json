@@ -1,6 +1,6 @@
 {
   "name": "@foxfriends/minigames-server-express",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Minigame server components for Express",
   "module": "lib/index.js",
   "type": "module",
