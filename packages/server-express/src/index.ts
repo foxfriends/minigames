@@ -18,7 +18,7 @@ export default function minigame({
 }: Options) {
   return function run(
     app: Server,
-    callback: (error?: Error) => () => {} | undefined,
+    callback: (error?: any) => () => {} | undefined,
   ) {
     let onclose: () => {} | undefined;
 
