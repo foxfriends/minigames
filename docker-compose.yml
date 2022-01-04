@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   bot:
-    build: "./bot"
+    image: "ghcr.io/foxfriends/minigames-bot:latest"
     init: true
     environment:
       - "API_URL=http://server:8000"
@@ -10,7 +10,7 @@ services:
     depends_on:
       - "server"
   server:
-    build: "./server"
+    image: "ghcr.io/foxfriends/minigames-server:latest"
     init: true
     ports:
       - "8000:8000"
@@ -36,7 +36,7 @@ services:
     volumes:
       - "postgres:/var/lib/postgresql/data"
   database:
-    build: "./database"
+    image: "ghcr.io/foxfriends/minigames-database:latest"
     init: true
     environment:
       DATABASE_URL: "postgresql://minigames:minigames@postgres:5432/minigames"

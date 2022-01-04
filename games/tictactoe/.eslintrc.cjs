@@ -14,7 +14,7 @@ module.exports = {
   extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
   overrides: [
     {
-      files: "server.js",
+      files: ["server.js", "vite.config.js"],
       env: {
         browser: false,
         node: true,
