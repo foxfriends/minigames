@@ -30,7 +30,7 @@ Before running the project by any method, the following setup steps must be comp
 
 ### Docker
 
-For those who are only planning on building games (e.g. not modifying the bot or server),
+For those who are *only planning on building games* (e.g. not modifying the bot or server),
 the `docker-compose.yml` in the root of this repository describes everything required to run the
 bot and server. Install [Docker][] and [docker-compose][] and you will be able to run the server
 with just `docker-compose up`.
@@ -38,9 +38,10 @@ with just `docker-compose up`.
 [Docker]: https://www.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
 
-This `docker-compose` builds images containing the server, bot, and database, so it will take some
-time. Using Docker for developing the server and bot are not recommended for that reason.
-Instead, follow the instructions below to run the bot and server directly on your machine.
+This `docker-compose` uses the images published on the GitHub container registry. When run
+this way, they have nothing to do with the source code on your system. __Using Docker for
+developing the server and bot is not recommended for that reason__. Instead, follow the
+instructions below to run the bot and server directly on your machine.
 
 ### Server and Bot
 
