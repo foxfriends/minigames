@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { config } from "dotenv";
 
-config()
+config();
 
 const base = process.env.PUBLIC_BASE_PATH;
 
