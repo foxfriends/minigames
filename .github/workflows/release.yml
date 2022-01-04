@@ -41,3 +41,15 @@ jobs:
           tags: ghcr.io/foxfriends/${{ matrix.image }}:latest
           build-args: |
             NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: cameldridge.com
+    needs:
+      - release
+    steps:
+      - name: Trigger deploy
+        run: |
+          curl https://console.cameldridge.com/deploy2/cameldridge --header "X-Deploy-Secret: $DEPLOY_SECRET"
+        env:
+          DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
