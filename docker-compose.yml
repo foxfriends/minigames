@@ -11,6 +11,7 @@ services:
       - "server"
   server:
     image: "ghcr.io/foxfriends/minigames-server:latest"
+    init: true
     ports:
       - "8000:8000"
       - "8001:8001"
