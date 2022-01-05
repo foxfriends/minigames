@@ -3,6 +3,7 @@ use crate::postgres::PgPool;
 
 mod authorization;
 mod cookies;
+mod cors;
 mod response;
 
 mod add_to_server;
@@ -34,6 +35,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 unregister_game::unregister_game,
             ],
         )
+        .attach(cors::Cors)
         .manage(pg_pool)
         .manage(GameRegistry::default())
         .launch()
