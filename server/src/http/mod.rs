@@ -5,6 +5,7 @@ mod authorization;
 mod cookies;
 mod response;
 
+mod add_to_server;
 mod complete_game;
 mod create_challenge;
 mod get_game;
@@ -20,6 +21,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
         .mount(
             "/",
             rocket::routes![
+                add_to_server::add_to_server,
                 complete_game::complete_game,
                 create_challenge::create_challenge,
                 get_game::get_game,
