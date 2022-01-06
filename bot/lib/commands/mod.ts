@@ -1,4 +1,4 @@
-import { challenge } from "./challenge.ts";
+import { challenge } from "./challenge/mod.ts";
 
 export const commands = [
   challenge,
