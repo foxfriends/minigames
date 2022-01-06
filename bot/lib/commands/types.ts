@@ -5,8 +5,7 @@ import type {
 import type { Task } from "../runtime.ts";
 
 interface Command extends CreateGlobalApplicationCommand {
-  handleInteraction(interaction: DiscordenoInteraction): Task;
-  handleComponentInteraction?(interaction: DiscordenoInteraction): Task;
+  handle(interaction: DiscordenoInteraction): Task | undefined;
 }
 
 export type { Command };

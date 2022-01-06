@@ -19,6 +19,17 @@ type Config = {
   guild?: bigint;
 };
 
+function getCommandName(interaction: DiscordenoInteraction): string {
+  switch (interaction.type) {
+    case InteractionTypes.ApplicationCommand:
+      return interaction.data!.name!;
+    case InteractionTypes.MessageComponent:
+      return interaction.message!.interaction!.name!;
+    default: // unsupported ones we can just not find
+      return "";
+  }
+}
+
 function prepareMinigamesBot(bot: Bot, {
   apiUrl,
   webUrl,
@@ -39,78 +50,36 @@ function prepareMinigamesBot(bot: Bot, {
         await ready(bot, payload, rawPayload);
       },
 
-      async interactionCreate(
-        bot: Bot,
-        interaction: DiscordenoInteraction,
-      ) {
-        if (
-          interaction.type === InteractionTypes.ApplicationCommand &&
-          interaction.data
-        ) {
-          const command = commands.find(
-            whereEq({ name: interaction.data.name }),
-          );
-          if (command) {
-            try {
-              const task = command.handleInteraction(interaction);
-              await run({ bot, interaction }, task);
-            } catch (error) {
-              const interactionName = blue(interaction.data!.name!);
-              console.error(
-                `Interaction ${interactionName} has ${red("failed")}:`,
-                error,
-              );
-              await sendInteractionResponse(
-                bot,
-                interaction.id,
-                interaction.token,
-                {
-                  type: InteractionResponseTypes.ChannelMessageWithSource,
-                  private: true,
-                  data: {
-                    content: `Sorry, looks like there was a problem: **${error.message}**`,
-                  },
-                },
-              );
-            }
-            return;
-          }
-        } else if (
-          interaction.type === InteractionTypes.MessageComponent &&
-          interaction.message && interaction.data
-        ) {
-          const command = commands.find(
-            whereEq({ name: interaction.message!.interaction!.name }),
-          );
-          if (command) {
-            try {
-              const task = command.handleComponentInteraction?.(interaction);
-              if (task) await run({ bot, interaction }, task);
-            } catch (error) {
-              const interactionName = blue(
-                interaction.message!.interaction!.name,
-              );
-              const component = green(`"${interaction.data!.customId}"`);
-              // deno-fmt-ignore
-              console.error(`Interaction ${interactionName} component ${component} has ${red("failed")}:`, error);
-              await sendInteractionResponse(
-                bot,
-                interaction.id,
-                interaction.token,
-                {
-                  type: InteractionResponseTypes.ChannelMessageWithSource,
-                  private: true,
-                  data: {
-                    content: `Sorry, looks like there was a problem: **${error.message}**`,
-                  },
-                },
-              );
-            }
-            return;
-          }
+      async interactionCreate(bot: Bot, interaction: DiscordenoInteraction) {
+        const commandName = getCommandName(interaction);
+        const command = commands.find(whereEq({ name: commandName }));
+        if (!command) {
+          return interactionCreate(bot, interaction);
         }
 
-        await interactionCreate(bot, interaction);
+        try {
+          const task = command.handle(interaction);
+          if (task) await run({ bot, interaction }, task);
+        } catch (error) {
+          const commandMsg = `Interaction ${blue(commandName)}`;
+          const componentMsg = interaction.type === InteractionTypes.MessageComponent
+            ? `component ${green(interaction.data!.customId!)}`
+            : "";
+          const descriptor = [commandMsg, componentMsg].filter(Boolean).join(" ");
+          console.error(`${descriptor} has ${red("failed")}:`, error);
+          await sendInteractionResponse(
+            bot,
+            interaction.id,
+            interaction.token,
+            {
+              type: InteractionResponseTypes.ChannelMessageWithSource,
+              private: true,
+              data: {
+                content: `Sorry, looks like there was a problem: **${error.message}**`,
+              },
+            },
+          );
+        }
       },
     }),
   );
