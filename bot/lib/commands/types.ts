@@ -1,10 +1,7 @@
-import type {
-  CreateGlobalApplicationCommand,
-  DiscordenoInteraction,
-} from "../../deps/discordeno.ts";
+import type { CreateApplicationCommand, DiscordenoInteraction } from "../../deps/discordeno.ts";
 import type { Task } from "../runtime.ts";
 
-interface Command extends CreateGlobalApplicationCommand {
+interface Command extends CreateApplicationCommand {
   handle(interaction: DiscordenoInteraction): Task | undefined;
 }
 

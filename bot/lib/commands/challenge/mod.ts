@@ -3,12 +3,13 @@ import {
   ApplicationCommandTypes,
   DiscordenoInteraction,
   InteractionTypes,
-} from "../../deps/discordeno.ts";
-import type { Command } from "./types.ts";
-import { Task } from "../runtime.ts";
+} from "../../../deps/discordeno.ts";
+import type { Command } from "../types.ts";
+import { Task } from "../../runtime.ts";
 
-import handleInteraction from "./challenge/handleInteraction.ts";
-import handleComponentInteraction from "./challenge/handleComponentInteraction.ts";
+import handleInteraction from "./handleInteraction.ts";
+import handleComponentInteraction from "./handleComponentInteraction.ts";
+import handleAutocomplete from "./handleAutocomplete.ts";
 
 export const challenge: Command = {
   name: "challenge",
@@ -35,6 +36,8 @@ export const challenge: Command = {
         return handleInteraction(interaction);
       case InteractionTypes.MessageComponent:
         return handleComponentInteraction(interaction);
+      case InteractionTypes.ApplicationCommandAutocomplete:
+        return handleAutocomplete(interaction);
     }
   },
 };

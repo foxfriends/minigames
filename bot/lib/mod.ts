@@ -22,6 +22,7 @@ type Config = {
 function getCommandName(interaction: DiscordenoInteraction): string {
   switch (interaction.type) {
     case InteractionTypes.ApplicationCommand:
+    case InteractionTypes.ApplicationCommandAutocomplete:
       return interaction.data!.name!;
     case InteractionTypes.MessageComponent:
       return interaction.message!.interaction!.name!;
