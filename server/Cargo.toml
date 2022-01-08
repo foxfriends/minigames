@@ -2,6 +2,7 @@
 name = "server"
 version = "0.1.0"
 edition = "2021"
+include = ["/src", "/public", "README.md", "build.rs", "sqlx-data.json", "tailwind.config.js", "package.json"]
 
 [dependencies]
 anyhow = "1.0"
@@ -10,6 +11,7 @@ dotenv = "0.15"
 futures = "0.3"
 jsonwebtoken = "7.2"
 lazy_static = "1.4"
+maud = "0.23" # Cannot use the "rocket" feature, as it is outdated
 oauth2 = "4.1"
 openssl = "0.10"
 reqwest = { version = "0.11", features = ["json"] }

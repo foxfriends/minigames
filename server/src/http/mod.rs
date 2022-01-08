@@ -1,3 +1,5 @@
+use rocket::fs::FileServer;
+
 use crate::game::GameRegistry;
 use crate::postgres::PgPool;
 
@@ -9,6 +11,7 @@ mod response;
 pub use cors::CorsOrigin;
 
 mod add_to_server;
+mod admin;
 mod complete_game;
 mod create_challenge;
 mod get_game;
@@ -37,6 +40,8 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 unregister_game::unregister_game,
             ],
         )
+        .mount("/admin", admin::routes())
+        .mount("/static", FileServer::from(crate::env::static_files_dir()))
         .attach(cors::Cors)
         .manage(pg_pool)
         .manage(GameRegistry::default())

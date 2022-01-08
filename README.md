@@ -39,10 +39,16 @@ with just `docker-compose up`.
 [Docker]: https://www.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
 
-This `docker-compose` uses the images published on the GitHub container registry. When run
+This `docker-compose.yml` uses the images published on the GitHub container registry. When run
 this way, they have nothing to do with the source code on your system. __Using Docker for
 developing the server and bot is not recommended for that reason__. Instead, follow the
 instructions below to run the bot and server directly on your machine.
+
+There is an additional file `docker-compose.src.yml`, which can be used to run the source
+versions, instead of the published versions. This file is still not recommended for
+developing the server or bot, as rebuilding the Docker containers takes a long time. This
+file is mainly intended for testing the that the Docker images actually work before
+publishing a release.
 
 ### Server and Bot
 

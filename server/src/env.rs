@@ -40,3 +40,10 @@ pub fn cors_allowed_origins() -> CorsOrigin {
     }
     CorsOrigin::Origins(origins.split(',').map(str::to_owned).collect())
 }
+
+pub fn static_files_dir() -> PathBuf {
+    env::var("STATIC_FILES_DIR")
+        .unwrap_or_else(|_| String::from("./public"))
+        .parse()
+        .unwrap()
+}

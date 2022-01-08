@@ -2,3 +2,5 @@
 !.env.example
 jwt.pem
 target
+/public
+node_modules
