@@ -9,12 +9,6 @@ use uuid::Uuid;
 #[sqlx(transparent)]
 pub struct GameId(Uuid);
 
-impl GameId {
-    pub fn new(id: Uuid) -> Self {
-        Self(id)
-    }
-}
-
 impl Display for GameId {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         self.0.fmt(f)

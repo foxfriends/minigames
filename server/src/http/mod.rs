@@ -18,6 +18,7 @@ mod get_game;
 mod get_public_key;
 mod leaderboard;
 mod list_games;
+mod oauth;
 mod play_game;
 mod register_game;
 mod unregister_game;
@@ -32,7 +33,8 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 create_challenge::create_challenge,
                 get_game::get_game,
                 play_game::play_game,
-                play_game::complete_oauth2,
+                play_game::sign_in_then_play_game,
+                oauth::complete_oauth2,
                 get_public_key::get_public_key,
                 leaderboard::leaderboard,
                 list_games::list_games,
@@ -40,7 +42,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 unregister_game::unregister_game,
             ],
         )
-        .mount("/admin", admin::routes())
+        .mount("/dashboard", admin::routes())
         .mount("/static", FileServer::from(crate::env::static_files_dir()))
         .attach(cors::Cors)
         .manage(pg_pool)

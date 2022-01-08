@@ -17,7 +17,7 @@ the best (mini)gamer once and for all.
 Before running the project by any method, the following setup steps must be completed:
 
 1.  On the [Discord Developer Portal][], Create an application, and then a bot within that application.
-2.  Set up an OAuth2 redirect for the `/play` route of where you will be running the server (likely `http://localhost:8000/play`)
+2.  Set up an OAuth2 redirect for the `/oauth` route of where you will be running the server (likely `http://localhost:8000/oauth`)
 3.  Copy `bot/.env.example` to `bot/.env` and put the appropriate values in.
 4.  Copy `server/.env.example` to `server/.env` and put the appropriate values in.
 5.  Use [OpenSSL][] to generate the RS256 key for signing JWTs:

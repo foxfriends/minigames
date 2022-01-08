@@ -8,7 +8,7 @@ pub struct DiscordUser {
     pub username: String,
 }
 
-pub async fn get_current_user(bearer: String) -> anyhow::Result<DiscordUser> {
+pub async fn get_current_user(bearer: &str) -> anyhow::Result<DiscordUser> {
     Ok(Client::new()
         .request(Method::GET, "https://discord.com/api/users/@me")
         .bearer_auth(bearer)
