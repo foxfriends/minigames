@@ -6,6 +6,8 @@ mod cookies;
 mod cors;
 mod response;
 
+pub use cors::CorsOrigin;
+
 mod add_to_server;
 mod complete_game;
 mod create_challenge;

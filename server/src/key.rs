@@ -1,12 +1,11 @@
 use openssl::pkey::Private;
 use openssl::rsa::Rsa;
-use std::env;
 use std::fs::File;
 use std::io::Read;
 
 lazy_static::lazy_static! {
     pub static ref JWT_KEY: Vec<u8> = {
-        let key_path = env::var("JWT_PEM").expect("Environment variable JWT_PEM is missing");
+        let key_path = crate::env::jwt_pem();
         let mut file = File::open(key_path).expect("File indicated by JWT_PEM could not be found");
         let mut buf = Vec::new();
         file.read_to_end(&mut buf).expect("Failed to read JWT_PEM file");

@@ -4,7 +4,6 @@ use crate::key::{JWT_KEY, SPKI};
 use crate::user::UserId;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
-use std::env;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 lazy_static::lazy_static! {
@@ -27,7 +26,7 @@ pub struct Claims {
 impl Claims {
     pub fn new(game_name: GameName, user_id: UserId) -> Self {
         Claims {
-            iss: env::var("PUBLIC_HTTP_URL").unwrap(),
+            iss: crate::env::public_http_url(),
             aud: game_name,
             sub: user_id,
             iat: SystemTime::now()
@@ -48,7 +47,7 @@ impl Claims {
     pub fn verify(token: Token) -> anyhow::Result<Claims> {
         let validation = Validation {
             validate_exp: false,
-            iss: Some(env::var("PUBLIC_HTTP_URL").unwrap()),
+            iss: Some(crate::env::public_http_url()),
             algorithms: vec![Algorithm::RS256],
             ..Validation::default()
         };

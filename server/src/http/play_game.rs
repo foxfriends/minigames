@@ -11,12 +11,11 @@ use oauth2::{
 use rocket::http::{CookieJar, Status};
 use rocket::response::Redirect;
 use rocket::State;
-use std::env;
 
 fn get_client() -> anyhow::Result<BasicClient> {
     Ok(BasicClient::new(
-        ClientId::new(env::var("DISCORD_CLIENT_ID")?),
-        Some(ClientSecret::new(env::var("DISCORD_CLIENT_SECRET")?)),
+        ClientId::new(crate::env::discord_client_id()),
+        Some(ClientSecret::new(crate::env::discord_client_secret())),
         AuthUrl::new("https://discord.com/api/oauth2/authorize".to_owned())?,
         Some(TokenUrl::new(
             "https://discord.com/api/oauth2/token".to_owned(),
@@ -24,7 +23,7 @@ fn get_client() -> anyhow::Result<BasicClient> {
     )
     .set_redirect_uri(RedirectUrl::new(format!(
         "{}/play",
-        env::var("PUBLIC_HTTP_URL")?,
+        crate::env::public_http_url(),
     ))?))
 }
 

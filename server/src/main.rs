@@ -1,4 +1,5 @@
 mod discord;
+mod env;
 mod game;
 mod guild;
 mod http;

@@ -2,7 +2,6 @@ use crate::game::Game;
 use crate::postgres::PgPool;
 use crate::token::{Claims, Token};
 use futures::{future, pin_mut, StreamExt};
-use std::env;
 use std::net::SocketAddr;
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc::unbounded_channel;
@@ -120,7 +119,7 @@ async fn handle_connection(
 }
 
 pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
-    let ws_port = env::var("WEBSOCKET_PORT")?.parse()?;
+    let ws_port = crate::env::websocket_port();
     let listener = TcpListener::bind(("0.0.0.0", ws_port)).await?;
     let context = Context::new(pg_pool);
 
