@@ -10,11 +10,11 @@ use rocket::response::Redirect;
 use rocket::State;
 
 #[rocket::get("/play?<game_id>", rank = 1)]
-pub async fn play_game<'r>(
+pub async fn play_game(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
     game_id: GameId,
-    user_cookie: UserCookie<'r>,
+    user_cookie: UserCookie<'_>,
 ) -> Response<Redirect> {
     let discord_user = discord::get_current_user(user_cookie.value()).await?;
     let mut conn = db.acquire().await?;
@@ -35,9 +35,9 @@ pub async fn play_game<'r>(
 }
 
 #[rocket::get("/play?<game_id>", rank = 2)]
-pub async fn sign_in_then_play_game<'r>(
+pub async fn sign_in_then_play_game(
     game_id: GameId,
-    cookies: &CookieJar<'r>,
+    cookies: &CookieJar<'_>,
 ) -> Response<Redirect> {
     sign_in_with_discord(format!("/play?game_id={}", game_id), cookies).await
 }

@@ -6,7 +6,7 @@ use maud::html;
 use rocket::response::content::Html;
 
 #[rocket::get("/")]
-pub async fn index<'r>(user_cookie: UserCookie<'r>) -> Response<Html<String>> {
+pub async fn index(user_cookie: UserCookie<'_>) -> Response<Html<String>> {
     let user = discord::get_current_user(user_cookie.value()).await?;
     let markup = layout(html! {
         "Hello, " (user.username)
