@@ -1,3 +1,15 @@
+@font-face {
+  font-family: "Whitney";
+  src: url("/static/whitneybook.otf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Whitney";
+  src: url("/static/whitneybold.otf");
+  font-weight: 700;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

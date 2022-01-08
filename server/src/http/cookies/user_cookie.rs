@@ -40,4 +40,8 @@ impl<'r> UserCookie<'r> {
         );
         cookie_jar.add(cookie);
     }
+
+    pub fn remove_from(cookie_jar: &CookieJar) {
+        cookie_jar.remove(Cookie::named(DISCORD_USER_COOKIE));
+    }
 }

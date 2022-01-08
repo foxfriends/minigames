@@ -5,7 +5,7 @@
 [Roadmap]: https://github.com/users/foxfriends/projects/2
 [Guide]: ./GUIDE.md
 [Manual]: ./USAGE.md
-[Install]: https://party.cameldridge.com
+[Install]: https://party.cameldridge.com/install
 
 Minigames and leaderboard for Discord servers. Challenge your friends to games, and determine who is
 the best (mini)gamer once and for all.

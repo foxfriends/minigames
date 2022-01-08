@@ -11,9 +11,9 @@ mod response;
 pub use cors::CorsOrigin;
 
 mod add_to_server;
-mod admin;
 mod complete_game;
 mod create_challenge;
+mod dashboard;
 mod get_game;
 mod get_public_key;
 mod leaderboard;
@@ -21,6 +21,7 @@ mod list_games;
 mod oauth;
 mod play_game;
 mod register_game;
+mod sign_out;
 mod unregister_game;
 
 pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
@@ -40,9 +41,10 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
                 list_games::list_games,
                 register_game::register_game,
                 unregister_game::unregister_game,
+                sign_out::sign_out,
             ],
         )
-        .mount("/dashboard", admin::routes())
+        .mount("/dashboard", dashboard::routes())
         .mount("/static", FileServer::from(crate::env::static_files_dir()))
         .attach(cors::Cors)
         .manage(pg_pool)
