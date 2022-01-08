@@ -34,7 +34,7 @@ pub fn discord_client_secret() -> String {
 }
 
 pub fn cors_allowed_origins() -> CorsOrigin {
-    let origins = env::var("CORS_ALLOWED_ORIGINS").unwrap_or_else(|| String::from(""));
+    let origins = env::var("CORS_ALLOWED_ORIGINS").unwrap_or_else(|_| String::from(""));
     if origins == "*" {
         return CorsOrigin::Any;
     }
