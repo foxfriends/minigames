@@ -34,6 +34,38 @@
       ]
     }
   },
+  "2bf28d866cb838f18b16f0acfd4c5717fc481c3a34bb064bd59b180318d2a4c7": {
+    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            WHERE user_id = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "2e541f9031bc6757ef4b58c3f78b1442446e22e23e2a6174f6b30b3a410b8de3": {
     "query": "SELECT user_id as \"id: UserId\", is_challenger FROM game_participants WHERE game_id = $1",
     "describe": {
@@ -97,6 +129,18 @@
         false,
         false
       ]
+    }
+  },
+  "52ab23afc8e284b52c1008923b8404f35c4061d23050dd49a44089e580e09de5": {
+    "query": "DELETE FROM game_servers WHERE name = $1",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": []
     }
   },
   "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
@@ -210,6 +254,38 @@
       ]
     }
   },
+  "a784c76ae0fd63346a99645ba62c841a962c41b5fde3e8203271003d91f68aa5": {
+    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            WHERE name = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "ac8952dee489127a4d849a0d412cab8cc1afee55bf233289ad50d6d581f7db2e": {
     "query": "INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING",
     "describe": {
@@ -217,6 +293,19 @@
       "parameters": {
         "Left": [
           "Int8"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "b074b0e69f05c9d340a403c3b9d8f9f8ac91dcb9c4e1f4c7c897b7085a6bc1e4": {
+    "query": "\n            UPDATE game_servers\n            SET name = $1\n            WHERE name = $2\n            ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Text"
         ]
       },
       "nullable": []
@@ -278,6 +367,19 @@
           "Uuid",
           "Int8",
           "Int8"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "ed816d87709fb6553038cb47b839e1bd8cb7f8adc9c4f821bf8998a367093a83": {
+    "query": "\n            UPDATE game_servers\n            SET public_url = $1\n            WHERE name = $2\n            ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text"
         ]
       },
       "nullable": []
