@@ -6,7 +6,7 @@ pub fn header(ctx: &DashboardContext) -> Markup {
     html! {
         header.flex.items-center."gap-4".w-full."h-16".bg-background-floating.text-text-heading.font-bold {
             ."w-[350px]"."pl-8" {
-                .a href="/dashboard" { (logo()) }
+                a href="/dashboard" { (logo()) }
             }
             .text-lg { (ctx.title) }
             .ml-auto."pr-8" {
