@@ -1,5 +1,6 @@
 use maud::{html, Markup};
 
+#[allow(dead_code)]
 pub fn page(children: Markup) -> Markup {
     html! {
         ."p-4" {
