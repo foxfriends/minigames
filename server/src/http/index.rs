@@ -20,7 +20,7 @@ pub fn index() -> Html<String> {
             }
 
             body.bg-background-default.text-text-body.h-screen.flex.justify-center.items-center.flex-col."gap-8" {
-                h1."text-4xl".text-text-heading { "Discord 🎉 Party" }
+                h1."text-4xl".font-bold.text-text-heading { "Discord 🎉 Party" }
                 .flex.flex-row."gap-4" {
                     (link("/install", "Install"))
                     (vsep())
