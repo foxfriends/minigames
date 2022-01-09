@@ -32,7 +32,7 @@ impl Game {
                 guild_id as "guild_id: _",
                 game as "game: _",
                 state as "state: _"
-                "#,
+            "#,
             guild_id as GuildId,
             game as GameName,
         )

@@ -60,8 +60,8 @@
       ]
     }
   },
-  "4fec749a8a4ea0ba85eca8c58ebea86613784b351ce8f242269eb19db9efeaa3": {
-    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n                ",
+  "50a926c3eacabe321b57bb1eecca294ef870445b1e929c56205bf0866c3219db": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n            ",
     "describe": {
       "columns": [
         {
@@ -170,6 +170,46 @@
       ]
     }
   },
+  "a52dc33aade889ba6b3156ff36bcd08c1e498b1a79ff68b4907372ae9d36c8f4": {
+    "query": "\n            INSERT INTO api_keys (game_server_name, public_key, secret_key)\n                VALUES ($1, $2, $3)\n                RETURNING\n                id,\n                game_server_name as \"game: _\",\n                public_key as \"public_key: _\",\n                secret_key as \"secret_key: _\"\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "game: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_key: _",
+          "type_info": "Bpchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "secret_key: _",
+          "type_info": "Bpchar"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Bpchar",
+          "Bpchar"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "ac8952dee489127a4d849a0d412cab8cc1afee55bf233289ad50d6d581f7db2e": {
     "query": "INSERT INTO guilds (id) VALUES ($1) ON CONFLICT DO NOTHING",
     "describe": {
@@ -180,6 +220,40 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "b80d9db42de0d70996c9582ddcf4e5dc68577b91a66658b486413fdf650c1a5f": {
+    "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Int8",
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
     }
   },
   "b91c22b6ac289754ff5840413b0d475d6b1fce97914abe300875f9b8e9d7b46c": {
