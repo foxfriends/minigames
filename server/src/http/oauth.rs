@@ -42,7 +42,7 @@ pub async fn complete_oauth2<'r>(
     code: String,
     state: String,
     state_cookie: StateCookie<'r>,
-    redirect_cookie: RedirectCookie,
+    redirect_cookie: RedirectCookie<'r>,
 ) -> Response<Redirect> {
     if state_cookie.value() != state {
         return Err(ResponseError::new(
