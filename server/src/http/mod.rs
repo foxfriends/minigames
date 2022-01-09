@@ -8,22 +8,15 @@ mod cookies;
 mod cors;
 mod response;
 
-pub use cors::CorsOrigin;
-
-mod add_to_server;
-mod complete_game;
-mod create_challenge;
+mod api;
+mod auth;
 mod dashboard;
-mod get_game;
+
 mod get_public_key;
 mod index;
-mod leaderboard;
-mod list_games;
-mod oauth;
 mod play_game;
-mod register_game;
-mod sign_out;
-mod unregister_game;
+
+pub use cors::CorsOrigin;
 
 pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
     rocket::build()
@@ -31,21 +24,13 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
             "/",
             rocket::routes![
                 index::index,
-                add_to_server::add_to_server,
-                complete_game::complete_game,
-                create_challenge::create_challenge,
-                get_game::get_game,
-                play_game::play_game,
-                play_game::sign_in_then_play_game,
-                oauth::complete_oauth2,
                 get_public_key::get_public_key,
-                leaderboard::leaderboard,
-                list_games::list_games,
-                register_game::register_game,
-                unregister_game::unregister_game,
-                sign_out::sign_out,
+                play_game::play_game,
+                play_game::sign_in_then_play_game
             ],
         )
+        .mount("/api/v1", api::v1::routes())
+        .mount("/auth", auth::routes())
         .mount("/dashboard", dashboard::routes())
         .mount("/static", FileServer::from(crate::env::static_files_dir()))
         .attach(cors::Cors)

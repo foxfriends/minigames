@@ -1,8 +1,8 @@
-use super::cookies::UserCookie;
-use super::response::{Response, ResponseError};
 use crate::discord;
 use crate::game::{Game, GameId, GameRegistry};
-use crate::http::oauth::sign_in_with_discord;
+use crate::http::auth::sign_in_with_discord;
+use crate::http::cookies::UserCookie;
+use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
 use crate::token::Claims;
 use rocket::http::{CookieJar, Status};

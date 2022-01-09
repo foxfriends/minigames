@@ -1,5 +1,5 @@
-use super::response::Response;
 use crate::game::{Game, GameId, GameName, GameParticipant};
+use crate::http::response::Response;
 use crate::postgres::PgPool;
 use crate::user::UserId;
 use rocket::serde::json::Json;

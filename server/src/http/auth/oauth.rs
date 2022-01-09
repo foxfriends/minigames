@@ -1,5 +1,5 @@
-use super::cookies::{RedirectCookie, StateCookie, UserCookie};
-use super::response::{Response, ResponseError};
+use crate::http::cookies::{RedirectCookie, StateCookie, UserCookie};
+use crate::http::response::{Response, ResponseError};
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
     ClientSecret, CsrfToken, RedirectUrl, Scope, TokenUrl,
@@ -17,7 +17,7 @@ fn get_client() -> anyhow::Result<BasicClient> {
         )?),
     )
     .set_redirect_uri(RedirectUrl::new(format!(
-        "{}/oauth",
+        "{}/oauth2",
         crate::env::public_http_url(),
     ))?))
 }
@@ -36,7 +36,7 @@ pub async fn sign_in_with_discord(
     Ok(Redirect::to(String::from(auth_url)))
 }
 
-#[rocket::get("/oauth?<code>&<state>")]
+#[rocket::get("/oauth2?<code>&<state>")]
 pub async fn complete_oauth2<'r>(
     cookies: &CookieJar<'r>,
     code: String,

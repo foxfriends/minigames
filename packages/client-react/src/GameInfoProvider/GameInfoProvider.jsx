@@ -17,7 +17,7 @@ export default function GameInfoProvider({ children }) {
       issuer: apiUrl,
       audience: name,
     });
-    const response = await fetch(`${apiUrl}/games/${name}/${gameId}`);
+    const response = await fetch(`${apiUrl}/api/v1/games/${name}/${gameId}`);
     const gameInfo = await response.json();
     setGameInfo({
       loading: false,

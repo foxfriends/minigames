@@ -1,4 +1,4 @@
-use crate::http::oauth::sign_in_with_discord;
+use crate::http::auth::sign_in_with_discord;
 use crate::http::response::Response;
 use rocket::http::CookieJar;
 use rocket::response::Redirect;

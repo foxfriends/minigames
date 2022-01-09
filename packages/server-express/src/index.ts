@@ -24,7 +24,7 @@ export default function minigame({
 
     const server = app.listen(port, async () => {
       try {
-        await fetch(`${apiUrl}/games/${name}`, {
+        await fetch(`${apiUrl}/api/v1/games/${name}`, {
           method: "POST",
           headers: { Authorization: `Bearer ${apiKey}` },
           body: JSON.stringify({ url: publicUrl }),
@@ -39,7 +39,7 @@ export default function minigame({
       if (typeof onclose === "function") {
         onclose();
       }
-      await fetch(`${apiUrl}/games/tictactoe`, {
+      await fetch(`${apiUrl}/api/v1/games/tictactoe`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${apiKey}` },
       });

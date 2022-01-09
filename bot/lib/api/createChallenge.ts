@@ -11,7 +11,7 @@ export function createChallenge(
   { guildId, challengerId, challengedId, game }: CreateChallenge,
 ): ApiRequest {
   return {
-    path: "/challenge",
+    path: "/api/v1/challenge",
     method: "POST",
     body: JSON.stringify({
       guildId: guildId.toString(),

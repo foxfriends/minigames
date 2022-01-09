@@ -17,7 +17,7 @@ export default function useWinner(computeWinner) {
     }
     const winnerId = await computeWinner(gameState);
     if (winnerId !== undefined) {
-      const response = await fetch(`${apiUrl}/complete`, {
+      const response = await fetch(`${apiUrl}/api/v1/complete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

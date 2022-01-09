@@ -1,4 +1,4 @@
-use super::cookies::UserCookie;
+use crate::http::cookies::UserCookie;
 use rocket::http::CookieJar;
 use rocket::response::Redirect;
 

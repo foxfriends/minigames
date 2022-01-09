@@ -1,6 +1,6 @@
-use super::authorization::UserAuthorization;
-use super::response::{Response, ResponseError};
 use crate::game::{Game, GameId};
+use crate::http::authorization::UserAuthorization;
+use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
 use crate::user::UserId;
 use rocket::http::Status;
