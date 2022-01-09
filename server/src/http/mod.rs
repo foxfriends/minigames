@@ -12,6 +12,7 @@ mod api;
 mod auth;
 mod dashboard;
 
+mod add_to_server;
 mod get_public_key;
 mod index;
 mod play_game;
@@ -24,6 +25,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
             "/",
             rocket::routes![
                 index::index,
+                add_to_server::add_to_server,
                 get_public_key::get_public_key,
                 play_game::play_game,
                 play_game::sign_in_then_play_game

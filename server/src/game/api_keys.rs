@@ -47,7 +47,7 @@ pub struct ApiKeys {
 }
 
 impl ApiKeys {
-    pub async fn generate<Conn>(game: GameName, mut conn: Conn) -> anyhow::Result<Self>
+    pub async fn generate<Conn>(game: &GameName, mut conn: Conn) -> anyhow::Result<Self>
     where
         Conn: std::ops::DerefMut,
         for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
@@ -66,7 +66,7 @@ impl ApiKeys {
                 public_key as "public_key: _",
                 secret_key as "secret_key: _"
             "#,
-            game as GameName,
+            game as &GameName,
             public_key as ApiKey,
             secret_key as ApiKey,
         )
