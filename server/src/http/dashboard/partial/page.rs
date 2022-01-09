@@ -7,3 +7,11 @@ pub fn page(children: Markup) -> Markup {
         }
     }
 }
+
+pub fn full_page(children: Markup) -> Markup {
+    html! {
+        ."p-4".w-full.h-full {
+            (children)
+        }
+    }
+}

@@ -1,4 +1,4 @@
-use super::partial::{layout, page};
+use super::partial::{construction, full_page, layout};
 use super::DashboardContext;
 use crate::http::cookies::UserCookie;
 use crate::http::response::Response;
@@ -10,8 +10,10 @@ pub async fn index(user_cookie: UserCookie<'_>) -> Response<Html<String>> {
     let ctx = DashboardContext::load("Dashboard", user_cookie.value()).await?;
     let markup = layout(
         &ctx,
-        page(html! {
-            "Hello world"
+        full_page(html! {
+            .flex.items-center.justify-center.w-full.h-full {
+                (construction("The dashboard is still under construction. Hopefully we'll have something to show soon!"))
+            }
         }),
     );
     Ok(Html(markup.into_string()))
