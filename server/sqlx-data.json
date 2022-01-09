@@ -34,38 +34,6 @@
       ]
     }
   },
-  "2bf28d866cb838f18b16f0acfd4c5717fc481c3a34bb064bd59b180318d2a4c7": {
-    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            WHERE user_id = $1\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Int8"
-        ]
-      },
-      "nullable": [
-        false,
-        false,
-        false
-      ]
-    }
-  },
   "2e541f9031bc6757ef4b58c3f78b1442446e22e23e2a6174f6b30b3a410b8de3": {
     "query": "SELECT user_id as \"id: UserId\", is_challenger FROM game_participants WHERE game_id = $1",
     "describe": {
@@ -356,6 +324,36 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "c27cd93510ef67889be1f786d3721d82e5ff495fa24516b83ad697acf555c311": {
+    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            ORDER BY name ASC\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
     }
   },
   "da8dd4f29f44ba2ba5538584d803fa1c16032e77789e3355655aa24611a802fb": {

@@ -10,5 +10,10 @@ mod partial;
 mod sign_in;
 
 pub fn routes() -> impl Into<Vec<Route>> {
-    rocket::routes![index::index, sign_in::sign_in, admin::admin]
+    rocket::routes![
+        index::index,
+        sign_in::sign_in,
+        admin::index::index,
+        admin::servers::new::new,
+    ]
 }

@@ -50,7 +50,7 @@ impl GameServer {
         Ok(game_server)
     }
 
-    pub async fn list_for_user<Conn>(user_id: UserId, mut conn: Conn) -> anyhow::Result<Vec<Self>>
+    pub async fn list_all<Conn>(mut conn: Conn) -> anyhow::Result<Vec<Self>>
     where
         Conn: std::ops::DerefMut,
         for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
@@ -60,9 +60,8 @@ impl GameServer {
             r#"
             SELECT name as "name: _", user_id as "user_id: _", public_url
             FROM game_servers
-            WHERE user_id = $1
+            ORDER BY name ASC
             "#,
-            user_id as UserId,
         )
         .fetch_all(&mut *conn)
         .await?;

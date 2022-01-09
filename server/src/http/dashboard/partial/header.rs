@@ -1,14 +1,15 @@
-use super::logo;
 use super::DashboardContext;
+use super::{h3, logo};
 use maud::{html, Markup};
+use rocket::uri;
 
 pub fn header(ctx: &DashboardContext) -> Markup {
     html! {
-        header.flex.items-center."gap-4".w-full."h-16".bg-background-floating.text-text-heading.font-bold {
+        header.flex.items-center."gap-10".w-full."h-16".bg-background-floating.text-text-heading.font-bold {
             ."w-[350px]"."pl-8" {
-                a href="/dashboard" { (logo()) }
+                a href=(uri!("/dashboard", super::super::index::index())) { (logo()) }
             }
-            .text-lg { (ctx.title) }
+            (h3(html! { (ctx.title()) }))
             .ml-auto."pr-8" {
                 a.flex.items-center."gap-2" href="/sign-out" {
                     img.rounded-full src=(ctx.user.avatar_url(5)) alt="";

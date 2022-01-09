@@ -1,9 +1,8 @@
 use maud::{html, Markup};
 
-#[allow(dead_code)]
 pub fn page(children: Markup) -> Markup {
     html! {
-        ."p-4" {
+        ."p-10" {
             (children)
         }
     }
@@ -11,7 +10,7 @@ pub fn page(children: Markup) -> Markup {
 
 pub fn full_page(children: Markup) -> Markup {
     html! {
-        ."p-4".w-full.h-full {
+        ."p-10".w-full.h-full {
             (children)
         }
     }

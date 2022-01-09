@@ -7,9 +7,12 @@ use rocket::serde::json::Json;
 use rocket::State;
 use serde::Serialize;
 
+pub struct PublicGameServer {
+    name: String,
+
 #[derive(Serialize)]
 pub struct ListGameServersResponse {
-    servers: Vec<GameServer>,
+    servers: Vec<PublicGameServer>,
 }
 
 #[rocket::get("/servers")]

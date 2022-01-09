@@ -13,6 +13,14 @@ impl Display for GameName {
     }
 }
 
+impl std::ops::Deref for GameName {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
 impl<'a> FromParam<'a> for GameName {
     type Error = Infallible;
 

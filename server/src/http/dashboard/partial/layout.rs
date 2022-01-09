@@ -9,7 +9,7 @@ pub fn layout(ctx: &DashboardContext, page: Markup) -> Markup {
             head {
                 meta charset="utf-8";
                 link rel="stylesheet" type="text/css" href="/static/index.css";
-                title { "Discord Party " (ctx.title) }
+                title { "Discord Party " (ctx.title()) }
             }
 
             body.bg-background-default.text-text-body.h-screen {
