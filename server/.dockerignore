@@ -2,3 +2,4 @@
 Dockerfile
 target
 public
+node_modules
