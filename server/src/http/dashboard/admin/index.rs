@@ -1,4 +1,4 @@
-use crate::game::GameServer;
+use crate::game::{GameName, GameServer};
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{empty, h1, layout, link_button, page};
 use crate::http::dashboard::DashboardContext;
@@ -8,16 +8,25 @@ use maud::{html, Markup};
 use rocket::response::content::Html;
 use rocket::{uri, State};
 
-fn game_server_tile(_ctx: &DashboardContext, server: &GameServer) -> Markup {
-    html! {
-        .w-min.h-min {
-            ."w-32"."h-32".rounded-sm.bg-background-floating.text-text-heading {
+fn game_server_tile(ctx: &DashboardContext, server: &GameServer) -> Markup {
+    let content = html! {
+        .w-min.h-min."p-2".bg-background-secondary.rounded-md.flex.flex-col."gap-2" {
+            ."w-28"."h-28".rounded-md.bg-background-floating.text-text-heading.flex.items-center.justify-center.font-medium.text-lg {
                 (server.name()[0..1])
             }
-            .truncate.text.text-heading.center {
+            .truncate.text.text-text-heading.text-center."min-w-0" {
                 (server.name())
             }
         }
+    };
+    if server.user_id() == ctx.user.id {
+        html! {
+            a."hover:shadow-xl"."hover:-translate-y-2".transition href=(uri!("/dashboard", super::servers::edit::edit(server.name()))) {
+                (content)
+            }
+        }
+    } else {
+        content
     }
 }
 
@@ -40,7 +49,7 @@ pub async fn index(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<
                         "Looks like there aren't any games installed yet. Why not make one now?"
                     }))
                 } @else {
-                    .flex.flex-row.flex-wrap {
+                    .flex.flex-row.flex-wrap."gap-4" {
                         @for server in &game_servers {
                             (game_server_tile(&ctx, server))
                         }

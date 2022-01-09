@@ -5,9 +5,16 @@ use sqlx::encode::{Encode, IsNull};
 use sqlx::postgres::{PgArgumentBuffer, PgTypeInfo, PgValueRef, Postgres};
 use sqlx::{Executor, Type};
 use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 use uuid::Uuid;
 
 pub struct ApiKey([u8; 96]);
+
+impl Display for ApiKey {
+    fn fmt(&self, fmt: &mut Formatter) -> fmt::Result {
+        base64::encode(self.0).fmt(fmt)
+    }
+}
 
 impl ApiKey {
     pub fn generate() -> anyhow::Result<Self> {
@@ -20,6 +27,10 @@ impl ApiKey {
 impl Type<Postgres> for ApiKey {
     fn type_info() -> PgTypeInfo {
         <String as Type<Postgres>>::type_info()
+    }
+
+    fn compatible(ty: &PgTypeInfo) -> bool {
+        <String as Type<Postgres>>::compatible(ty)
     }
 }
 
@@ -73,6 +84,23 @@ impl ApiKeys {
         .fetch_one(&mut *conn)
         .await?;
 
+        Ok(keys)
+    }
+
+    pub async fn load<Conn>(game: &GameName, mut conn: Conn) -> anyhow::Result<Self>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        let keys = sqlx::query_as!(
+            Self,
+            r#"
+            SELECT id, game_server_name as "game: _", public_key as "public_key: _", secret_key as "secret_key: _"
+            FROM api_keys
+            WHERE game_server_name = $1
+            "#,
+            game as &GameName,
+        ).fetch_one(&mut *conn).await?;
         Ok(keys)
     }
 }

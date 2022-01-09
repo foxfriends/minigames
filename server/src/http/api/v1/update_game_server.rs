@@ -3,24 +3,25 @@ use crate::game::{GameName, GameServer};
 use crate::http::cookies::UserCookie;
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
+use rocket::form::{Form, FromForm};
 use rocket::http::Status;
+use rocket::response::Redirect;
 use rocket::serde::json::Json;
-use rocket::State;
+use rocket::{uri, State};
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, FromForm)]
 pub struct UpdateGameServerRequest {
     name: Option<GameName>,
     public_url: Option<String>,
 }
 
-#[rocket::patch("/servers/<name>", data = "<body>")]
-pub async fn update_game_server(
+async fn update_game_server(
     db: &State<PgPool>,
-    body: Json<UpdateGameServerRequest>,
+    body: &UpdateGameServerRequest,
     name: GameName,
     user_cookie: UserCookie<'_>,
-) -> Response<Json<GameServer>> {
+) -> Response<GameServer> {
     let user = discord::get_current_user(user_cookie.value()).await?;
     let mut conn = db.begin().await?;
     let mut server = match GameServer::load(&name, &mut conn).await? {
@@ -50,5 +51,30 @@ pub async fn update_game_server(
     server.save(&mut conn).await?;
 
     conn.commit().await?;
-    Ok(Json(server))
+    Ok(server)
+}
+
+#[rocket::patch("/servers/<name>", data = "<body>", format = "json")]
+pub async fn update_game_server_json(
+    db: &State<PgPool>,
+    body: Json<UpdateGameServerRequest>,
+    name: GameName,
+    user_cookie: UserCookie<'_>,
+) -> Response<Json<GameServer>> {
+    let updated_server = update_game_server(db, &*body, name, user_cookie).await?;
+    Ok(Json(updated_server))
+}
+
+#[rocket::patch("/servers/<name>", data = "<body>", format = "form")]
+pub async fn update_game_server_form(
+    db: &State<PgPool>,
+    body: Form<UpdateGameServerRequest>,
+    name: GameName,
+    user_cookie: UserCookie<'_>,
+) -> Response<Redirect> {
+    let updated_server = update_game_server(db, &*body, name, user_cookie).await?;
+    Ok(Redirect::to(uri!(
+        "/dashboard",
+        crate::http::dashboard::admin::servers::edit::edit(updated_server.name())
+    )))
 }

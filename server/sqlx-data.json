@@ -279,6 +279,44 @@
       "nullable": []
     }
   },
+  "b737425c3fe36ce4eec4f64fdec9ef8d14eabe2b230440929afdd9a4145baeb8": {
+    "query": "\n            SELECT id, game_server_name as \"game: _\", public_key as \"public_key: _\", secret_key as \"secret_key: _\"\n            FROM api_keys\n            WHERE game_server_name = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "game: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_key: _",
+          "type_info": "Bpchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "secret_key: _",
+          "type_info": "Bpchar"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "b80d9db42de0d70996c9582ddcf4e5dc68577b91a66658b486413fdf650c1a5f": {
     "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url\n            ",
     "describe": {

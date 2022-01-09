@@ -6,6 +6,18 @@
 
 @font-face {
   font-family: "Whitney";
+  src: url("/static/whitneymedium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Whitney";
+  src: url("/static/whitneysemibold.otf");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Whitney";
   src: url("/static/whitneybold.otf");
   font-weight: 700;
 }

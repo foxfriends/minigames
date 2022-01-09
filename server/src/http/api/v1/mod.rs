@@ -1,16 +1,16 @@
 use rocket::Route;
 
-mod complete_game;
-mod create_challenge;
-mod get_game;
-mod leaderboard;
-mod list_games;
-mod register_game;
-mod unregister_game;
+pub mod complete_game;
+pub mod create_challenge;
+pub mod get_game;
+pub mod leaderboard;
+pub mod list_games;
+pub mod register_game;
+pub mod unregister_game;
 
-mod create_game_server;
-mod delete_game_server;
-mod update_game_server;
+pub mod create_game_server;
+pub mod delete_game_server;
+pub mod update_game_server;
 
 pub fn routes() -> impl Into<Vec<Route>> {
     rocket::routes![
@@ -22,8 +22,10 @@ pub fn routes() -> impl Into<Vec<Route>> {
         leaderboard::leaderboard,
         list_games::list_games,
         // Admin APIs
-        create_game_server::create_game_server,
-        update_game_server::update_game_server,
+        create_game_server::create_game_server_json,
+        create_game_server::create_game_server_form,
+        update_game_server::update_game_server_json,
+        update_game_server::update_game_server_form,
         delete_game_server::delete_game_server,
         // Legacy APIs
         register_game::register_game,

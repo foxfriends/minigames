@@ -4,10 +4,10 @@ mod context;
 
 use context::DashboardContext;
 
-mod admin;
-mod index;
-mod partial;
-mod sign_in;
+pub mod admin;
+pub mod index;
+pub mod partial;
+pub mod sign_in;
 
 pub fn routes() -> impl Into<Vec<Route>> {
     rocket::routes![
@@ -15,5 +15,6 @@ pub fn routes() -> impl Into<Vec<Route>> {
         sign_in::sign_in,
         admin::index::index,
         admin::servers::new::new,
+        admin::servers::edit::edit,
     ]
 }

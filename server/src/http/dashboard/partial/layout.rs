@@ -8,6 +8,11 @@ pub fn layout(ctx: &DashboardContext, page: Markup) -> Markup {
         html lang="en" {
             head {
                 meta charset="utf-8";
+
+                link rel="preconnect" href="https://fonts.googleapis.com";
+                link rel="preconnect" href="https://fonts.gstatic.com" crossorigin;
+                link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet";
+
                 link rel="stylesheet" type="text/css" href="/static/index.css";
                 title { "Discord Party " (ctx.title()) }
             }
