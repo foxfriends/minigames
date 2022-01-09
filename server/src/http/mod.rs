@@ -16,6 +16,7 @@ mod create_challenge;
 mod dashboard;
 mod get_game;
 mod get_public_key;
+mod index;
 mod leaderboard;
 mod list_games;
 mod oauth;
@@ -29,6 +30,7 @@ pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
         .mount(
             "/",
             rocket::routes![
+                index::index,
                 add_to_server::add_to_server,
                 complete_game::complete_game,
                 create_challenge::create_challenge,
