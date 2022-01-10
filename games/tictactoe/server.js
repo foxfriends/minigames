@@ -7,10 +7,9 @@ import config from "./vite.config.js";
 const {
   NODE_ENV = "development",
   PORT,
-  PUBLIC_URL,
   VITE_API_URL,
   VITE_GAME_NAME,
-  API_KEY,
+  SECRET_KEY,
 } = process.env;
 
 export async function createServer() {
@@ -27,9 +26,8 @@ export async function createServer() {
 const run = minigame({
   port: PORT,
   apiUrl: VITE_API_URL,
-  publicUrl: PUBLIC_URL,
   name: VITE_GAME_NAME,
-  apiKey: API_KEY,
+  secretKey: SECRET_KEY,
 });
 
 createServer().then((app) => {
