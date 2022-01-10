@@ -5,7 +5,7 @@ use crate::postgres::PgPool;
 use crate::user::User;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
-    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenUrl, TokenResponse,
+    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl,
 };
 use rocket::http::{CookieJar, Status};
 use rocket::response::Redirect;
