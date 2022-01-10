@@ -17,7 +17,7 @@ export default function minigame({ name, port, apiUrl, secretKey }: Options) {
     let onclose: (() => unknown) | undefined;
 
     app.post("/health", async (req: Request, res: Response) => {
-      const token = req.get("X-Minigame-Server");
+      const token = req.get("X-Minigames-Server");
       if (
         token &&
         (await validate(token, { issuer: apiUrl, audience: name }))
