@@ -17,7 +17,7 @@ fn get_client() -> anyhow::Result<BasicClient> {
         )?),
     )
     .set_redirect_uri(RedirectUrl::new(format!(
-        "{}/oauth2",
+        "{}/auth/oauth2",
         crate::env::public_http_url(),
     ))?))
 }
