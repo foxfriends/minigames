@@ -5,17 +5,10 @@ export type Options = {
   name: string;
   port: number;
   apiUrl: string;
-  apiKey: string;
-  publicUrl: string;
+  secretKey: string;
 };
 
-export default function minigame({
-  name,
-  port,
-  apiUrl,
-  apiKey,
-  publicUrl,
-}: Options) {
+export default function minigame({ name, port, apiUrl, secretKey }: Options) {
   return function run(
     app: Server,
     callback: (error?: unknown) => (() => unknown) | undefined,
@@ -24,10 +17,9 @@ export default function minigame({
 
     const server = app.listen(port, async () => {
       try {
-        await fetch(`${apiUrl}/api/v1/games/${name}`, {
+        await fetch(`${apiUrl}/api/v1/servers/${name}/available`, {
           method: "POST",
-          headers: { Authorization: `Bearer ${apiKey}` },
-          body: JSON.stringify({ url: publicUrl }),
+          headers: { "X-Api-Key": secretKey },
         });
         onclose = callback();
       } catch (error) {
@@ -39,9 +31,9 @@ export default function minigame({
       if (typeof onclose === "function") {
         onclose();
       }
-      await fetch(`${apiUrl}/api/v1/games/tictactoe`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${apiKey}` },
+      await fetch(`${apiUrl}/api/v1/servers/${name}/unavailable`, {
+        method: "POST",
+        headers: { "X-Api-Key": secretKey },
       });
       server.close();
       process.exit(0);
