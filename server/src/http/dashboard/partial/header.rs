@@ -11,7 +11,7 @@ pub fn header(ctx: &DashboardContext) -> Markup {
             }
             (h3(html! { (ctx.title()) }))
             .ml-auto."pr-8" {
-                a.flex.items-center."gap-2" href="/sign-out" {
+                a.flex.items-center."gap-2" href=(uri!("/auth", crate::http::auth::sign_out::sign_out())) {
                     img.rounded-full src=(ctx.user.avatar_url(5)) alt="";
                     (ctx.user.username) "#" (ctx.user.discriminator)
                 }

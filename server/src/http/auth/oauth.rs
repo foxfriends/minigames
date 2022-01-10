@@ -1,11 +1,15 @@
+use crate::discord;
 use crate::http::cookies::{RedirectCookie, StateCookie, UserCookie};
 use crate::http::response::{Response, ResponseError};
+use crate::postgres::PgPool;
+use crate::user::User;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
-    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenUrl,
+    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenUrl, TokenResponse,
 };
 use rocket::http::{CookieJar, Status};
 use rocket::response::Redirect;
+use rocket::State;
 
 fn get_client() -> anyhow::Result<BasicClient> {
     Ok(BasicClient::new(
@@ -38,6 +42,7 @@ pub async fn sign_in_with_discord(
 
 #[rocket::get("/oauth2?<code>&<state>")]
 pub async fn complete_oauth2<'r>(
+    db: &State<PgPool>,
     cookies: &CookieJar<'r>,
     code: String,
     state: String,
@@ -58,6 +63,10 @@ pub async fn complete_oauth2<'r>(
         .add_extra_param("grant_type", "authorization_code")
         .request_async(async_http_client)
         .await?;
+
+    let user = discord::get_current_user(discord_user_token.access_token().secret()).await?;
+    let mut conn = db.acquire().await?;
+    User::upsert(user.id, &mut conn).await?;
 
     UserCookie::add_to(cookies, &discord_user_token);
     StateCookie::remove_from(cookies);

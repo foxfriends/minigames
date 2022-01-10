@@ -1,7 +1,7 @@
 use rocket::route::Route;
 
-mod oauth;
-mod sign_out;
+pub mod oauth;
+pub mod sign_out;
 
 pub use oauth::sign_in_with_discord;
 
