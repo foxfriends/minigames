@@ -2272,7 +2272,6 @@ dependencies = [
  "tokio-stream",
  "tokio-tungstenite",
  "tungstenite",
- "url 2.2.2",
  "uuid",
  "websocket",
 ]

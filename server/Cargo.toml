@@ -25,5 +25,4 @@ tokio-tungstenite = "0.16"
 tokio-stream = "0.1"
 tungstenite = "0.16"
 uuid = { version = "0.8", features = ["serde", "v4"] }
-url = { version = "2.2", features = ["serde"] }
 websocket = { version = "0.26", features = ["async"] }

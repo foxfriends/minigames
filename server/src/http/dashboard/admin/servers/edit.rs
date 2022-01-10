@@ -1,7 +1,9 @@
 use crate::game::{ApiKeys, GameName, GameServer};
 use crate::http::api::v1::update_game_server;
 use crate::http::cookies::UserCookie;
-use crate::http::dashboard::partial::{button, field, info_field, layout, page, text_input, tt};
+use crate::http::dashboard::partial::{
+    button, field, info_field, layout, page, switch, text_input, tt,
+};
 use crate::http::dashboard::DashboardContext;
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
@@ -43,6 +45,16 @@ pub async fn edit(
                         "Public URL",
                         "public_url",
                         text_input("public_url", "https://my-cool-minigame.com", &server.public_url),
+                    ))
+                    (field(
+                        "Enabled",
+                        "enabled",
+                        html! {
+                            .flex.items-center.justify-between {
+                                "Servers that are not enabled will not be made available for games"
+                                (switch("enabled", server.enabled))
+                            }
+                        }
                     ))
                     (button(html! { "Save" }))
                 }

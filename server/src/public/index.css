@@ -25,3 +25,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .switch {
+    @apply h-[24px] w-[40px] rounded-[12px] cursor-pointer transition-colors flex items-center shrink-0;
+  }
+
+  input:checked + .switch {
+    @apply bg-blurple-default;
+  }
+
+  input:not(:checked) + .switch {
+    @apply bg-switch-unchecked;
+  }
+
+  .switch-toggle {
+    @apply h-[18px] w-[18px] ml-[2px] rounded-[9px] transition-all bg-switch-toggle shadow-switch duration-100;
+  }
+
+  input:checked + .switch .switch-toggle {
+    @apply translate-x-[18px];
+  }
+
+  input:checked + .switch:active .switch-toggle {
+    @apply translate-x-[12px];
+  }
+
+  .switch:active .switch-toggle {
+    @apply w-[24px];
+  }
+}

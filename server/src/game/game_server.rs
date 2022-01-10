@@ -9,6 +9,7 @@ pub struct GameServer {
     name: GameName,
     user_id: UserId,
     pub public_url: String,
+    pub enabled: bool,
 }
 
 impl GameServer {
@@ -38,7 +39,8 @@ impl GameServer {
                 RETURNING
                     name as "name: _",
                     user_id as "user_id: _",
-                    public_url
+                    public_url,
+                    enabled
             "#,
             name as &GameName,
             user_id as UserId,
@@ -58,7 +60,7 @@ impl GameServer {
         let servers = sqlx::query_as!(
             Self,
             r#"
-            SELECT name as "name: _", user_id as "user_id: _", public_url
+            SELECT name as "name: _", user_id as "user_id: _", public_url, enabled
             FROM game_servers
             ORDER BY name ASC
             "#,
@@ -76,7 +78,7 @@ impl GameServer {
         let server = sqlx::query_as!(
             Self,
             r#"
-            SELECT name as "name: _", user_id as "user_id: _", public_url
+            SELECT name as "name: _", user_id as "user_id: _", public_url, enabled
             FROM game_servers
             WHERE name = $1
             "#,
@@ -96,10 +98,12 @@ impl GameServer {
             Self,
             r#"
             UPDATE game_servers
-            SET public_url = $1
-            WHERE name = $2
+            SET public_url = $1,
+                enabled = $2
+            WHERE name = $3
             "#,
             self.public_url,
+            self.enabled,
             &self.name as &GameName,
         )
         .execute(&mut *conn)

@@ -1,5 +1,5 @@
 use crate::discord;
-use crate::game::{GameName, GameServer};
+use crate::game::{GameName, GameRegistry, GameServer};
 use crate::http::cookies::UserCookie;
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
@@ -18,6 +18,7 @@ pub struct CreateGameServerRequest {
 
 async fn create_game_server(
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
     body: &CreateGameServerRequest,
     user_cookie: UserCookie<'_>,
 ) -> Response<GameServer> {
@@ -39,26 +40,29 @@ async fn create_game_server(
     }
     let created_server =
         GameServer::create(&body.name, user.id, &body.public_url, &mut conn).await?;
+    registry.register(&created_server).await;
     Ok(created_server)
 }
 
 #[rocket::post("/servers/new", data = "<body>", format = "json")]
 pub async fn create_game_server_json(
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
     body: Json<CreateGameServerRequest>,
     user_cookie: UserCookie<'_>,
 ) -> Response<Json<GameServer>> {
-    let created_server = create_game_server(db, &*body, user_cookie).await?;
+    let created_server = create_game_server(db, registry, &*body, user_cookie).await?;
     Ok(Json(created_server))
 }
 
 #[rocket::post("/servers/new", data = "<body>", format = "form")]
 pub async fn create_game_server_form(
     db: &State<PgPool>,
+    registry: &State<GameRegistry>,
     body: Form<CreateGameServerRequest>,
     user_cookie: UserCookie<'_>,
 ) -> Response<Redirect> {
-    let server = create_game_server(db, &*body, user_cookie).await?;
+    let server = create_game_server(db, registry, &*body, user_cookie).await?;
     Ok(Redirect::to(uri!(
         "/dashboard",
         crate::http::dashboard::admin::servers::edit::edit(server.name())

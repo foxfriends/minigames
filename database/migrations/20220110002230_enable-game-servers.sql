@@ -1,0 +1,1 @@
+ALTER TABLE game_servers ADD COLUMN enabled BOOLEAN NOT NULL DEFAULT false;

@@ -21,6 +21,13 @@ module.exports = {
           input: "#f6f6f7",
           body: "#b9bbbe",
         },
+        switch: {
+          unchecked: "#72767D",
+          toggle: "#FFFFFF",
+        },
+      },
+      boxShadow: {
+        switch: "0 2px 4px rgba(0, 0, 0, 0.3)",
       },
       fontFamily: {
         sans: ['Whitney', 'Open Sans', 'San Francisco', 'Ubuntu', 'Arial', 'sans-serif'],

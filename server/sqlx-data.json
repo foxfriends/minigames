@@ -13,6 +13,44 @@
       "nullable": []
     }
   },
+  "1065c91e3fb83fb90b9c7a5701187bfe28857763dc68f40a90faf36c439b4058": {
+    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url, enabled\n            FROM game_servers\n            WHERE name = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "1ba6449200a0e1aa95cb7d97b0cec73b9e92b2192b14c3e6af6fb728d8fbab7c": {
     "query": "SELECT EXISTS (SELECT 1 FROM game_participants WHERE game_id = $1 AND user_id = $2)",
     "describe": {
@@ -111,6 +149,20 @@
       "nullable": []
     }
   },
+  "53e3d41be9ecf2b9653846d45f66cb14e2b4abd8381e8671047d7784b7b9b7a1": {
+    "query": "\n            UPDATE game_servers\n            SET public_url = $1,\n                enabled = $2\n            WHERE name = $3\n            ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Bool",
+          "Text"
+        ]
+      },
+      "nullable": []
+    }
+  },
   "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
     "query": "INSERT INTO game_participants (game_id, user_id) VALUES ($1, $2)",
     "describe": {
@@ -182,6 +234,82 @@
       ]
     }
   },
+  "87b4aa3101a3b2ca8c190cd672b86842d573576fb97244b0254bb5275f5480de": {
+    "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url,\n                    enabled\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Int8",
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "969cd73fdf1184cf8bf40f7058f9dedc912b791d415d1153bff9701a51018281": {
+    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url, enabled\n            FROM game_servers\n            ORDER BY name ASC\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "a52dc33aade889ba6b3156ff36bcd08c1e498b1a79ff68b4907372ae9d36c8f4": {
     "query": "\n            INSERT INTO api_keys (game_server_name, public_key, secret_key)\n                VALUES ($1, $2, $3)\n                RETURNING\n                id,\n                game_server_name as \"game: _\",\n                public_key as \"public_key: _\",\n                secret_key as \"secret_key: _\"\n            ",
     "describe": {
@@ -216,38 +344,6 @@
       },
       "nullable": [
         false,
-        false,
-        false,
-        false
-      ]
-    }
-  },
-  "a784c76ae0fd63346a99645ba62c841a962c41b5fde3e8203271003d91f68aa5": {
-    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            WHERE name = $1\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Text"
-        ]
-      },
-      "nullable": [
         false,
         false,
         false
@@ -317,40 +413,6 @@
       ]
     }
   },
-  "b80d9db42de0d70996c9582ddcf4e5dc68577b91a66658b486413fdf650c1a5f": {
-    "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Int8",
-          "Text"
-        ]
-      },
-      "nullable": [
-        false,
-        false,
-        false
-      ]
-    }
-  },
   "b91c22b6ac289754ff5840413b0d475d6b1fce97914abe300875f9b8e9d7b46c": {
     "query": "UPDATE games SET state = $1 WHERE id = $2",
     "describe": {
@@ -364,36 +426,6 @@
       "nullable": []
     }
   },
-  "c27cd93510ef67889be1f786d3721d82e5ff495fa24516b83ad697acf555c311": {
-    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url\n            FROM game_servers\n            ORDER BY name ASC\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        }
-      ],
-      "parameters": {
-        "Left": []
-      },
-      "nullable": [
-        false,
-        false,
-        false
-      ]
-    }
-  },
   "da8dd4f29f44ba2ba5538584d803fa1c16032e77789e3355655aa24611a802fb": {
     "query": "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
     "describe": {
@@ -403,19 +435,6 @@
           "Uuid",
           "Int8",
           "Int8"
-        ]
-      },
-      "nullable": []
-    }
-  },
-  "ed816d87709fb6553038cb47b839e1bd8cb7f8adc9c4f821bf8998a367093a83": {
-    "query": "\n            UPDATE game_servers\n            SET public_url = $1\n            WHERE name = $2\n            ",
-    "describe": {
-      "columns": [],
-      "parameters": {
-        "Left": [
-          "Text",
-          "Text"
         ]
       },
       "nullable": []

@@ -17,7 +17,7 @@ pub use construction::construction;
 pub use empty::empty;
 use header::header;
 pub use heading::{h1, h3};
-pub use input::{field, info_field, text_input};
+pub use input::{field, info_field, switch, text_input};
 pub use layout::layout;
 use logo::logo;
 use nav::nav;
