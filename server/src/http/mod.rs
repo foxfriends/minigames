@@ -3,10 +3,11 @@ use rocket::fs::FileServer;
 use crate::game::GameRegistry;
 use crate::postgres::PgPool;
 
-mod authorization;
+mod api_key_header;
 mod cookies;
 mod cors;
 mod response;
+mod user_authorization;
 
 mod api;
 mod auth;

@@ -6,10 +6,12 @@ use sqlx::postgres::{PgArgumentBuffer, PgTypeInfo, PgValueRef, Postgres};
 use sqlx::{Executor, Type};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 use uuid::Uuid;
 
 const KEY_LENGTH: usize = 48;
 
+#[derive(Eq, PartialEq)]
 pub struct ApiKey([u8; KEY_LENGTH]);
 
 impl Display for ApiKey {
@@ -23,6 +25,16 @@ impl ApiKey {
         let mut buf = [0; KEY_LENGTH];
         rand_bytes(&mut buf)?;
         Ok(Self(buf))
+    }
+}
+
+impl FromStr for ApiKey {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(ApiKey(base64::decode(s)?.try_into().map_err(|_| {
+            anyhow::anyhow!("API Key must be 64 characters long")
+        })?))
     }
 }
 

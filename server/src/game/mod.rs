@@ -10,7 +10,7 @@ mod game_server;
 mod game_state;
 mod registry;
 
-pub use api_keys::ApiKeys;
+pub use api_keys::{ApiKey, ApiKeys};
 pub use game::Game;
 pub use game_id::GameId;
 pub use game_name::GameName;

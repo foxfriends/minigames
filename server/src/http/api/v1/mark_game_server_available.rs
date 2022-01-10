@@ -1,13 +1,26 @@
-use crate::game::{GameName, GameRegistry};
-use crate::http::response::Response;
+use crate::game::{ApiKeys, GameName, GameRegistry};
+use crate::http::api_key_header::ApiKeyHeader;
+use crate::http::response::{Response, ResponseError};
+use crate::postgres::PgPool;
 use rocket::http::Status;
 use rocket::State;
 
 #[rocket::post("/servers/<game>/available")]
 pub async fn mark_game_server_available(
+    db: &State<PgPool>,
     registry: &State<GameRegistry>,
     game: GameName,
+    api_key: ApiKeyHeader,
 ) -> Response<Status> {
+    let mut conn = db.acquire().await?;
+    let api_keys = ApiKeys::load(&game, &mut conn).await?;
+    if api_key.value() != &api_keys.secret_key {
+        return Err(ResponseError::new(
+            Status::Forbidden,
+            "IncorrectApiKey".to_owned(),
+            "This API key is not valid for this game".to_owned(),
+        ));
+    }
     registry.set_available(&game, true).await;
     Ok(Status::NoContent)
 }
