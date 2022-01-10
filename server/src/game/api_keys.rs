@@ -8,7 +8,9 @@ use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 use uuid::Uuid;
 
-pub struct ApiKey([u8; 96]);
+const KEY_LENGTH: usize = 48;
+
+pub struct ApiKey([u8; KEY_LENGTH]);
 
 impl Display for ApiKey {
     fn fmt(&self, fmt: &mut Formatter) -> fmt::Result {
@@ -18,7 +20,7 @@ impl Display for ApiKey {
 
 impl ApiKey {
     pub fn generate() -> anyhow::Result<Self> {
-        let mut buf = [0; 96];
+        let mut buf = [0; KEY_LENGTH];
         rand_bytes(&mut buf)?;
         Ok(Self(buf))
     }
@@ -45,7 +47,7 @@ impl Decode<'_, Postgres> for ApiKey {
     fn decode(value: PgValueRef) -> Result<Self, Box<dyn Error + Send + Sync + 'static>> {
         let string = String::decode(value)?;
         let buf = base64::decode(string)?;
-        let buf: [u8; 96] = buf.try_into().unwrap();
+        let buf: [u8; KEY_LENGTH] = buf.try_into().unwrap();
         Ok(Self(buf))
     }
 }
