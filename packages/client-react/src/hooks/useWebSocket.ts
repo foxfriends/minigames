@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 
-export default function useWebSocket(url) {
-  const [socket, setSocket] = useState(null);
+export type Message = string;
+
+export default function useWebSocket(url: string): WebSocket | null {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    let ws;
+    let ws: WebSocket;
 
     connect();
 

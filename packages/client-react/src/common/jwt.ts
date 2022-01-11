@@ -1,6 +1,9 @@
-import { jwtVerify, importSPKI } from "jose";
+import { jwtVerify, importSPKI, JWTVerifyOptions, JWTPayload } from "jose";
 
-export default async function validate(token, { issuer, audience }) {
+export default async function validate<T extends JWTPayload>(
+  token: string,
+  { issuer, audience }: JWTVerifyOptions,
+): Promise<T> {
   const response = await fetch(`${issuer}/.well-known/openid-configuration`, {
     headers: { Accept: "text/plain" },
   });
@@ -12,5 +15,5 @@ export default async function validate(token, { issuer, audience }) {
     audience,
   });
 
-  return payload;
+  return payload as T;
 }

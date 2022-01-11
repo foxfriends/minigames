@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   parserOptions: { sourceType: "module" },
+  parser: "@typescript-eslint/parser",
   env: {
     browser: true,
     es2021: true,
@@ -11,10 +12,16 @@ module.exports = {
       version: "detect",
     },
   },
-  extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "prettier",
+  ],
   overrides: [
     {
-      files: "server.js",
+      files: "server.ts",
       env: {
         browser: false,
         node: true,

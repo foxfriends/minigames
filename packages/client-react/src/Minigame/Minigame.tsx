@@ -3,6 +3,15 @@ import GameMetaDataProvider from "../GameMetaDataProvider";
 import GameInfoProvider from "../GameInfoProvider";
 import GameStateProvider from "../GameStateProvider";
 
+declare const process: { env: { NODE_ENV: string } };
+
+export type Props = {
+  name: string;
+  socketUrl: string;
+  apiUrl: string;
+  children: React.ReactNode;
+};
+
 export default function Minigame({
   // Game configuration, provided by user
   name,
@@ -11,7 +20,7 @@ export default function Minigame({
   apiUrl,
   // React
   children,
-}) {
+}: Props) {
   if (process.env.NODE_ENV === "development") {
     useEffect(
       () =>

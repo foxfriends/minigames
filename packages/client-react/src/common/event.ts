@@ -1,3 +1,6 @@
+import type { GameId } from "../types";
+import type { Message } from "../hooks/useWebSocket";
+
 const createEventId = (() => {
   let i = 0;
 
@@ -6,28 +9,28 @@ const createEventId = (() => {
   };
 })();
 
-export function subscribe(gameId) {
+export function subscribe(gameId: GameId): Message {
   return JSON.stringify({
     id: createEventId(),
     payload: { Subscribe: gameId },
   });
 }
 
-export function unsubscribe(gameId) {
+export function unsubscribe(gameId: GameId): Message {
   return JSON.stringify({
     id: createEventId(),
     payload: { Unsubscribe: gameId },
   });
 }
 
-export function get(gameId) {
+export function get(gameId: String): Message {
   return JSON.stringify({
     id: createEventId(),
     payload: { Get: gameId },
   });
 }
 
-export function set(gameId, gameState) {
+export function set<T>(gameId: GameId, gameState: T): Message {
   return JSON.stringify({
     id: createEventId(),
     payload: { Set: [gameId, gameState] },
