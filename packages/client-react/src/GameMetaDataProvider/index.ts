@@ -1,1 +1,1 @@
-export { default, useGameMetaData } from "./GameMetaDataProvider.jsx";
+export { default, useGameMetaData } from "./GameMetaDataProvider.js";

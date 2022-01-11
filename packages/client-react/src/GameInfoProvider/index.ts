@@ -1,1 +1,1 @@
-export { default, useGameInfo } from "./GameInfoProvider.jsx";
+export { default, useGameInfo } from "./GameInfoProvider.js";
