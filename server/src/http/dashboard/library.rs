@@ -8,27 +8,23 @@ use maud::html;
 use rocket::response::content::Html;
 use rocket::{uri, State};
 
-#[rocket::get("/admin")]
-pub async fn index(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<Html<String>> {
-    let ctx = DashboardContext::load(["Server Admin"], user_cookie.value()).await?;
+#[rocket::get("/library")]
+pub async fn library(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<Html<String>> {
+    let ctx = DashboardContext::load(["Library"], user_cookie.value()).await?;
     let mut conn = db.acquire().await?;
-    let game_servers: Vec<_> = GameServer::list_all(&mut conn)
-        .await?
-        .into_iter()
-        .filter(|server| server.user_id() == ctx.user.id)
-        .collect();
+    let game_servers = GameServer::list_all(&mut conn).await?;
 
     let markup = layout(
         &ctx,
         page(html! {
             .flex.flex-col."gap-6" {
                 .flex.items-center.justify-between.w-full {
-                    (h1(html! { "Your Games" }))
-                    (link_button(uri!("/dashboard", super::servers::new::new()), html! { "New Game" }))
+                    (h1(html! { "Installed Games" }))
+                    (link_button(uri!("/dashboard", super::admin::index::index()), html! { "Manage" }))
                 }
                 @if game_servers.is_empty() {
                     (empty(html! {
-                        "Looks like you haven't installed a game yet yourself. Got any suggestions?"
+                        "Looks like there aren't any games installed yet. If this is your server, why not set some up?"
                     }))
                 } @else {
                     .flex.flex-row.flex-wrap."gap-4" {

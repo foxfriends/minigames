@@ -17,6 +17,7 @@ pub fn nav(ctx: &DashboardContext) -> Markup {
     html! {
         nav."w-[350px]".bg-background-secondary.h-full.flex.flex-col.items-stretch."p-8"."pr-10"."shrink-0" {
             (nav_link(ctx, uri!("/dashboard", super::super::index::index()), "Dashboard"))
+            (nav_link(ctx, uri!("/dashboard", super::super::library::library()), "Library"))
             (nav_link(ctx, uri!("/dashboard", super::super::admin::index::index()), "Server Admin"))
         }
     }
