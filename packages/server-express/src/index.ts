@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import fetch from "node-fetch";
-import validate from "./jwt";
+import validate from "./jwt.js";
 
 export type Options = {
   name: string;
