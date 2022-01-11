@@ -36,8 +36,14 @@ impl Fairing for Cors {
 
         if let Some(origin) = allow_origin {
             response.set_header(Header::new("Access-Control-Allow-Origin", origin));
-            response.set_header(Header::new("Access-Control-Allow-Methods", "*"));
-            response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+            response.set_header(Header::new(
+                "Access-Control-Allow-Methods",
+                "OPTIONS, GET, HEAD, POST, PUT, DELETE, PATCH",
+            ));
+            response.set_header(Header::new(
+                "Access-Control-Allow-Headers",
+                "Authorization, Content-Type",
+            ));
             response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
         }
     }
