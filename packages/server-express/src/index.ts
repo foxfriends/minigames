@@ -53,7 +53,7 @@ export default function minigame({ name, port, apiUrl, secretKey }: Options) {
         token &&
         (await validate(token, { issuer: apiUrl, audience: name }))
       ) {
-        console.log('valid');
+        console.log("valid");
         res.set("X-Api-Key", secretKey);
       }
       res.json({ ok: true });
