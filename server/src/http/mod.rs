@@ -20,11 +20,7 @@ mod play_game;
 
 pub use cors::CorsOrigin;
 
-pub async fn server(pg_pool: PgPool) -> anyhow::Result<()> {
-    let registry = {
-        let mut conn = pg_pool.acquire().await?;
-        GameRegistry::initialize(&mut conn).await?
-    };
+pub async fn server(pg_pool: PgPool, registry: GameRegistry) -> anyhow::Result<()> {
     rocket::build()
         .mount(
             "/",

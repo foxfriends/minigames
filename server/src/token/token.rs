@@ -1,3 +1,4 @@
+use reqwest::header::HeaderValue;
 use rocket::form::{self, FromFormField, ValueField};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
@@ -20,5 +21,11 @@ impl Display for Token {
 impl<'r> FromFormField<'r> for Token {
     fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
         Ok(Self(field.value.to_owned()))
+    }
+}
+
+impl From<Token> for HeaderValue {
+    fn from(token: Token) -> Self {
+        Self::try_from(&token.0).unwrap()
     }
 }

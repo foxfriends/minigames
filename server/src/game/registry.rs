@@ -11,6 +11,7 @@ pub struct GameServerState {
     pub public_url: String,
 }
 
+#[derive(Clone)]
 pub struct GameRegistry(Arc<Mutex<HashMap<GameName, GameServerState>>>);
 
 impl GameRegistry {
@@ -69,6 +70,16 @@ impl GameRegistry {
             .filter(|(_, state)| state.enabled && state.available)
             .map(|(key, _)| key)
             .cloned()
+            .collect()
+    }
+
+    pub async fn list_enabled(&self) -> Vec<(GameName, String)> {
+        self.0
+            .lock()
+            .await
+            .iter()
+            .filter(|(_, state)| state.enabled)
+            .map(|(key, state)| (key.clone(), state.public_url.clone()))
             .collect()
     }
 }
