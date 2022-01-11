@@ -1,4 +1,5 @@
 import { jwtVerify, importSPKI, JWTVerifyOptions, JWTPayload } from "jose";
+import fetch from "node-fetch";
 
 export default async function validate<T extends JWTPayload>(
   token: string,
