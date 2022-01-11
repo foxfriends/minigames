@@ -1,4 +1,4 @@
-import minigame from "@foxfriends/minigames-server-express";
+import createMinigame from "@foxfriends/minigames-server-express";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import chalk from "chalk";
@@ -12,26 +12,33 @@ const {
   SECRET_KEY,
 } = process.env;
 
-export async function createServer() {
-  if (NODE_ENV === "development") {
-    const vite = await createViteServer(config);
-    return vite.httpServer;
-  } else {
-    const app = express();
-    app.use(express.static("dist"));
-    return app;
-  }
-}
-
-const run = minigame({
+const minigame = createMinigame({
   port: PORT,
   apiUrl: VITE_API_URL,
   name: VITE_GAME_NAME,
   secretKey: SECRET_KEY,
 });
 
+export async function createServer() {
+  if (NODE_ENV === "development") {
+    const vite = await createViteServer({
+      ...config,
+      server: { ...config.server, middlewareMode: "html" },
+    });
+    const app = express();
+    app.use(minigame.middleware());
+    app.use(vite.middlewares);
+    return app;
+  } else {
+    const app = express();
+    app.use(minigame.middleware());
+    app.use(express.static("dist"));
+    return app;
+  }
+}
+
 createServer().then((app) => {
-  run(app, (error) => {
+  minigame.run(app, (error) => {
     if (error) {
       if (error.name === "FetchError") {
         console.log(
@@ -46,7 +53,6 @@ createServer().then((app) => {
       } else {
         console.error(error.message);
       }
-      process.exit(1);
     }
 
     console.log(`${chalk.yellow("tictactoe")} is running on port ${PORT}`);
