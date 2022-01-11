@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import { Router, Express, Request, Response } from "express";
 import fetch from "node-fetch";
 import validate from "./jwt.js";
 
@@ -10,22 +10,11 @@ export type Options = {
 };
 
 export default function minigame({ name, port, apiUrl, secretKey }: Options) {
-  return function run(
+  function run(
     app: Express,
     callback: (error?: unknown) => (() => unknown) | undefined,
   ) {
     let onclose: (() => unknown) | undefined;
-
-    app.post("/health", async (req: Request, res: Response) => {
-      const token = req.get("X-Minigames-Server");
-      if (
-        token &&
-        (await validate(token, { issuer: apiUrl, audience: name }))
-      ) {
-        res.set("X-Api-Key", secretKey);
-      }
-      res.json({ ok: true });
-    });
 
     const server = app.listen(port, async () => {
       try {
@@ -53,5 +42,24 @@ export default function minigame({ name, port, apiUrl, secretKey }: Options) {
 
     process.on("SIGTERM", shutdown);
     process.on("SIGINT", shutdown);
-  };
+  }
+
+  function middleware() {
+    const router = Router();
+    router.post("/health", async (req: Request, res: Response) => {
+      const token = req.get("X-Minigames-Server");
+      console.log(token);
+      if (
+        token &&
+        (await validate(token, { issuer: apiUrl, audience: name }))
+      ) {
+        console.log('valid');
+        res.set("X-Api-Key", secretKey);
+      }
+      res.json({ ok: true });
+    });
+    return router;
+  }
+
+  return { run, middleware };
 }
