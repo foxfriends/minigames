@@ -48,12 +48,10 @@ export default function minigame({ name, port, apiUrl, secretKey }: Options) {
     const router = Router();
     router.post("/health", async (req: Request, res: Response) => {
       const token = req.get("X-Minigames-Server");
-      console.log(token);
       if (
         token &&
         (await validate(token, { issuer: apiUrl, audience: name }))
       ) {
-        console.log("valid");
         res.set("X-Api-Key", secretKey);
       }
       res.json({ ok: true });
