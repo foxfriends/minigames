@@ -37,7 +37,7 @@ export default function handleInteraction({ guildId, user, data }: DiscordenoInt
       return;
     }
     // deno-fmt-ignore
-    const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? (yield pickRandomGame())}`;
+    const game = `${data?.options?.find(whereEq({ name: "game" }))?.value ?? (yield pickRandomGame(guildId!))}`;
     const gameId: string = yield createChallenge({
       guildId: guildId!,
       challengerId: challengerUserId,
