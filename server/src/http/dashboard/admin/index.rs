@@ -1,4 +1,4 @@
-use crate::game::GameServer;
+use crate::game::{GameName, GameServer};
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{empty, game_server_tile, h1, layout, link_button, page};
 use crate::http::dashboard::DashboardContext;
@@ -10,12 +10,15 @@ use rocket::{uri, State};
 
 #[rocket::get("/admin")]
 pub async fn index(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<Html<String>> {
-    let ctx = DashboardContext::load(["Server Admin"], user_cookie.value()).await?;
+    let ctx = DashboardContext::builder(["Server Admin"])
+        .load_user(user_cookie.value())
+        .await?
+        .build();
     let mut conn = db.acquire().await?;
     let game_servers: Vec<_> = GameServer::list_all(&mut conn)
         .await?
         .into_iter()
-        .filter(|server| server.user_id() == ctx.user.id)
+        .filter(|server| server.user_id() == ctx.user().id)
         .collect();
 
     let markup = layout(
@@ -33,7 +36,9 @@ pub async fn index(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<
                 } @else {
                     .flex.flex-row.flex-wrap."gap-4" {
                         @for server in &game_servers {
-                            (game_server_tile(&ctx, server))
+                            a."hover:shadow-xl"."hover:-translate-y-2".transition href=(uri!("/dashboard", super::super::admin::servers::edit::edit(server.name()))) {
+                                (game_server_tile(&ctx, server).await)
+                            }
                         }
                     }
                 }

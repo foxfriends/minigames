@@ -82,4 +82,13 @@ impl GameRegistry {
             .map(|(key, state)| (key.clone(), state.public_url.clone()))
             .collect()
     }
+
+    pub async fn is_available(&self, name: &GameName) -> bool {
+        self.0
+            .lock()
+            .await
+            .get(name)
+            .map(|state| state.available)
+            .unwrap_or(false)
+    }
 }

@@ -1,4 +1,4 @@
-use crate::game::GameServer;
+use crate::game::{GameRegistry, GameServer};
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{empty, game_server_tile, h1, layout, link_button, page};
 use crate::http::dashboard::DashboardContext;
@@ -9,8 +9,16 @@ use rocket::response::content::Html;
 use rocket::{uri, State};
 
 #[rocket::get("/library")]
-pub async fn library(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Response<Html<String>> {
-    let ctx = DashboardContext::load(["Library"], user_cookie.value()).await?;
+pub async fn library(
+    db: &State<PgPool>,
+    registry: &State<GameRegistry>,
+    user_cookie: UserCookie<'_>,
+) -> Response<Html<String>> {
+    let ctx = DashboardContext::builder(["Library"])
+        .with_registry((*registry).clone())
+        .load_user(user_cookie.value())
+        .await?
+        .build();
     let mut conn = db.acquire().await?;
     let game_servers = GameServer::list_all(&mut conn).await?;
 
@@ -29,7 +37,7 @@ pub async fn library(db: &State<PgPool>, user_cookie: UserCookie<'_>) -> Respons
                 } @else {
                     .flex.flex-row.flex-wrap."gap-4" {
                         @for server in &game_servers {
-                            (game_server_tile(&ctx, server))
+                            (game_server_tile(&ctx, server).await)
                         }
                     }
                 }

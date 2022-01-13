@@ -19,9 +19,12 @@ pub async fn edit(
     user_cookie: UserCookie<'_>,
 ) -> Response<Html<String>> {
     let mut conn = db.acquire().await?;
-    let ctx = DashboardContext::load(["Server Admin", &*name], user_cookie.value()).await?;
+    let ctx = DashboardContext::builder(["Server Admin", &*name])
+        .load_user(user_cookie.value())
+        .await?
+        .build();
     let server = match GameServer::load(&name, &mut conn).await? {
-        Some(server) if ctx.user.id == server.user_id() => server,
+        Some(server) if ctx.user().id == server.user_id() => server,
         Some(..) => {
             return Err(ResponseError::new_empty(Status::Forbidden));
         }

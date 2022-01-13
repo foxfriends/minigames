@@ -7,7 +7,10 @@ use rocket::response::content::Html;
 
 #[rocket::get("/")]
 pub async fn index(user_cookie: UserCookie<'_>) -> Response<Html<String>> {
-    let ctx = DashboardContext::load(["Dashboard"], user_cookie.value()).await?;
+    let ctx = DashboardContext::builder(["Dashboard"])
+        .load_user(user_cookie.value())
+        .await?
+        .build();
     let markup = layout(
         &ctx,
         full_page(html! {
