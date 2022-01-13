@@ -27,7 +27,7 @@ impl DashboardContextBuilder {
 
     pub async fn with_guild(mut self, guild_id: GuildId) -> anyhow::Result<Self> {
         let guild = discord::get_guild(guild_id).await?;
-        self.path.push(guild.name.clone());
+        self.path.push(guild.name);
         Ok(self)
     }
 
