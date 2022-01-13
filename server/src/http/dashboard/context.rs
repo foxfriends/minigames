@@ -1,10 +1,13 @@
 use crate::discord;
-use crate::discord::DiscordUser;
+use crate::discord::{DiscordGuild, DiscordUser, UserDiscordGuild};
 use crate::game::{GameName, GameRegistry};
+use crate::guild::GuildId;
 
 pub struct DashboardContextBuilder {
+    token: String,
+    user: DiscordUser,
+    guild: Option<DiscordGuild>,
     path: Vec<String>,
-    user: Option<DiscordUser>,
     registry: Option<GameRegistry>,
 }
 
@@ -14,16 +17,28 @@ impl DashboardContextBuilder {
         self
     }
 
-    pub async fn load_user(mut self, discord_user_token: &str) -> anyhow::Result<Self> {
-        let user = discord::get_current_user(discord_user_token).await?;
-        self.user = Some(user);
+    pub fn with_path<P>(mut self, path: P) -> Self
+    where
+        P: IntoIterator,
+        P::Item: Into<String>,
+    {
+        self.path.extend(path.into_iter().map(Into::into));
+        self
+    }
+
+    pub async fn with_guild(mut self, guild_id: GuildId) -> anyhow::Result<Self> {
+        let guild = discord::get_guild(guild_id).await?;
+        self.path.push(guild.name.clone());
+        self.guild = Some(guild);
         Ok(self)
     }
 
     pub fn build(self) -> DashboardContext {
         DashboardContext {
+            token: self.token,
             path: self.path,
             user: self.user,
+            guild: self.guild,
             registry: self.registry,
         }
     }
@@ -31,21 +46,22 @@ impl DashboardContextBuilder {
 
 pub struct DashboardContext {
     path: Vec<String>,
-    user: Option<DiscordUser>,
+    token: String,
+    user: DiscordUser,
+    guild: Option<DiscordGuild>,
     registry: Option<GameRegistry>,
 }
 
 impl DashboardContext {
-    pub fn builder<P>(path: P) -> DashboardContextBuilder
-    where
-        P: IntoIterator,
-        P::Item: Into<String>,
-    {
-        DashboardContextBuilder {
-            path: path.into_iter().map(Into::into).collect(),
-            user: None,
+    pub async fn builder(token: &str) -> anyhow::Result<DashboardContextBuilder> {
+        let user = discord::get_current_user(token).await?;
+        Ok(DashboardContextBuilder {
+            path: vec![],
+            token: token.to_owned(),
+            user,
+            guild: None,
             registry: None,
-        }
+        })
     }
 
     pub fn section(&self) -> &str {
@@ -57,7 +73,11 @@ impl DashboardContext {
     }
 
     pub fn user(&self) -> &DiscordUser {
-        self.user.as_ref().unwrap()
+        &self.user
+    }
+
+    pub async fn load_guilds(&self) -> anyhow::Result<Vec<UserDiscordGuild>> {
+        discord::get_user_guilds(&self.token).await
     }
 
     pub async fn is_available(&self, game: &GameName) -> bool {

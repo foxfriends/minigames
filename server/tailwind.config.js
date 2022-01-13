@@ -8,6 +8,7 @@ module.exports = {
           floating: "#18191c",
           default: "#36393F",
           secondary: "#2F3136",
+          hover: "#292B2F",
         },
         divider: {
           dark: "#040405"

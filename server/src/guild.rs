@@ -1,4 +1,6 @@
 use rocket::form::{self, FromFormField, ValueField};
+use rocket::request::FromParam;
+use rocket::UriDisplayPath;
 use serde::de::Error as _;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use sqlx::decode::Decode;
@@ -8,8 +10,9 @@ use sqlx::Executor;
 use sqlx::Type;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, UriDisplayPath)]
 pub struct GuildId(u64);
 
 impl Display for GuildId {
@@ -64,6 +67,14 @@ impl<'r> FromFormField<'r> for GuildId {
                 error
             )))?,
         }
+    }
+}
+
+impl<'a> FromParam<'a> for GuildId {
+    type Error = <u64 as FromStr>::Err;
+
+    fn from_param(param: &'a str) -> Result<Self, Self::Error> {
+        Ok(Self(param.parse()?))
     }
 }
 

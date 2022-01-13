@@ -9,9 +9,9 @@ use rocket::uri;
 
 #[rocket::get("/admin/servers/new")]
 pub async fn new(user_cookie: UserCookie<'_>) -> Response<Html<String>> {
-    let ctx = DashboardContext::builder(["Server Admin", "New Game"])
-        .load_user(user_cookie.value())
+    let ctx = DashboardContext::builder(user_cookie.value())
         .await?
+        .with_path(["Developer", "New Game"])
         .build();
     let markup = layout(
         &ctx,

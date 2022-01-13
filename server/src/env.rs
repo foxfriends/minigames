@@ -29,6 +29,10 @@ pub fn discord_client_id() -> String {
     env::var("DISCORD_CLIENT_ID").expect("Environment variable DISCORD_CLIENT_ID is required")
 }
 
+pub fn discord_bot_token() -> String {
+    env::var("DISCORD_BOT_TOKEN").expect("Environment variable DISCORD_BOT_TOKEN is required")
+}
+
 pub fn discord_client_secret() -> String {
     env::var("DISCORD_CLIENT_SECRET")
         .expect("Environment variable DISCORD_CLIENT_SECRET is required")

@@ -114,6 +114,58 @@ impl GameServer {
         Ok(servers)
     }
 
+    pub async fn list_all_for_guild<Conn>(
+        guild_id: &GuildId,
+        mut conn: Conn,
+    ) -> anyhow::Result<Vec<Self>>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        let servers = match superuser_id() {
+            Some(superuser) => {
+                sqlx::query_as!(
+                    Self,
+                    r#"
+                    SELECT DISTINCT
+                        name as "name: _",
+                        user_id as "user_id: _",
+                        public_url,
+                        enabled
+                    FROM game_servers g
+                    LEFT OUTER JOIN game_server_guilds l ON l.game_server_name = g.name
+                    WHERE user_id = $1 OR l.guild_id = $2
+                    ORDER BY name ASC
+                    "#,
+                    superuser as UserId,
+                    guild_id as &GuildId,
+                )
+                .fetch_all(&mut *conn)
+                .await?
+            }
+            None => {
+                sqlx::query_as!(
+                    Self,
+                    r#"
+                SELECT
+                    name as "name: _",
+                    user_id as "user_id: _",
+                    public_url,
+                    enabled
+                FROM game_servers g
+                INNER JOIN game_server_guilds l ON g.name = l.game_server_name
+                WHERE l.guild_id = $1
+                ORDER BY name ASC
+                "#,
+                    guild_id as &GuildId,
+                )
+                .fetch_all(&mut *conn)
+                .await?
+            }
+        };
+        Ok(servers)
+    }
+
     pub async fn load<Conn>(name: &GameName, mut conn: Conn) -> anyhow::Result<Option<Self>>
     where
         Conn: std::ops::DerefMut,

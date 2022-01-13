@@ -19,9 +19,9 @@ pub async fn edit(
     user_cookie: UserCookie<'_>,
 ) -> Response<Html<String>> {
     let mut conn = db.acquire().await?;
-    let ctx = DashboardContext::builder(["Server Admin", &*name])
-        .load_user(user_cookie.value())
+    let ctx = DashboardContext::builder(user_cookie.value())
         .await?
+        .with_path(["Developer", &*name])
         .build();
     let server = match GameServer::load(&name, &mut conn).await? {
         Some(server) if ctx.user().id == server.user_id() => server,

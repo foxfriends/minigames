@@ -1,5 +1,6 @@
 use maud::{html, Markup};
 
+#[allow(dead_code)]
 pub fn construction(warning: &str) -> Markup {
     html! {
         .bg-background-floating.rounded-md.flex.items-center."gap-8"."p-8".shadow-xl.max-w-sm {

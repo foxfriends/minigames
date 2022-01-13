@@ -34,6 +34,7 @@ pub async fn sign_in_with_discord(
     let (auth_url, state) = client
         .authorize_url(CsrfToken::new_random)
         .add_scope(Scope::new("identify".to_owned()))
+        .add_scope(Scope::new("guilds".to_owned()))
         .url();
     RedirectCookie::add_to(cookies, redirect_path);
     StateCookie::add_to(cookies, state.secret().to_owned());
