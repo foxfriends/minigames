@@ -62,6 +62,7 @@ impl<'r> FromFormField<'r> for GuildId {
     fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
         match field.value.parse() {
             Ok(id) => Ok(Self(id)),
+            #[allow(clippy::try_err)]
             Err(error) => Err(form::Error::validation(format!(
                 "Failed to parse GuildId: {}",
                 error

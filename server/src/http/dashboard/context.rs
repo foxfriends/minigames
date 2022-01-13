@@ -1,12 +1,11 @@
 use crate::discord;
-use crate::discord::{DiscordGuild, DiscordUser, UserDiscordGuild};
+use crate::discord::{DiscordUser, UserDiscordGuild};
 use crate::game::{GameName, GameRegistry};
 use crate::guild::GuildId;
 
 pub struct DashboardContextBuilder {
     token: String,
     user: DiscordUser,
-    guild: Option<DiscordGuild>,
     path: Vec<String>,
     registry: Option<GameRegistry>,
 }
@@ -29,7 +28,6 @@ impl DashboardContextBuilder {
     pub async fn with_guild(mut self, guild_id: GuildId) -> anyhow::Result<Self> {
         let guild = discord::get_guild(guild_id).await?;
         self.path.push(guild.name.clone());
-        self.guild = Some(guild);
         Ok(self)
     }
 
@@ -38,7 +36,6 @@ impl DashboardContextBuilder {
             token: self.token,
             path: self.path,
             user: self.user,
-            guild: self.guild,
             registry: self.registry,
         }
     }
@@ -48,7 +45,6 @@ pub struct DashboardContext {
     path: Vec<String>,
     token: String,
     user: DiscordUser,
-    guild: Option<DiscordGuild>,
     registry: Option<GameRegistry>,
 }
 
@@ -59,7 +55,6 @@ impl DashboardContext {
             path: vec![],
             token: token.to_owned(),
             user,
-            guild: None,
             registry: None,
         })
     }

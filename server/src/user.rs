@@ -40,7 +40,7 @@ impl<'de> Deserialize<'de> for UserId {
         D: Deserializer<'de>,
     {
         let id_str = String::deserialize(deserializer)?;
-        Ok(id_str.parse().map_err(D::Error::custom)?)
+        id_str.parse().map_err(D::Error::custom)
     }
 }
 

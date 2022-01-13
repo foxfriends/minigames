@@ -13,8 +13,8 @@
       "nullable": []
     }
   },
-  "1065c91e3fb83fb90b9c7a5701187bfe28857763dc68f40a90faf36c439b4058": {
-    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url, enabled\n            FROM game_servers\n            WHERE name = $1\n            ",
+  "191706977abe6c247097cbd5df83c7afa60e583f88ec2ee677d7d2eb1fbe520e": {
+    "query": "\n                    SELECT DISTINCT\n                        name as \"name: _\",\n                        user_id as \"user_id: _\",\n                        public_url,\n                        enabled\n                    FROM game_servers g\n                    LEFT OUTER JOIN game_server_guilds l ON l.game_server_name = g.name\n                    WHERE user_id = $1 OR l.guild_id = $2\n                    ORDER BY name ASC\n                    ",
     "describe": {
       "columns": [
         {
@@ -40,7 +40,8 @@
       ],
       "parameters": {
         "Left": [
-          "Text"
+          "Int8",
+          "Int8"
         ]
       },
       "nullable": [
@@ -93,6 +94,42 @@
         ]
       },
       "nullable": [
+        false,
+        false
+      ]
+    }
+  },
+  "47201e733894d31366cfeb01bb3ab216b33f8d442fae4cb81b7c102b8b934041": {
+    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                public_url,\n                enabled\n            FROM game_servers\n            ORDER BY name ASC\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false,
         false,
         false
       ]
@@ -174,6 +211,44 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "6a49ee9a55f6c8f29abba1ae2930752025486e3fa88e2ae0df8718b734e58338": {
+    "query": "\n                SELECT\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url,\n                    enabled\n                FROM game_servers g\n                INNER JOIN game_server_guilds l ON g.name = l.game_server_name\n                WHERE l.guild_id = $1\n                ORDER BY name ASC\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
     }
   },
   "6dced4b0bf1fa7445c3268e8551994a060588b269b0c6936fb15e0a83683edae": {
@@ -274,40 +349,29 @@
       ]
     }
   },
-  "969cd73fdf1184cf8bf40f7058f9dedc912b791d415d1153bff9701a51018281": {
-    "query": "\n            SELECT name as \"name: _\", user_id as \"user_id: _\", public_url, enabled\n            FROM game_servers\n            ORDER BY name ASC\n            ",
+  "9528c259ce95dc78ba7243c58e147bf65e54330f7ecb74deee90c17f5521bd7d": {
+    "query": "DELETE FROM game_server_guilds WHERE game_server_name = $1",
     "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        },
-        {
-          "ordinal": 3,
-          "name": "enabled",
-          "type_info": "Bool"
-        }
-      ],
+      "columns": [],
       "parameters": {
-        "Left": []
+        "Left": [
+          "Text"
+        ]
       },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
+      "nullable": []
+    }
+  },
+  "9d84082e8e9c8e5a3d3e9efe54a55d5cd08ab3ffa72c9e4fdafc01eb9743e320": {
+    "query": "INSERT INTO game_server_guilds (game_server_name, guild_id) VALUES ($1, $2)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Int8"
+        ]
+      },
+      "nullable": []
     }
   },
   "a52dc33aade889ba6b3156ff36bcd08c1e498b1a79ff68b4907372ae9d36c8f4": {
@@ -424,6 +488,65 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "c36be689c215f99401af437c8bdd06120304834db57d49d7f0ebb8db0393a4da": {
+    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                public_url,\n                enabled\n            FROM game_servers\n            WHERE name = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "c4a27e62a09401fd0f27af7fe131396dd86b024ee2a726c9cc18ada7b01f37b7": {
+    "query": "SELECT EXISTS (SELECT 1 FROM game_server_guilds WHERE game_server_name = $1 AND guild_id = $2)",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "exists",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        null
+      ]
     }
   },
   "da8dd4f29f44ba2ba5538584d803fa1c16032e77789e3355655aa24611a802fb": {

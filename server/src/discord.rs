@@ -55,7 +55,7 @@ impl UserDiscordGuild {
 
     pub fn initials(&self) -> String {
         self.name
-            .split(" ")
+            .split(' ')
             .filter_map(|word| word.chars().next())
             .collect()
     }
