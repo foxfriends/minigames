@@ -1,4 +1,6 @@
 use super::{ApiKeys, GameName};
+use crate::env::superuser_id;
+use crate::guild::{Guild, GuildId};
 use crate::user::UserId;
 use serde::{Deserialize, Serialize};
 use sqlx::postgres::Postgres;
@@ -52,6 +54,44 @@ impl GameServer {
         Ok(game_server)
     }
 
+    pub async fn set_guilds<Conn>(&self, guilds: &[GuildId], mut conn: Conn) -> anyhow::Result<()>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        sqlx::query!(
+            "DELETE FROM game_server_guilds WHERE game_server_name = $1",
+            &self.name as &GameName
+        )
+        .execute(&mut *conn)
+        .await?;
+        for guild_id in guilds {
+            Guild::upsert(guild_id, &mut *conn).await?;
+            sqlx::query!(
+                "INSERT INTO game_server_guilds (game_server_name, guild_id) VALUES ($1, $2)",
+                &self.name as &GameName,
+                guild_id as &GuildId
+            )
+            .execute(&mut *conn)
+            .await?;
+        }
+        Ok(())
+    }
+
+    pub async fn is_in_guild<Conn>(&self, guild_id: GuildId, mut conn: Conn) -> anyhow::Result<bool>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        if superuser_id().map(|id| id == self.user_id).unwrap_or(false) {
+            return Ok(true);
+        }
+        let result = sqlx::query!("SELECT EXISTS (SELECT 1 FROM game_server_guilds WHERE game_server_name = $1 AND guild_id = $2)", &self.name as &GameName, guild_id as GuildId)
+            .fetch_one(&mut *conn)
+            .await?;
+        Ok(result.exists.unwrap())
+    }
+
     pub async fn list_all<Conn>(mut conn: Conn) -> anyhow::Result<Vec<Self>>
     where
         Conn: std::ops::DerefMut,
@@ -60,7 +100,11 @@ impl GameServer {
         let servers = sqlx::query_as!(
             Self,
             r#"
-            SELECT name as "name: _", user_id as "user_id: _", public_url, enabled
+            SELECT
+                name as "name: _",
+                user_id as "user_id: _",
+                public_url,
+                enabled
             FROM game_servers
             ORDER BY name ASC
             "#,
@@ -78,7 +122,11 @@ impl GameServer {
         let server = sqlx::query_as!(
             Self,
             r#"
-            SELECT name as "name: _", user_id as "user_id: _", public_url, enabled
+            SELECT
+                name as "name: _",
+                user_id as "user_id: _",
+                public_url,
+                enabled
             FROM game_servers
             WHERE name = $1
             "#,

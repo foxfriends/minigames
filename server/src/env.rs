@@ -1,4 +1,5 @@
 use crate::http::CorsOrigin;
+use crate::user::UserId;
 use std::env;
 use std::path::PathBuf;
 
@@ -46,4 +47,13 @@ pub fn static_files_dir() -> PathBuf {
         .unwrap_or_else(|_| String::from("./public"))
         .parse()
         .unwrap()
+}
+
+pub fn superuser_id() -> Option<UserId> {
+    let id_str = env::var("SUPERUSER_ID").ok()?;
+    Some(
+        id_str
+            .parse()
+            .expect("Environment variable SUPERUSER_ID must be a valid user ID"),
+    )
 }

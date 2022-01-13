@@ -6,6 +6,7 @@ use sqlx::postgres::{PgArgumentBuffer, PgConnection, PgTypeInfo, PgValueRef, Pos
 use sqlx::Type;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct UserId(u64);
@@ -13,6 +14,14 @@ pub struct UserId(u64);
 impl Display for UserId {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl FromStr for UserId {
+    type Err = <u64 as FromStr>::Err;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self(s.parse()?))
     }
 }
 
@@ -31,7 +40,7 @@ impl<'de> Deserialize<'de> for UserId {
         D: Deserializer<'de>,
     {
         let id_str = String::deserialize(deserializer)?;
-        Ok(Self(id_str.parse().map_err(D::Error::custom)?))
+        Ok(id_str.parse().map_err(D::Error::custom)?)
     }
 }
 

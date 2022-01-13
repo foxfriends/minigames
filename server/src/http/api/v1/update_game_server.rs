@@ -1,5 +1,6 @@
 use crate::discord;
 use crate::game::{GameName, GameRegistry, GameServer};
+use crate::guild::GuildId;
 use crate::http::cookies::UserCookie;
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
@@ -14,6 +15,7 @@ use serde::Deserialize;
 pub struct UpdateGameServerRequest {
     name: Option<GameName>,
     public_url: Option<String>,
+    guilds: Option<Vec<GuildId>>,
     enabled: bool,
 }
 
@@ -51,8 +53,12 @@ async fn update_game_server(
         server.public_url = public_url.to_owned();
     }
     server.enabled = body.enabled;
-
     server.save(&mut conn).await?;
+
+    if let Some(guilds) = &body.guilds {
+        server.set_guilds(guilds, &mut conn).await?;
+    }
+
     conn.commit().await?;
 
     if let Some(name) = &body.name {

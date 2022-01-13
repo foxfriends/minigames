@@ -38,7 +38,7 @@ pub async fn create_challenge(
     }
 
     let mut conn = db.begin().await?;
-    Guild::upsert(body.guild_id, &mut conn).await?;
+    Guild::upsert(&body.guild_id, &mut conn).await?;
     let challenger = User::upsert(body.challenger_id, &mut conn).await?;
     let challenged = User::upsert(body.challenged_id, &mut conn).await?;
     let game = Game::create(body.guild_id, body.game.clone(), challenger, &mut conn).await?;
