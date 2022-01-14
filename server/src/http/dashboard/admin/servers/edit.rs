@@ -1,3 +1,4 @@
+use crate::env::superuser_id;
 use crate::game::{ApiKeys, GameName, GameServer};
 use crate::http::api::v1::update_game_server;
 use crate::http::cookies::UserCookie;
@@ -32,6 +33,20 @@ pub async fn edit(
             return Err(ResponseError::new_empty(Status::NotFound));
         }
     };
+
+    let enabled_guilds = server.list_enabled_guilds(&mut conn).await?;
+    let is_supergame = match superuser_id() {
+        Some(id) => id == server.user_id(),
+        _ => false,
+    };
+
+    let guilds: Vec<_> = ctx
+        .load_guilds()
+        .await?
+        .into_iter()
+        .filter(|guild| guild.can_manage())
+        .collect();
+
     let api_keys = ApiKeys::load(server.name(), &mut conn).await?;
     let markup = layout(
         &ctx,
@@ -54,11 +69,43 @@ pub async fn edit(
                         "enabled",
                         html! {
                             .flex.items-center.justify-between {
-                                "Servers that are not enabled will not be made available for games"
+                                "Games that are not enabled will not be made available to play on any Discord server"
                                 (switch("enabled", server.enabled))
                             }
-                        }
+                        },
                     ))
+
+                    @if !is_supergame {
+                        (info_field(
+                            "Servers",
+                            html! {
+                                .flex.flex-col."gap-4" {
+                                    "You must choose which servers to install this game to. You may only install games to servers you manage."
+                                    .grid."gap-2"."grid-cols-3".bg-background-secondary."p-4".border.border-divider-dark.rounded-md {
+                                        @for guild in &guilds {
+                                            label.flex.flex-row."gap-4".items-center."p-2".cursor-pointer.select-none for=(guild.id) {
+                                                input.hidden #(guild.id) type="checkbox" name="guilds" value=(guild.id) checked[enabled_guilds.contains(&guild.id)] autocomplete="off";
+                                                .checkbox.border.border-divider-light.rounded-sm.flex.items-center.justify-center."w-6"."h-6"."shrink-0" {
+                                                    .checkmark { "✓" }
+                                                }
+                                                @if let Some(url) = guild.icon_url(6) {
+                                                    img.rounded-full."w-8"."h-8"."shrink-0" src=(url) alt="";
+                                                } @else {
+                                                    ."w-8"."h-8".rounded-full.bg-background-floating.flex.items-center.justify-center.text-xs."shrink-0" {
+                                                        (guild.initials())
+                                                    }
+                                                }
+                                                .font-semibold.truncate {
+                                                    (guild.name)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                        ))
+                    }
+
                     (button(html! { "Save" }))
                 }
                 (info_field(

@@ -5,6 +5,7 @@ use crate::user::UserId;
 use serde::{Deserialize, Serialize};
 use sqlx::postgres::Postgres;
 use sqlx::Executor;
+use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize)]
 pub struct GameServer {
@@ -90,6 +91,26 @@ impl GameServer {
             .fetch_one(&mut *conn)
             .await?;
         Ok(result.exists.unwrap())
+    }
+
+    pub async fn list_enabled_guilds<Conn>(
+        &self,
+        mut conn: Conn,
+    ) -> anyhow::Result<HashSet<GuildId>>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        let result = sqlx::query!(
+            r#"SELECT guild_id as "guild_id: GuildId" FROM game_server_guilds WHERE game_server_name = $1"#,
+            &self.name as &GameName
+        )
+        .fetch_all(&mut *conn)
+        .await?
+        .into_iter()
+        .map(|result| result.guild_id)
+        .collect();
+        Ok(result)
     }
 
     pub async fn list_all<Conn>(mut conn: Conn) -> anyhow::Result<Vec<Self>>

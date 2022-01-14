@@ -309,6 +309,26 @@
       ]
     }
   },
+  "829b712f8f567582431f5e3d5b303487e66a828e274d67fe01ef2f533e7459bf": {
+    "query": "SELECT guild_id as \"guild_id: GuildId\" FROM game_server_guilds WHERE game_server_name = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "guild_id: GuildId",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false
+      ]
+    }
+  },
   "87b4aa3101a3b2ca8c190cd672b86842d573576fb97244b0254bb5275f5480de": {
     "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url,\n                    enabled\n            ",
     "describe": {

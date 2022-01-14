@@ -54,4 +54,16 @@
   .switch:active .switch-toggle {
     @apply w-[24px];
   }
+
+  input:checked + .checkbox {
+    @apply bg-background-light;
+  }
+
+  .checkbox .checkmark {
+    @apply text-text-dark;
+  }
+
+  input:not(:checked) + .checkbox .checkmark {
+    @apply hidden;
+  }
 }

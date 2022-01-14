@@ -9,9 +9,11 @@ module.exports = {
           default: "#36393F",
           secondary: "#2F3136",
           hover: "#292B2F",
+          light: "#b9bbbe",
         },
         divider: {
-          dark: "#040405"
+          dark: "#040405",
+          light: "#b9bbbe",
         },
         blurple: {
           default: "#5865f2",
@@ -21,6 +23,7 @@ module.exports = {
           heading: "#ffffff",
           input: "#f6f6f7",
           body: "#b9bbbe",
+          dark: "#36393F",
         },
         switch: {
           unchecked: "#72767D",
