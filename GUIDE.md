@@ -33,6 +33,11 @@ server, the Docker approach is recommended.
 
 > When run in development mode, the default port for the Main server's REST API is 8000.
 
+It is recommended to set the `SUPERUSER_ID` environment variable of the server to your
+Discord User ID, which you can find by following [this guide][discord-user-id].
+
+[discord-user-id]: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+
 ## Minigame Server
 
 The first step of creating a minigame is setting up a minigame server. This server
@@ -41,55 +46,75 @@ serves two purposes:
 2.  To facilitate the playing of the game (e.g. serving the game client).
 
 Though there is technically no requirement that the game *plays* in the browser, it
-is required that the minigame includes a server that provides a public URL which, when
-visited in a browser starts the game. When a user is directed to play your minigame,
-they will be sent to the URL `<public_url>/?game_id=<game_id>&token=<token>`.
+is required that the minigame is accessible via a URL which, when opened by a browser
+starts the game. When a user is directed to play your minigame, they will be sent to
+the URL `<public_url>/?game_id=<game_id>&token=<token>`.
 
-### Registering and Unregistering
+The name of your game, its public URL, and other settings are configured from the web
+dashboard served by the main server. Open up your main server in the browser (likely
+`http://locahost:8000`) and navigate to `Dashboard`, then `Developers`, and then click
+the `New Game` button and fill in the appropriate fields.
 
-The minigame server needs to tell the main server that it has started, adding the
-game to the list of games that will be able to the bot.
+If not running with `SUPERUSER_ID` set to your Discord User ID, you will also need to
+check off which Discord servers your game should be made available in. Only servers
+that you manage and have the bot installed will be available in the list.
+
+### Availability
+
+The minigame server should tell the main server that it has started, adding the
+game to the list of games that will be able to the bot. Otherwise, the main server will
+eventually pick up the availability of the game by performing a health check (described
+below), but that takes a while.
 
 Similarly, when the minigame server shuts down it should notify the main server
 that it is no longer available to host games. The two requests are as follows:
 
-> 🚧 The `Authorization: Bearer <token>` part of these requests is not yet
-> implemented. You can leave that out of your requests for now.
-
 __Registering__:
 
 ```
-POST /game/<name>
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{ "url": "<public_url>" }
+POST /api/v1/servers/<name>/available
+X-Api-Key: <secret_key>
 
 where:
-  <name> is the name of your game, which must not already be registered on the Main server
-  <token> is your API key
-  <public_url> is the URL at which your game can be reached, as described above
+  <name> is the name of your game, which must already be registered on the Main server
+  <secret_key> is your game server's secret key
 ```
 
 __Unregistering__:
 
 ```
-DELETE /game/<name>
-Authorization: Bearer <token>
+POST /api/v1/game/<name>/unavailable
+X-Api-Key: <secret_key>
 
 where:
   <name> is the name of your game, which must not already be registered on the Main server
-  <token> is your API key
+  <secret_key> is your game server's secret key
 ```
 
 ### Health Check
 
-The minigame server should have a route `GET /health` which responds with an empty response,
-which will be reached occasionally by the main server. If this address cannot be reached,
-the game will be removed from the registry on the main server.
+The minigame server should have a route `GET /health` which responds with your game server's
+secret key when called by the main server. This route will be reached occasionally (every
+half hour or so) by the main server. If this address cannot be reached, or the response is not
+as expected, the game will be removed from the registry on the main server.
 
-> 🚧 This check has not yet been implemented on the main server, so you don't have to
-> worry about this right yet.
+⚠ __Be careful not to respond with your API key on every request__! Only requests containing
+the proper validation should be responded to with the secret key, otherwise you risk exposing
+your secret key to malicious callers. A request is validated as follows:
+
+1.  Check that the request contains the header `X-Minigames-Server`.
+2.  The the value of the `X-Minigames-Server` header should be a JWT. Validate it as follows:
+    1.  Retrieve the public verification key from `<main_server_url>/.well-known/openid-configuration`
+    2.  Verify the JWT with that key (SPKI PEM encoded) and algorithm `RS256`.
+    3.  Ensure the `iss` matches the `<main_server_url>` you retrieved it from.
+    4.  Ensure the `aud` matches the name of your game.
+
+If all that turns out okay, include the `X-Api-Key` header in your response with the value
+of your secret key. Otherwise, you may respond however you like as long as it __does not__
+include your secret key.
+
+>   Note that if you use one of the provided server packages, this endpoint will be created
+>   automatically for you. This is recommended, to avoid errors in the validation process.
 
 ## Minigame Client
 
@@ -119,7 +144,7 @@ The minigame client will likely need to know some information about the game, wh
 can be retrieved via the REST API with the following request:
 
 ```
-GET /games/<name>/<game_id>
+GET /api/v1/games/<name>/<game_id>
 
 where:
   <name> is the name of your game (same as used when registering)
@@ -267,7 +292,7 @@ Once the main server has received the same result from all players, the game is
 officially considered completed.
 
 ```
-POST /complete
+POST /api/v1/complete
 Authorization: Bearer <token>
 Content-Type: application/json
 
