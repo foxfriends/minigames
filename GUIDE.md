@@ -93,7 +93,7 @@ where:
 
 ### Health Check
 
-The minigame server should have a route `GET /health` which responds with your game server's
+The minigame server should have a route `POST /health` which responds with your game server's
 secret key when called by the main server. This route will be reached occasionally (every
 half hour or so) by the main server. If this address cannot be reached, or the response is not
 as expected, the game will be removed from the registry on the main server.
