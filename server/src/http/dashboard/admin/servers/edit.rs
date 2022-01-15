@@ -59,7 +59,7 @@ pub async fn edit(
                             "Icon",
                             html! {
                                 input.hidden id="asset" type="file" accept="image/png;image/jpeg;image/gif" name="asset";
-                                label.border.border-divider-dark.bg-background-secondary."p-4" for="asset" {
+                                label.border.border-divider-dark.bg-background-secondary."p-4".rounded-md for="asset" {
                                     @if let Some(asset) = asset {
                                         img.object-cover.rounded-full.bg-background-floating."w-32"."h-32" src=(asset.url());
                                     } @else {
