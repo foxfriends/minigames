@@ -5,6 +5,7 @@ module.exports = {
       colors: {
         // Colors are mostly taken off discord website
         background: {
+          overlay: "#18191c55",
           floating: "#18191c",
           default: "#36393F",
           secondary: "#2F3136",

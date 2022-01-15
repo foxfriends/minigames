@@ -59,12 +59,15 @@ pub async fn edit(
                             "Icon",
                             html! {
                                 input.hidden id="asset" type="file" accept="image/png;image/jpeg;image/gif" name="asset";
-                                label.border.border-divider-dark.bg-background-secondary."p-4".rounded-md for="asset" {
-                                    @if let Some(asset) = asset {
-                                        img.object-cover.rounded-full.bg-background-floating."w-32"."h-32" src=(asset.url());
-                                    } @else {
-                                        .bg-background-floating.rounded-full."w-32"."h-32"."text-2xl".flex.items-center.justify-center {
-                                            (server.name().initials())
+                                .border.border-divider-dark.bg-background-secondary."p-4".rounded-md {
+                                    label.flex.items-center.justify-center.cursor-pointer.relative.rounded-full.bg-background-floating."w-32"."h-32".overflow-hidden for="asset" {
+                                        @if let Some(asset) = asset {
+                                            img.object-cover src=(asset.url()) alt="";
+                                        } @else {
+                                            ."text-2xl" { (server.name().initials()) }
+                                        }
+                                        ."opacity-0"."hover:opacity-100".bg-background-overlay.transition-opacity.uppercase.absolute."left-0"."top-0"."right-0"."bottom-0".flex.items-center.justify-center."duration-75" {
+                                            .w-min.text-xs.font-semibold { "Select Image" }
                                         }
                                     }
                                 }
