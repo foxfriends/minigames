@@ -22,10 +22,8 @@ pub fn routes() -> impl Into<Vec<Route>> {
         leaderboard::leaderboard,
         list_games::list_games,
         // Admin APIs
-        create_game_server::create_game_server_json,
-        create_game_server::create_game_server_form,
-        update_game_server::update_game_server_json,
-        update_game_server::update_game_server_form,
+        create_game_server::create_game_server,
+        update_game_server::update_game_server,
         delete_game_server::delete_game_server,
         // Game server APIs
         mark_game_server_available::mark_game_server_available,

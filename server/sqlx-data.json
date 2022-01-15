@@ -13,43 +13,19 @@
       "nullable": []
     }
   },
-  "191706977abe6c247097cbd5df83c7afa60e583f88ec2ee677d7d2eb1fbe520e": {
-    "query": "\n                    SELECT DISTINCT\n                        name as \"name: _\",\n                        user_id as \"user_id: _\",\n                        public_url,\n                        enabled\n                    FROM game_servers g\n                    LEFT OUTER JOIN game_server_guilds l ON l.game_server_name = g.name\n                    WHERE user_id = $1 OR l.guild_id = $2\n                    ORDER BY name ASC\n                    ",
+  "0da0f2a2cae27dd5bdfa49a7565f2ab30e69a34c0b4ffdfb26882a5be7579a09": {
+    "query": "\n            UPDATE game_servers\n            SET public_url = $1,\n                enabled = $2,\n                asset_id = $3\n            WHERE name = $4\n            ",
     "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        },
-        {
-          "ordinal": 3,
-          "name": "enabled",
-          "type_info": "Bool"
-        }
-      ],
+      "columns": [],
       "parameters": {
         "Left": [
-          "Int8",
-          "Int8"
+          "Text",
+          "Bool",
+          "Uuid",
+          "Text"
         ]
       },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
+      "nullable": []
     }
   },
   "1ba6449200a0e1aa95cb7d97b0cec73b9e92b2192b14c3e6af6fb728d8fbab7c": {
@@ -94,42 +70,6 @@
         ]
       },
       "nullable": [
-        false,
-        false
-      ]
-    }
-  },
-  "47201e733894d31366cfeb01bb3ab216b33f8d442fae4cb81b7c102b8b934041": {
-    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                public_url,\n                enabled\n            FROM game_servers\n            ORDER BY name ASC\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        },
-        {
-          "ordinal": 3,
-          "name": "enabled",
-          "type_info": "Bool"
-        }
-      ],
-      "parameters": {
-        "Left": []
-      },
-      "nullable": [
-        false,
-        false,
         false,
         false
       ]
@@ -186,18 +126,50 @@
       "nullable": []
     }
   },
-  "53e3d41be9ecf2b9653846d45f66cb14e2b4abd8381e8671047d7784b7b9b7a1": {
-    "query": "\n            UPDATE game_servers\n            SET public_url = $1,\n                enabled = $2\n            WHERE name = $3\n            ",
+  "592cc5918f0e6297c6d32b8dc8c5236bfef2e598d6317d59251e3ac76dd0bee6": {
+    "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    asset_id,\n                    public_url,\n                    enabled\n            ",
     "describe": {
-      "columns": [],
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "asset_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 3,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 4,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
       "parameters": {
         "Left": [
-          "Text",
-          "Bool",
+          "Varchar",
+          "Int8",
           "Text"
         ]
       },
-      "nullable": []
+      "nullable": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
     }
   },
   "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
@@ -213,8 +185,8 @@
       "nullable": []
     }
   },
-  "6a49ee9a55f6c8f29abba1ae2930752025486e3fa88e2ae0df8718b734e58338": {
-    "query": "\n                SELECT\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url,\n                    enabled\n                FROM game_servers g\n                INNER JOIN game_server_guilds l ON g.name = l.game_server_name\n                WHERE l.guild_id = $1\n                ORDER BY name ASC\n                ",
+  "6d3bee05616d2f07396640f61c3454f7036778b1c3f6f0b1045f1edd39ded6f8": {
+    "query": "\n                    SELECT DISTINCT\n                        name as \"name: _\",\n                        user_id as \"user_id: _\",\n                        asset_id,\n                        public_url,\n                        enabled\n                    FROM game_servers g\n                    LEFT OUTER JOIN game_server_guilds l ON l.game_server_name = g.name\n                    WHERE user_id = $1 OR l.guild_id = $2\n                    ORDER BY name ASC\n                    ",
     "describe": {
       "columns": [
         {
@@ -229,23 +201,30 @@
         },
         {
           "ordinal": 2,
+          "name": "asset_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 3,
           "name": "public_url",
           "type_info": "Text"
         },
         {
-          "ordinal": 3,
+          "ordinal": 4,
           "name": "enabled",
           "type_info": "Bool"
         }
       ],
       "parameters": {
         "Left": [
+          "Int8",
           "Int8"
         ]
       },
       "nullable": [
         false,
         false,
+        true,
         false,
         false
       ]
@@ -329,44 +308,16 @@
       ]
     }
   },
-  "87b4aa3101a3b2ca8c190cd672b86842d573576fb97244b0254bb5275f5480de": {
-    "query": "\n            INSERT INTO game_servers (name, user_id, public_url)\n                VALUES ($1, $2, $3)\n                RETURNING\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    public_url,\n                    enabled\n            ",
+  "834a48554bc7989975b42afbc40d0128865826a7cc6130441c42e75b46c54dc9": {
+    "query": "DELETE FROM assets WHERE id = $1",
     "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        },
-        {
-          "ordinal": 3,
-          "name": "enabled",
-          "type_info": "Bool"
-        }
-      ],
+      "columns": [],
       "parameters": {
         "Left": [
-          "Varchar",
-          "Int8",
-          "Text"
+          "Uuid"
         ]
       },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
+      "nullable": []
     }
   },
   "9528c259ce95dc78ba7243c58e147bf65e54330f7ecb74deee90c17f5521bd7d": {
@@ -429,6 +380,50 @@
       "nullable": [
         false,
         false,
+        false,
+        false
+      ]
+    }
+  },
+  "a666996ace74341285ed73d8ef5fcf768cc38700bc278e310aced187bd01cd1b": {
+    "query": "\n                SELECT\n                    name as \"name: _\",\n                    user_id as \"user_id: _\",\n                    asset_id,\n                    public_url,\n                    enabled\n                FROM game_servers g\n                INNER JOIN game_server_guilds l ON g.name = l.game_server_name\n                WHERE l.guild_id = $1\n                ORDER BY name ASC\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "asset_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 3,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 4,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        true,
         false,
         false
       ]
@@ -510,44 +505,6 @@
       "nullable": []
     }
   },
-  "c36be689c215f99401af437c8bdd06120304834db57d49d7f0ebb8db0393a4da": {
-    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                public_url,\n                enabled\n            FROM game_servers\n            WHERE name = $1\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "name: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 1,
-          "name": "user_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "public_url",
-          "type_info": "Text"
-        },
-        {
-          "ordinal": 3,
-          "name": "enabled",
-          "type_info": "Bool"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Text"
-        ]
-      },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
-    }
-  },
   "c4a27e62a09401fd0f27af7fe131396dd86b024ee2a726c9cc18ada7b01f37b7": {
     "query": "SELECT EXISTS (SELECT 1 FROM game_server_guilds WHERE game_server_name = $1 AND guild_id = $2)",
     "describe": {
@@ -569,6 +526,32 @@
       ]
     }
   },
+  "d6cbda83f62e8d1a8a2d8e03342e64869d27c9bb0809ac38c316593af20be836": {
+    "query": "INSERT INTO assets (ext) VALUES ($1) RETURNING *",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "ext",
+          "type_info": "Varchar"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar"
+        ]
+      },
+      "nullable": [
+        false,
+        false
+      ]
+    }
+  },
   "da8dd4f29f44ba2ba5538584d803fa1c16032e77789e3355655aa24611a802fb": {
     "query": "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
     "describe": {
@@ -581,6 +564,118 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "db0513d0023efff40c216d11ed9ec781586b797ac3460e66c5cfdfcbbc9c0506": {
+    "query": "SELECT * FROM assets WHERE id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "ext",
+          "type_info": "Varchar"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false
+      ]
+    }
+  },
+  "dd07e3191a74f64b51ee06824172c7f1e41e68300d5defecd2182d97a155ee82": {
+    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                asset_id,\n                public_url,\n                enabled\n            FROM game_servers\n            ORDER BY name ASC\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "asset_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 3,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 4,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    }
+  },
+  "ddd36f7db73ab3940f19953426882984619d289ad605297140da962cffd71be5": {
+    "query": "\n            SELECT\n                name as \"name: _\",\n                user_id as \"user_id: _\",\n                asset_id,\n                public_url,\n                enabled\n            FROM game_servers\n            WHERE name = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "name: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 1,
+          "name": "user_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "asset_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 3,
+          "name": "public_url",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 4,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
     }
   },
   "fd2c038a22c9ea4e2d976f4cff29575e7b077ace4325ee5c7b632a853f7eae08": {

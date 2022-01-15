@@ -1,3 +1,4 @@
+mod asset;
 mod discord;
 mod env;
 mod game;

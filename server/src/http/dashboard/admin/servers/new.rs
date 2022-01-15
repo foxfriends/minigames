@@ -16,7 +16,7 @@ pub async fn new(user_cookie: UserCookie<'_>) -> Response<Html<String>> {
     let markup = layout(
         &ctx,
         page(html! {
-            form.flex.flex-col."gap-6" method="POST" action=(uri!("/api/v1", create_game_server::create_game_server_form())) {
+            form.flex.flex-col."gap-6" method="POST" action=(uri!("/api/v1", create_game_server::create_game_server())) {
                 (field(
                     "Name",
                     "name",

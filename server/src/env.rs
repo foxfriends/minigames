@@ -61,3 +61,10 @@ pub fn superuser_id() -> Option<UserId> {
             .expect("Environment variable SUPERUSER_ID must be a valid user ID"),
     )
 }
+
+pub fn assets_dir() -> PathBuf {
+    env::var("ASSETS_DIR")
+        .expect("Environment variable ASSETS_DIR is required")
+        .parse()
+        .unwrap()
+}

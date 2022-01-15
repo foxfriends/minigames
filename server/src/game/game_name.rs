@@ -9,6 +9,15 @@ use std::fmt::{self, Display, Formatter};
 #[sqlx(transparent)]
 pub struct GameName(String);
 
+impl GameName {
+    pub fn initials(&self) -> String {
+        self.0
+            .split(' ')
+            .filter_map(|word| word.chars().next())
+            .collect()
+    }
+}
+
 impl Display for GameName {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         Display::fmt(&self.0, f)

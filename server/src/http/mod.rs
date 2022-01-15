@@ -1,4 +1,6 @@
+use rocket::data::{Limits, ToByteUnit};
 use rocket::fs::FileServer;
+use rocket::Config;
 
 use crate::game::GameRegistry;
 use crate::postgres::PgPool;
@@ -21,7 +23,10 @@ mod play_game;
 pub use cors::CorsOrigin;
 
 pub async fn server(pg_pool: PgPool, registry: GameRegistry) -> anyhow::Result<()> {
-    rocket::build()
+    let config = Config::figment().merge(("limits", Limits::new().limit("file", 4.mebibytes())));
+    let assets_dir = crate::env::assets_dir();
+    tokio::fs::create_dir_all(&assets_dir).await?;
+    rocket::custom(config)
         .mount(
             "/",
             rocket::routes![
@@ -36,6 +41,7 @@ pub async fn server(pg_pool: PgPool, registry: GameRegistry) -> anyhow::Result<(
         .mount("/auth", auth::routes())
         .mount("/dashboard", dashboard::routes())
         .mount("/static", FileServer::from(crate::env::static_files_dir()))
+        .mount("/asset", FileServer::from(assets_dir))
         .attach(cors::Cors)
         .manage(pg_pool)
         .manage(registry)

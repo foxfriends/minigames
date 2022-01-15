@@ -33,6 +33,7 @@ pub async fn edit(
             return Err(ResponseError::new_empty(Status::NotFound));
         }
     };
+    let asset = server.asset(&mut conn).await?;
 
     let enabled_guilds = server.list_enabled_guilds(&mut conn).await?;
     let is_supergame = match superuser_id() {
@@ -52,28 +53,46 @@ pub async fn edit(
         &ctx,
         page(html! {
             .flex.flex-col."gap-4" {
-                form.flex.flex-col."gap-6" method="POST" action=(uri!("/api/v1", update_game_server::update_game_server_form(server.name()))) {
-                    input type="hidden" name="_method" value="PATCH";
-                    (field(
-                        "Name",
-                        "name",
-                        text_input("name", "", server.name()),
-                    ))
-                    (field(
-                        "Public URL",
-                        "public_url",
-                        text_input("public_url", "https://my-cool-minigame.com", &server.public_url),
-                    ))
-                    (field(
-                        "Enabled",
-                        "enabled",
-                        html! {
-                            .flex.items-center.justify-between {
-                                "Games that are not enabled will not be made available to play on any Discord server"
-                                (switch("enabled", server.enabled))
-                            }
-                        },
-                    ))
+                form.flex.flex-col."gap-4" method="POST" action=(uri!("/api/v1", update_game_server::update_game_server(server.name()))) enctype="multipart/form-data" {
+                    .flex.flex-row."gap-4" {
+                        (info_field(
+                            "Icon",
+                            html! {
+                                input.hidden id="asset" type="file" accept="image/png;image/jpeg;image/gif" name="asset";
+                                label.border.border-divider-dark.bg-background-secondary."p-4" for="asset" {
+                                    @if let Some(asset) = asset {
+                                        img.object-cover.rounded-full.bg-background-floating."w-32"."h-32" src=(asset.url());
+                                    } @else {
+                                        .bg-background-floating.rounded-full."w-32"."h-32"."text-2xl".flex.items-center.justify-center {
+                                            (server.name().initials())
+                                        }
+                                    }
+                                }
+                            },
+                        ))
+                        .flex.flex-col."gap-4".grow {
+                            (field(
+                                "Name",
+                                "name",
+                                text_input("name", "", server.name()),
+                            ))
+                            (field(
+                                "Public URL",
+                                "public_url",
+                                text_input("public_url", "https://my-cool-minigame.com", &server.public_url),
+                            ))
+                            (field(
+                                "Enabled",
+                                "enabled",
+                                html! {
+                                    .flex.items-center.justify-between {
+                                        "Games that are not enabled will not be made available to play on any Discord server"
+                                        (switch("enabled", server.enabled))
+                                    }
+                                },
+                            ))
+                        }
+                    }
 
                     @if !is_supergame {
                         (info_field(
@@ -106,7 +125,7 @@ pub async fn edit(
                         ))
                     }
 
-                    (button(html! { "Save" }))
+                    .ml-auto { (button(html! { "Save" })) }
                 }
                 (info_field(
                     "Public Key",

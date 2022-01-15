@@ -1,4 +1,5 @@
 use super::{ApiKeys, GameName};
+use crate::asset::Asset;
 use crate::env::superuser_id;
 use crate::guild::{Guild, GuildId};
 use crate::user::UserId;
@@ -6,11 +7,13 @@ use serde::{Deserialize, Serialize};
 use sqlx::postgres::Postgres;
 use sqlx::Executor;
 use std::collections::HashSet;
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize)]
 pub struct GameServer {
     name: GameName,
     user_id: UserId,
+    pub asset_id: Option<Uuid>,
     pub public_url: String,
     pub enabled: bool,
 }
@@ -42,6 +45,7 @@ impl GameServer {
                 RETURNING
                     name as "name: _",
                     user_id as "user_id: _",
+                    asset_id,
                     public_url,
                     enabled
             "#,
@@ -124,6 +128,7 @@ impl GameServer {
             SELECT
                 name as "name: _",
                 user_id as "user_id: _",
+                asset_id,
                 public_url,
                 enabled
             FROM game_servers
@@ -151,6 +156,7 @@ impl GameServer {
                     SELECT DISTINCT
                         name as "name: _",
                         user_id as "user_id: _",
+                        asset_id,
                         public_url,
                         enabled
                     FROM game_servers g
@@ -171,6 +177,7 @@ impl GameServer {
                 SELECT
                     name as "name: _",
                     user_id as "user_id: _",
+                    asset_id,
                     public_url,
                     enabled
                 FROM game_servers g
@@ -198,6 +205,7 @@ impl GameServer {
             SELECT
                 name as "name: _",
                 user_id as "user_id: _",
+                asset_id,
                 public_url,
                 enabled
             FROM game_servers
@@ -220,11 +228,13 @@ impl GameServer {
             r#"
             UPDATE game_servers
             SET public_url = $1,
-                enabled = $2
-            WHERE name = $3
+                enabled = $2,
+                asset_id = $3
+            WHERE name = $4
             "#,
             self.public_url,
             self.enabled,
+            self.asset_id,
             &self.name as &GameName,
         )
         .execute(&mut *conn)
@@ -265,5 +275,16 @@ impl GameServer {
         .execute(&mut *conn)
         .await?;
         Ok(())
+    }
+
+    pub async fn asset<Conn>(&self, conn: Conn) -> anyhow::Result<Option<Asset>>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        match self.asset_id {
+            Some(id) => Ok(Some(Asset::load(id, conn).await?)),
+            None => Ok(None),
+        }
     }
 }
