@@ -15,7 +15,7 @@ export function useTicTacToe() {
 
 export default function TicTacToe({ children }) {
   useInitialTicTacToeState();
-  useTicTacToeWinner();
+  const winner = useTicTacToeWinner();
 
   const [gameState, setGameState] = useGameState();
   const { me } = useGameInfo();
@@ -58,8 +58,6 @@ export default function TicTacToe({ children }) {
   }
 
   const winningCells = gameState && win(gameState);
-  const winner = gameState?.cells?.[winningCells?.[0]]?.value;
-
   const tictactoe = {
     gameState,
     mine,

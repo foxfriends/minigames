@@ -55,9 +55,9 @@ createServer().then((app) => {
       }
     }
 
-    console.log(`${chalk.yellow("tictactoe")} is running on port ${PORT}`);
+    console.log(`${chalk.yellow(VITE_GAME_NAME)} is running on port ${PORT}`);
     return () => {
-      console.log(`Shutting down ${chalk.yellow("tictactoe")}`);
+      console.log(`Shutting down ${chalk.yellow(VITE_GAME_NAME)}`);
     };
   });
 });

@@ -2,7 +2,7 @@ import { useWinner } from "@foxfriends/minigames-client-react";
 import win from "../win";
 
 export default function useTicTacToeWinner() {
-  useWinner((gameState) => {
+  return useWinner((gameState) => {
     const winningCells = win(gameState);
     if (!winningCells) {
       if (gameState.cells.every((cell) => cell.value)) {
