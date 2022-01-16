@@ -1,8 +1,5 @@
 name: Database CI
 on: push
-defaults:
-  run:
-    working-directory: database
 jobs:
   migrate:
     name: migrate
@@ -35,10 +32,12 @@ jobs:
         run: cargo install sqlx-cli
       - name: Create database
         run: sqlx database create
+        working-directory: database
         env:
           DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
       - name: Migrate database
         run: sqlx migrate run
+        working-directory: database
         env:
           DATABASE_URL: postgres://minigames:minigames@localhost:5432/minigames
       - name: Check sqlx-data.json
