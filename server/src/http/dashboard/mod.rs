@@ -1,4 +1,4 @@
-use rocket::Route;
+use rocket::{Catcher, Route};
 
 mod context;
 
@@ -17,6 +17,12 @@ pub fn routes() -> impl Into<Vec<Route>> {
         admin::index::index,
         admin::servers::new::new,
         admin::servers::edit::edit,
-        sign_in::sign_in,
+        admin::servers::create_game_server::create_game_server,
+        admin::servers::update_game_server::update_game_server,
+        admin::servers::delete_game_server::delete_game_server,
     ]
+}
+
+pub fn catchers() -> impl Into<Vec<Catcher>> {
+    rocket::catchers![sign_in::sign_in]
 }

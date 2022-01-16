@@ -1,12 +1,20 @@
 use crate::http::auth::sign_in_with_discord;
 use crate::http::response::Response;
-use rocket::http::CookieJar;
 use rocket::response::Redirect;
-use rocket::route::Route;
+use rocket::Request;
 use std::path::PathBuf;
 
-#[rocket::get("/<path..>")]
-pub async fn sign_in(route: &Route, path: PathBuf, cookies: &CookieJar<'_>) -> Response<Redirect> {
-    // Is this really the only way to get the path of the current request? It seems pretty unreliable.
-    sign_in_with_discord(format!("{}/{}", route.uri.base, path.display()), cookies).await
+#[rocket::catch(401)]
+pub async fn sign_in(request: &Request<'_>) -> Response<Redirect> {
+    sign_in_with_discord(
+        format!(
+            "/dashboard/{}",
+            request
+                .segments::<PathBuf>(0..)
+                .map_err(|_| anyhow::anyhow!("Invalid path"))?
+                .display()
+        ),
+        request.cookies(),
+    )
+    .await
 }

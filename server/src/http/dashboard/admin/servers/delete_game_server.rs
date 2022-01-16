@@ -7,7 +7,7 @@ use rocket::http::Status;
 use rocket::response::Redirect;
 use rocket::{uri, State};
 
-#[rocket::delete("/servers/<name>")]
+#[rocket::delete("/admin/servers/<name>")]
 pub async fn delete_game_server(
     db: &State<PgPool>,
     name: GameName,
@@ -36,6 +36,6 @@ pub async fn delete_game_server(
     conn.commit().await?;
     Ok(Redirect::to(uri!(
         "/dashboard",
-        crate::http::dashboard::admin::index::index()
+        super::super::index::index()
     )))
 }

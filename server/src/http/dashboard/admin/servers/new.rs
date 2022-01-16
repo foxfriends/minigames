@@ -1,4 +1,4 @@
-use crate::http::api::v1::create_game_server;
+use super::create_game_server;
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{button, field, layout, page, text_input};
 use crate::http::dashboard::DashboardContext;

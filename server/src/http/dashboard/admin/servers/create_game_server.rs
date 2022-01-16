@@ -14,7 +14,7 @@ pub struct CreateGameServerRequest {
     public_url: String,
 }
 
-#[rocket::post("/servers/new", data = "<body>", format = "form")]
+#[rocket::post("/admin/servers/new", data = "<body>", format = "form")]
 pub async fn create_game_server(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
@@ -42,6 +42,6 @@ pub async fn create_game_server(
     registry.register(&created_server).await;
     Ok(Redirect::to(uri!(
         "/dashboard",
-        crate::http::dashboard::admin::servers::edit::edit(created_server.name())
+        super::edit::edit(created_server.name())
     )))
 }

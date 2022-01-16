@@ -1,7 +1,7 @@
 use crate::discord;
 use crate::game::{Game, GameId, GameRegistry};
 use crate::http::auth::sign_in_with_discord;
-use crate::http::cookies::UserCookie;
+use crate::http::cookies::{Lax, UserCookie};
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
 use crate::token::Claims;
@@ -14,7 +14,7 @@ pub async fn play_game(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
     game_id: GameId,
-    user_cookie: UserCookie<'_>,
+    user_cookie: Lax<UserCookie<'_>>,
 ) -> Response<Redirect> {
     let discord_user = discord::get_current_user(user_cookie.value()).await?;
     let mut conn = db.acquire().await?;

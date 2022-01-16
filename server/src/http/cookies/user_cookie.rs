@@ -1,5 +1,5 @@
 use oauth2::{TokenResponse, TokenType};
-use rocket::http::{Cookie, CookieJar, SameSite};
+use rocket::http::{Cookie, CookieJar, SameSite, Status};
 use rocket::request::{self, FromRequest, Outcome, Request};
 use time::Duration;
 
@@ -15,7 +15,7 @@ impl<'r> FromRequest<'r> for UserCookie<'r> {
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         match req.cookies().get(DISCORD_USER_COOKIE) {
             Some(cookie) => Outcome::Success(Self(cookie.value())),
-            None => Outcome::Forward(()),
+            None => Outcome::Failure((Status::Unauthorized, ())),
         }
     }
 }

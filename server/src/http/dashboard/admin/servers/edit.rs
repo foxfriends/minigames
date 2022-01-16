@@ -1,6 +1,6 @@
+use super::{delete_game_server, update_game_server};
 use crate::env::superuser_id;
 use crate::game::{ApiKeys, GameName, GameServer};
-use crate::http::api::v1::{delete_game_server, update_game_server};
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{
     button, danger_button, field, info_field, layout, page, switch, text_input, tt,

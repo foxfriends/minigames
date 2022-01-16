@@ -43,7 +43,11 @@ fn get_extension(file: &TempFile<'_>) -> Response<String> {
     Ok(extension)
 }
 
-#[rocket::post("/servers/<name>", data = "<body>", format = "multipart/form-data")]
+#[rocket::post(
+    "/admin/servers/<name>",
+    data = "<body>",
+    format = "multipart/form-data"
+)]
 pub async fn update_game_server(
     db: &State<PgPool>,
     registry: &State<GameRegistry>,
@@ -99,6 +103,6 @@ pub async fn update_game_server(
 
     Ok(Redirect::to(uri!(
         "/dashboard",
-        crate::http::dashboard::admin::servers::edit::edit(server.name())
+        super::edit::edit(server.name())
     )))
 }

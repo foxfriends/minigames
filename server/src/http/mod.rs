@@ -16,6 +16,7 @@ mod auth;
 mod dashboard;
 
 mod add_to_server;
+mod error;
 mod get_public_key;
 mod index;
 mod play_game;
@@ -37,9 +38,11 @@ pub async fn server(pg_pool: PgPool, registry: GameRegistry) -> anyhow::Result<(
                 play_game::sign_in_then_play_game
             ],
         )
+        .register("/", rocket::catchers![error::error])
         .mount("/api/v1", api::v1::routes())
         .mount("/auth", auth::routes())
         .mount("/dashboard", dashboard::routes())
+        .register("/dashboard", dashboard::catchers())
         .mount("/static", FileServer::from(crate::env::static_files_dir()))
         .mount("/asset", FileServer::from(assets_dir))
         .attach(cors::Cors)
