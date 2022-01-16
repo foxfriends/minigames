@@ -4,14 +4,15 @@ use crate::http::cookies::UserCookie;
 use crate::http::response::{Response, ResponseError};
 use crate::postgres::PgPool;
 use rocket::http::Status;
-use rocket::State;
+use rocket::response::Redirect;
+use rocket::{uri, State};
 
 #[rocket::delete("/servers/<name>")]
 pub async fn delete_game_server(
     db: &State<PgPool>,
     name: GameName,
     user_cookie: UserCookie<'_>,
-) -> Response<Status> {
+) -> Response<Redirect> {
     let user = discord::get_current_user(user_cookie.value()).await?;
     let mut conn = db.begin().await?;
     let server = match GameServer::load(&name, &mut conn).await? {
@@ -33,5 +34,8 @@ pub async fn delete_game_server(
     }
     server.delete(&mut conn).await?;
     conn.commit().await?;
-    Ok(Status::NoContent)
+    Ok(Redirect::to(uri!(
+        "/dashboard",
+        crate::http::dashboard::admin::index::index()
+    )))
 }

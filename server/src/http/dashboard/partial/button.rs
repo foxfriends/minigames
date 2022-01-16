@@ -16,3 +16,11 @@ pub fn link_button<S: Display>(href: S, children: Markup) -> Markup {
         }
     }
 }
+
+pub fn danger_button(children: Markup) -> Markup {
+    html! {
+        button.self-start.bg-transparent.rounded-sm.border-danger-faded.text-danger-default."hover:border-danger-default".border."px-4"."py-2".transition-colors {
+            (children)
+        }
+    }
+}

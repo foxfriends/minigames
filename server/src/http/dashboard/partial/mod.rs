@@ -14,7 +14,7 @@ mod nav;
 mod page;
 mod text;
 
-pub use button::{button, link_button};
+pub use button::{button, danger_button, link_button};
 pub use construction::construction;
 pub use empty::empty;
 pub use game_server_tile::game_server_tile;

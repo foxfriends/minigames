@@ -30,9 +30,13 @@ module.exports = {
           unchecked: "#72767D",
           toggle: "#FFFFFF",
         },
+        danger: {
+          default: "#ed4245",
+          faded: "rgba(237 66 69 / 0.3)"
+        }
       },
       boxShadow: {
-        switch: "0 2px 4px rgba(0, 0, 0, 0.3)",
+        switch: "0 2px 4px rgba(0 0 0 / 0.3)",
       },
       fontFamily: {
         sans: ['Whitney', 'Open Sans', 'San Francisco', 'Ubuntu', 'Arial', 'sans-serif'],

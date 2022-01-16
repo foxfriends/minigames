@@ -1,9 +1,9 @@
 use crate::env::superuser_id;
 use crate::game::{ApiKeys, GameName, GameServer};
-use crate::http::api::v1::update_game_server;
+use crate::http::api::v1::{delete_game_server, update_game_server};
 use crate::http::cookies::UserCookie;
 use crate::http::dashboard::partial::{
-    button, field, info_field, layout, page, switch, text_input, tt,
+    button, danger_button, field, info_field, layout, page, switch, text_input, tt,
 };
 use crate::http::dashboard::DashboardContext;
 use crate::http::response::{Response, ResponseError};
@@ -138,6 +138,10 @@ pub async fn edit(
                     "Secret Key",
                     tt(api_keys.secret_key),
                 ))
+                form.ml-auto method="POST" action=(uri!("/api/v1", delete_game_server::delete_game_server(server.name()))) {
+                    input type="hidden" name="_method" value="DELETE";
+                    (danger_button(html! { "Delete " (server.name()) }))
+                }
             }
         }),
     );
