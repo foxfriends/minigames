@@ -1,6 +1,6 @@
 {
   "name": "@foxfriends/minigames-client-react",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Minigames client for React",
   "module": "lib/index.js",
   "main": "lib/index.js",
