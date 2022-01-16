@@ -82,7 +82,7 @@ attempting to work on them.
 
 From there, follow the directions in each game's individual README to get them set up and running:
 *   [Tic-tac-toe](./games/tictactoe/README.md)
-*   [Dots and Boxes(./games/dots-and-boxes/README.md)
+*   [Dots and Boxes](./games/dots-and-boxes/README.md)
 
 For more information on how to build a game and connect it with a running server, see the [Guide][].
 
