@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useGameMetaData } from "../GameMetaDataProvider";
 import { useGameInfo } from "../GameInfoProvider";
 import { useGameState } from "../GameStateProvider";
@@ -6,10 +6,12 @@ import type { UserId } from "../types";
 
 export default function useWinner<State>(
   computeWinner: (state: State) => UserId | null | undefined,
-) {
+): UserId | null | undefined {
   const { apiUrl, token, gameId } = useGameMetaData();
   const gameInfo = useGameInfo();
   const [gameState] = useGameState<State>();
+
+  const [winner, setWinner] = useState<UserId | null | undefined>(undefined);
 
   useEffect(() => {
     async function effect() {
@@ -24,6 +26,7 @@ export default function useWinner<State>(
       }
       const winnerId = await computeWinner(gameState);
       if (winnerId !== undefined) {
+        setWinner(winnerId);
         const response = await fetch(`${apiUrl}/api/v1/complete`, {
           method: "POST",
           headers: {
@@ -40,4 +43,6 @@ export default function useWinner<State>(
     }
     void effect();
   }, [gameState, gameInfo]);
+
+  return winner;
 }
