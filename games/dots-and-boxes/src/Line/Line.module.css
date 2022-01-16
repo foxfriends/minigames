@@ -1,0 +1,12 @@
+.line {
+  position: absolute;
+  border-color: var(--color--foreground);
+  height: 2px;
+}
+
+.horizontal {
+}
+
+.vertical {
+  transform: rotate(90deg);
+}
