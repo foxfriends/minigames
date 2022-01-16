@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ['games/tictactoe', 'packages/client-react', 'packages/server-express']
+        directory: ['games/tictactoe', 'games/dots-and-boxes', 'packages/client-react', 'packages/server-express']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2

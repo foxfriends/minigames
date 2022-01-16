@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ['bot', 'server', 'database', 'games/tictactoe']
+        directory: ['bot', 'server', 'database', 'games/tictactoe', 'games/dots-and-boxes']
         include:
           - directory: bot
             image: minigames-bot
@@ -19,6 +19,8 @@ jobs:
             image: minigames-database
           - directory: games/tictactoe
             image: minigame-tictactoe
+          - directory: games/dots-and-boxes
+            image: minigame-dots-and-boxes
     permissions:
       contents: read
       packages: write
