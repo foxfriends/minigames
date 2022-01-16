@@ -1,3 +1,3 @@
-# Minigame: Tic Tac Toe
+# Minigame: Dots and Boxes
 
-A standard game of Tic-Tac-Toe.
+A game of [Dots and Boxes](https://en.wikipedia.org/wiki/Dots_and_Boxes).
