@@ -133,3 +133,12 @@ jobs:
     - name: Run fmt
       run: npx prettier . --check
       working-directory: ${{ matrix.directory }}
+  node-ok:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - stylelint
+      - build
+      - fmt
+    steps:
+      - run: true

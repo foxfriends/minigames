@@ -64,3 +64,11 @@ jobs:
         deno-version: v1.x
     - name: Run cache
       run: deno cache ./bin/bot/main.ts
+  deno-ok:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - fmt
+      - cache
+    steps:
+      - run: true
