@@ -66,4 +66,14 @@
   input:not(:checked) + .checkbox .checkmark {
     @apply hidden;
   }
+
+  .absolute-overlay {
+    @apply absolute left-0 top-0 right-0 bottom-0;
+  }
+
+  .remove-icon-input:checked ~ .remove-icon-button,
+  .remove-icon-input:checked ~ * .icon-img {
+    @apply hidden;
+  }
 }
+

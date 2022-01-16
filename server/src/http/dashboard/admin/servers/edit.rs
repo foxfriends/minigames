@@ -53,22 +53,29 @@ pub async fn edit(
         &ctx,
         page(html! {
             .flex.flex-col."gap-4" {
-                form.flex.flex-col."gap-4" method="POST" action=(uri!("/api/v1", update_game_server::update_game_server(server.name()))) enctype="multipart/form-data" {
+                form.flex.flex-col."gap-4" method="POST" action=(uri!("/dashboard", update_game_server::update_game_server(server.name()))) enctype="multipart/form-data" {
                     .flex.flex-row."gap-4" {
                         (info_field(
                             "Icon",
                             html! {
                                 input.hidden id="asset" type="file" accept="image/png;image/jpeg;image/gif" name="asset";
-                                .border.border-divider-dark.bg-background-secondary."p-4".rounded-md {
+                                .border.border-divider-dark.bg-background-secondary."p-4".rounded-md.flex.items-stretch.flex-col."gap-2" {
+                                    @if asset.is_some() {
+                                        input.remove-icon-input.hidden type="checkbox" name="delete_asset" id="delete_asset" autocomplete="off";
+                                    }
+
                                     label.flex.items-center.justify-center.cursor-pointer.relative.rounded-full.bg-background-floating."w-32"."h-32".overflow-hidden for="asset" {
-                                        @if let Some(asset) = asset {
-                                            img.object-cover src=(asset.url()) alt="";
-                                        } @else {
-                                            ."text-2xl" { (server.name().initials()) }
+                                        ."text-2xl" { (server.name().initials()) }
+                                        @if let Some(asset) = &asset {
+                                            img.icon-img.bg-background-floating.absolute-overlay.object-cover src=(asset.url()) alt="";
                                         }
-                                        ."opacity-0"."hover:opacity-100".bg-background-overlay.transition-opacity.uppercase.absolute."left-0"."top-0"."right-0"."bottom-0".flex.items-center.justify-center."duration-75" {
+                                        .absolute-overlay."opacity-0"."hover:opacity-100".bg-background-overlay[asset.is_some()].bg-background-floating[asset.is_none()].transition-opacity.uppercase.flex.items-center.justify-center."duration-75" {
                                             .w-min.text-xs.font-semibold { "Select Image" }
                                         }
+                                    }
+
+                                    @if asset.is_some() {
+                                        label.remove-icon-button.text-blue.text-center.cursor-pointer."hover:underline" for="delete_asset" { "Remove" }
                                     }
                                 }
                             },
@@ -138,7 +145,7 @@ pub async fn edit(
                     "Secret Key",
                     tt(api_keys.secret_key),
                 ))
-                form.ml-auto method="POST" action=(uri!("/api/v1", delete_game_server::delete_game_server(server.name()))) {
+                form.ml-auto method="POST" action=(uri!("/dashboard", delete_game_server::delete_game_server(server.name()))) {
                     input type="hidden" name="_method" value="DELETE";
                     (danger_button(html! { "Delete " (server.name()) }))
                 }

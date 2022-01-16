@@ -5,7 +5,7 @@ module.exports = {
       colors: {
         // Colors are mostly taken off discord website
         background: {
-          overlay: "#18191c55",
+          overlay: "#18191c88",
           floating: "#18191c",
           default: "#36393F",
           secondary: "#2F3136",
@@ -33,14 +33,15 @@ module.exports = {
         danger: {
           default: "#ed4245",
           faded: "rgba(237 66 69 / 0.3)"
-        }
+        },
+        blue: "#00aff4"
       },
       boxShadow: {
         switch: "0 2px 4px rgba(0 0 0 / 0.3)",
       },
       fontFamily: {
-        sans: ['Whitney', 'Open Sans', 'San Francisco', 'Ubuntu', 'Arial', 'sans-serif'],
-        mono: ['Source Code Pro', 'Ubuntu Mono', 'Courier New'],
+        sans: ["Whitney", "Open Sans", "San Francisco", "Ubuntu", "Arial", "sans-serif"],
+        mono: ["Source Code Pro", "Ubuntu Mono", "Courier New"],
       },
       borderRadius: {
         sm: "0.2rem"

@@ -17,7 +17,8 @@ pub struct UpdateGameServerRequest<'r> {
     public_url: Option<String>,
     guilds: Option<Vec<GuildId>>,
     enabled: bool,
-    asset: Option<TempFile<'r>>,
+    asset: TempFile<'r>,
+    delete_asset: bool,
 }
 
 fn get_extension(file: &TempFile<'_>) -> Response<String> {
@@ -76,15 +77,21 @@ pub async fn update_game_server(
     }
     server.enabled = body.enabled;
 
-    if let Some(file) = &mut body.asset {
-        let asset = Asset::create(&get_extension(file)?, &mut conn).await?;
-        file.persist_to(asset.path()).await?;
+    // If no file is supplied, the temp file is still created but empty
+    if body.asset.len() != 0 {
+        let asset = Asset::create(&get_extension(&body.asset)?, &mut conn).await?;
+        body.asset.persist_to(asset.path()).await?;
         let previous_asset = server.asset_id.replace(asset.id);
         if let Some(previous_id) = previous_asset {
             Asset::load(previous_id, &mut conn)
                 .await?
                 .delete(&mut conn)
                 .await?;
+        }
+    } else if body.delete_asset {
+        if let Some(asset) = server.asset(&mut conn).await? {
+            asset.delete(&mut conn).await?;
+            server.asset_id = None;
         }
     }
 
