@@ -1,13 +1,14 @@
 import React from "react";
-import { useDotsAndBoxes, BOARD_SIZE } from "../DotsAndBoxes";
+import { useDotsAndBoxes, useFns, BOARD_SIZE } from "../DotsAndBoxes";
 import { line, horizontal, vertical } from "./Line.module.css";
 import classes from "../util/classes";
 
 export default function Line({ start, end }) {
+  const { pxy } = useFns();
   const { size } = useDotsAndBoxes();
   const grid = BOARD_SIZE / size;
-  const [sx, sy] = [start % (size + 1), Math.floor(start / (size + 1))];
-  const [dx, dy] = [end % (size + 1), Math.floor(end / (size + 1))];
+  const [sx, sy] = pxy(start, size);
+  const [dx, dy] = pxy(end, size);
 
   const cs = [line, sx === dx ? horizontal : vertical];
 

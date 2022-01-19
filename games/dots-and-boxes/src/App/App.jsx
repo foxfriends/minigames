@@ -1,5 +1,5 @@
 import React from "react";
-import { useGame } from "../DotsAndBoxes";
+import { useDotsAndBoxes } from "../DotsAndBoxes";
 import Layout from "../Layout";
 import Board from "../Board";
 import Slot from "../Slot";

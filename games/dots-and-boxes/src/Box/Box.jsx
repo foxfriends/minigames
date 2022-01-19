@@ -1,14 +1,16 @@
 import React from "react";
-import { useDotsAndBoxes, BOARD_SIZE } from "../DotsAndBoxes";
+import { useDotsAndBoxes, useFns, BOARD_SIZE } from "../DotsAndBoxes";
 import { box } from "./Box.module.css";
 import $if from "../util/$if";
 
 export default function Box({ index, scorer }) {
   const { size } = useDotsAndBoxes();
+  const { fxy } = useFns();
   const grid = BOARD_SIZE / size;
+  const [x, y] = fxy(index);
   const style = {
-    left: (index % size) * grid,
-    top: Math.floor(index / size) * grid,
+    left: x * grid,
+    top: y * grid,
     width: grid,
     height: grid,
   };
