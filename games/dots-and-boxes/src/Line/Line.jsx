@@ -1,23 +1,49 @@
 import React from "react";
 import { useDotsAndBoxes, useFns, BOARD_SIZE } from "../DotsAndBoxes";
-import { line, horizontal, vertical } from "./Line.module.css";
+import {
+  container,
+  disabled,
+  line,
+  horizontal,
+  vertical,
+  undrawn,
+} from "./Line.module.css";
 import classes from "../util/classes";
 
-export default function Line({ start, end }) {
+export default function Line({
+  line: [start, end],
+  drawn: isDrawn = false,
+  onClick,
+}) {
   const { pxy } = useFns();
-  const { size } = useDotsAndBoxes();
+  const { size, isMyTurn } = useDotsAndBoxes();
   const grid = BOARD_SIZE / size;
-  const [sx, sy] = pxy(start, size);
-  const [dx, dy] = pxy(end, size);
+  const [sx, sy] = pxy(start);
+  const [dx, dy] = pxy(end);
 
-  const cs = [line, sx === dx ? horizontal : vertical];
+  const cs = [
+    sx === dx ? vertical : horizontal,
+    isDrawn ? undefined : undrawn,
+    isMyTurn ? undefined : disabled,
+  ];
 
-  const style = {
-    left: sx * grid - 1,
-    top: sy * grid - 1,
-    width: Math.floor(grid * 0.8),
-    margin: Math.ceil(grid * 0.1),
-  };
+  const left = sx * grid - 1;
+  const top = sy * grid - 1;
+  const length = Math.floor(grid * 0.8);
+  const direction = sx === dx ? "height" : "width";
+  const notDirection = sx === dx ? "width" : "height";
+  const padding = Math.ceil(grid * 0.1);
 
-  return <div class={classes(cs)} style={style} />;
+  return (
+    <div
+      className={classes([container, ...cs])}
+      style={{ top, left, padding }}
+      onClick={onClick}
+    >
+      <div
+        className={classes([line, ...cs])}
+        style={{ [direction]: length, [notDirection]: 2 }}
+      />
+    </div>
+  );
 }

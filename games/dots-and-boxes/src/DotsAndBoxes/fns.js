@@ -1,11 +1,15 @@
-import { useGameState } from "@foxfriends/minigames-client-react";
+import { useGameInfo } from "@foxfriends/minigames-client-react";
 import intersection from "../util/intersection";
 
 export default function useFns() {
-  const [{ size }] = useGameState();
+  const { options: { size = 5 } = {} } = useGameInfo();
 
   function pxy(point) {
     return [point % (size + 1), Math.floor(point / (size + 1))];
+  }
+
+  function xyp(x, y) {
+    return y * (size + 1) + x;
   }
 
   function fxy(face) {
@@ -49,6 +53,7 @@ export default function useFns() {
 
   return {
     pxy,
+    xyp,
     fxy,
     getPointFaces,
     getLineFaces,

@@ -5,7 +5,7 @@
   grid-template:
     ".   prompt ." 1fr
     ".   board  ." auto
-    ".   .      ." 1fr
+    ".   msg    ." 1fr
     / 1fr auto 1fr;
   gap: 2rem;
 }
@@ -17,8 +17,17 @@
 
 .prompt {
   grid-area: prompt;
-  align-self: end;
-  justify-self: center;
   font-size: 2rem;
+  align-self: end;
+}
+
+.message {
+  grid-area: msg;
+  align-self: start;
+}
+
+.prompt,
+.message {
+  justify-self: center;
   color: var(--color--foreground);
 }

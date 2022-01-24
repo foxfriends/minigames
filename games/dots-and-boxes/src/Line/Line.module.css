@@ -1,12 +1,27 @@
-.line {
+.container {
   position: absolute;
-  border-color: var(--color--foreground);
-  height: 2px;
 }
 
-.horizontal {
+.container.undrawn {
+  opacity: 0;
 }
 
-.vertical {
-  transform: rotate(90deg);
+.container.undrawn:not(.disabled) {
+  cursor: pointer;
+}
+
+.container.undrawn:not(.disabled):hover {
+  opacity: 0.5;
+}
+
+.line {
+  background-color: var(--color--foreground);
+}
+
+.container.horizontal {
+  transform: translateY(-50%);
+}
+
+.container.vertical {
+  transform: translateX(-50%);
 }

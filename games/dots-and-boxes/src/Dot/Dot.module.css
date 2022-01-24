@@ -1,7 +1,8 @@
 .dot {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: 5px;
+  height: 5px;
   border-radius: 100%;
-  background-color: var(--color--divider);
+  background-color: var(--color--foreground);
+  transform: translate(-50%, -50%);
 }

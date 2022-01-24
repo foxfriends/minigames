@@ -14,13 +14,12 @@ export function useDotsAndBoxes() {
 }
 
 export default function DotsAndBoxes({ children }) {
-  const fns = useFns();
+  const { getLineFaces, getFaceLines } = useFns();
   useInitialDotsAndBoxesState();
   const winner = useDotsAndBoxesWinner();
 
   const [gameState, setGameState] = useGameState();
-  const { me, players } = useGameInfo();
-  const them = players.find(({ id }) => id !== me);
+  const { me, players, options: { size = 5 } = {} } = useGameInfo();
 
   function updateGameState(fn) {
     setGameState(fn(gameState));
@@ -44,11 +43,11 @@ export default function DotsAndBoxes({ children }) {
     );
   }
 
-  function drawLine(line) {
-    let updated = addLine(line, gameState);
+  function drawLine(drawn) {
+    let updated = addLine(drawn, gameState);
 
     let scored = false;
-    const lineFaces = getLineFaces(line);
+    const lineFaces = getLineFaces(drawn);
     for (const face of lineFaces) {
       const faceLines = getFaceLines(face);
       const closed = faceLines.every((a) =>
@@ -60,11 +59,15 @@ export default function DotsAndBoxes({ children }) {
       }
     }
 
-    return scored ? updated : setTurn(them, updated);
+    const them = players?.find(({ id }) => id !== me).id;
+    updated = scored ? updated : setTurn(them, updated);
+    setGameState(updated);
   }
 
   const dotsAndBoxes = {
     gameState,
+    me,
+    size,
     isMyTurn,
     winner,
     drawLine,

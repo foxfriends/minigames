@@ -2,17 +2,17 @@ function lens(get, set) {
   return { get, set };
 }
 
-export const set = (lens) => (val) => (obj) => {
+export function set(lens, val, obj) {
   return lens.set(val, obj);
-};
+}
 
-export const get = (lens) => (obj) => {
+export function get(lens, obj) {
   return lens.get(obj);
-};
+}
 
-export const mod = (lens) => (fn) => (obj) => {
+export function mod(lens, fn, obj) {
   return lens.set(fn(lens.get(obj)), obj);
-};
+}
 
 export function prop(key) {
   return lens(
