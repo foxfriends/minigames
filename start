@@ -1,0 +1,29 @@
+#!/bin/sh
+
+session=${MINIGAMES_TMUX:-minigames}
+here=$(cd $(dirname $0); pwd)
+
+if [ -z ${TMUX} ]; then
+    tmux start
+fi
+
+is_running() {
+    tmux ls | cut -d':' -f 1 | grep -q "^$session\$"
+}
+
+for app in "$@"; do
+    if is_running; then
+        start="tmux new-window -d -t ${session} -n ${app}"
+    else
+        start="tmux new-session -d -s ${session} -n ${app}"
+    fi
+    
+    case "${app}" in
+        bot) dir="${here}/bot"; cmd="./scripts/bot" ;;
+        server) dir="${here}/server"; cmd="cargo run" ;;
+        tictactoe) dir="${here}/games/tictactoe"; cmd="npm run dev" ;;
+        dots-and-boxes) dir="${here}/games/tictactoe"; cmd="npm run dev" ;;
+        *) echo "${app} is not a known app"; continue ;;
+    esac
+    ${start} -c "${dir}" "${cmd}"
+done
