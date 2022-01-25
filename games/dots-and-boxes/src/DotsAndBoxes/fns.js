@@ -16,14 +16,13 @@ export default function useFns() {
     return [face % size, Math.floor(face / size)];
   }
 
+  function xyf(x, y) {
+    return y * size + x;
+  }
+
   function getPointFaces(point) {
     const [x, y] = pxy(point, size);
-    return [
-      (y - 1) * size + (x - 1),
-      (y - 1) * size + x,
-      y * size + (x - 1),
-      y * size + x,
-    ];
+    return [xyf(x - 1, y - 1), xyf(x - 1, y), xyf(x, y - 1), xyf(x, y)];
   }
 
   function getLineFaces(line) {
@@ -33,12 +32,7 @@ export default function useFns() {
 
   function getFacePoints(face) {
     const [x, y] = fxy(face);
-    return [
-      y * size + x,
-      y * size + x + 1,
-      (y + 1) * size + x,
-      (y + 1) * size + x + 1,
-    ];
+    return [xyp(x, y), xyp(x + 1, y), xyp(x, y + 1), xyp(x + 1, y + 1)];
   }
 
   function getFaceLines(face) {
@@ -55,6 +49,7 @@ export default function useFns() {
     pxy,
     xyp,
     fxy,
+    xyf,
     getPointFaces,
     getLineFaces,
     getFacePoints,

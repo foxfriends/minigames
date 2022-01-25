@@ -50,6 +50,7 @@ export default function DotsAndBoxes({ children }) {
     const lineFaces = getLineFaces(drawn);
     for (const face of lineFaces) {
       const faceLines = getFaceLines(face);
+      console.log(faceLines);
       const closed = faceLines.every((a) =>
         updated.lines.some((b) => line.eq(a, b)),
       );

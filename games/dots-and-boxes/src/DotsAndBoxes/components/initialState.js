@@ -14,7 +14,7 @@ export default function useInitialDotsAndBoxesState() {
       size,
       turn: players[Math.floor(Math.random() * 2)].id,
       lines: [],
-      boxes: range(size ** 2).map(() => null),
+      boxes: range(0, size ** 2).map(() => null),
     };
   });
 }

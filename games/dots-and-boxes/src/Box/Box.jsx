@@ -1,5 +1,6 @@
 import React from "react";
 import { useDotsAndBoxes, useFns, BOARD_SIZE } from "../DotsAndBoxes";
+import Avatar from "../Avatar";
 import { box } from "./Box.module.css";
 import $if from "../util/$if";
 
