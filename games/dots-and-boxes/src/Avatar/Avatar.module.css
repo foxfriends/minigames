@@ -1,5 +1,6 @@
 .avatar {
   border-radius: 100%;
+  overflow: hidden;
   object-fit: cover;
   color: var(--color--foreground);
   display: flex;

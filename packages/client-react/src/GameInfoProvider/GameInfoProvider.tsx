@@ -7,9 +7,12 @@ export type Props = {
   children: React.ReactNode;
 };
 
-export type Participant = {
+export type Player = {
   id: UserId;
   isChallenger: boolean;
+  username: string;
+  discriminator: string;
+  avatar: string;
 };
 
 type LoadingGameInfo = {
@@ -19,7 +22,7 @@ type LoadingGameInfo = {
 type LoadedGameInfo = {
   loading: false;
   me: UserId;
-  players: Participant[];
+  players: Player[];
   isComplete: boolean;
   winnerId: UserId | null;
 };

@@ -18,7 +18,7 @@ export default function App() {
   }
 
   function name(player) {
-    return players.some(({ id }) => id === player) ? player : "spectating";
+    return players.find(({ id }) => id === player)?.username ?? "spectating";
   }
 
   const message = `You are ${name(me)}`;

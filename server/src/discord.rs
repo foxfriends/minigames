@@ -140,3 +140,16 @@ pub async fn get_guild(guild_id: GuildId) -> anyhow::Result<DiscordGuild> {
         .json()
         .await?)
 }
+
+pub async fn get_user(user_id: UserId) -> anyhow::Result<DiscordUser> {
+    Ok(Client::new()
+        .request(
+            Method::GET,
+            format!("https://discord.com/api/v8/users/{}", user_id),
+        )
+        .header("Authorization", format!("Bot {}", discord_bot_token()))
+        .send()
+        .await?
+        .json()
+        .await?)
+}
