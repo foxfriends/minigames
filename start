@@ -22,7 +22,7 @@ for app in "$@"; do
         bot) dir="${here}/bot"; cmd="./scripts/bot" ;;
         server) dir="${here}/server"; cmd="cargo run" ;;
         tictactoe) dir="${here}/games/tictactoe"; cmd="npm run dev" ;;
-        dots-and-boxes) dir="${here}/games/tictactoe"; cmd="npm run dev" ;;
+        dots-and-boxes) dir="${here}/games/dots-and-boxes"; cmd="npm run dev" ;;
         *) echo "${app} is not a known app"; continue ;;
     esac
     ${start} -c "${dir}" "${cmd}"
