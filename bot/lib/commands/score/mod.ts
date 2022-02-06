@@ -8,24 +8,28 @@ import type { Command } from "../types.ts";
 import { Task } from "../../runtime.ts";
 
 import handleInteraction from "./handleInteraction.ts";
-import handleComponentInteraction from "./handleComponentInteraction.ts";
 import handleAutocomplete from "./handleAutocomplete.ts";
 
-export const challenge: Command = {
-  name: "challenge",
-  description: "Challenge a particular user to a 2-player game!",
+export const score: Command = {
+  name: "score",
+  description: "Get the score between some players",
   type: ApplicationCommandTypes.ChatInput,
   options: [
     {
       type: ApplicationCommandOptionTypes.User,
       name: "user",
-      description: "Who to challenge",
+      description: "Who to check score of",
       required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.User,
+      name: "against",
+      description: "Who to compare score against, if not yourself",
     },
     {
       type: ApplicationCommandOptionTypes.String,
       name: "game",
-      description: "Which game to play",
+      description: "Which game to compare score of",
       autocomplete: true,
     },
   ],
@@ -34,8 +38,8 @@ export const challenge: Command = {
     switch (interaction.type) {
       case InteractionTypes.ApplicationCommand:
         return handleInteraction(interaction);
-      case InteractionTypes.MessageComponent:
-        return handleComponentInteraction(interaction);
+      // case InteractionTypes.MessageComponent:
+      //   return handleComponentInteraction(interaction);
       case InteractionTypes.ApplicationCommandAutocomplete:
         return handleAutocomplete(interaction);
     }

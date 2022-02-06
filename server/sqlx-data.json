@@ -13,6 +13,51 @@
       "nullable": []
     }
   },
+  "0b9615a9b1d1380b7814e38b1df93a6cfaa4f22e019fe568c15ecb4e0e024b2c": {
+    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\",\n                complete\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "guild_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "game: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "state: _",
+          "type_info": "Jsonb"
+        },
+        {
+          "ordinal": 4,
+          "name": "complete",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Varchar"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "0da0f2a2cae27dd5bdfa49a7565f2ab30e69a34c0b4ffdfb26882a5be7579a09": {
     "query": "\n            UPDATE game_servers\n            SET public_url = $1,\n                enabled = $2,\n                asset_id = $3\n            WHERE name = $4\n            ",
     "describe": {
@@ -46,71 +91,6 @@
       },
       "nullable": [
         null
-      ]
-    }
-  },
-  "2e541f9031bc6757ef4b58c3f78b1442446e22e23e2a6174f6b30b3a410b8de3": {
-    "query": "SELECT user_id as \"id: UserId\", is_challenger FROM game_participants WHERE game_id = $1",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: UserId",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 1,
-          "name": "is_challenger",
-          "type_info": "Bool"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Uuid"
-        ]
-      },
-      "nullable": [
-        false,
-        false
-      ]
-    }
-  },
-  "50a926c3eacabe321b57bb1eecca294ef870445b1e929c56205bf0866c3219db": {
-    "query": "\n            INSERT INTO games (guild_id, game)\n                VALUES ($1, $2)\n            RETURNING\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n            ",
-    "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: _",
-          "type_info": "Uuid"
-        },
-        {
-          "ordinal": 1,
-          "name": "guild_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "game: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 3,
-          "name": "state: _",
-          "type_info": "Jsonb"
-        }
-      ],
-      "parameters": {
-        "Left": [
-          "Int8",
-          "Varchar"
-        ]
-      },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
       ]
     }
   },
@@ -172,6 +152,85 @@
       ]
     }
   },
+  "630f4bdc31cd635056ca0c8a5ec02da528a1e57858184253eb0c798237b06ca0": {
+    "query": "\n            SELECT SUM(p1.score) AS p1score, SUM(p2.score) AS p2score, count(p1.game_id) AS total_games\n                FROM game_participants p1\n                INNER JOIN game_participants p2 ON p1.game_id = p2.game_id\n                INNER JOIN games ON games.id = p1.game_id\n                WHERE games.complete = true\n                AND games.game = $1\n                AND games.guild_id = $2\n                AND p1.user_id = $3\n                AND p2.user_id = $4\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "p1score",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "p2score",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "total_games",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int8",
+          "Int8",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "6990962747fe9462cae4ca0391d39cf77141b94e6d3a9df06e724916c5c7bab5": {
+    "query": "\n            SELECT\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\",\n                complete\n            FROM games\n            WHERE id = $1\n            ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: _",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "guild_id: _",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "game: _",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "state: _",
+          "type_info": "Jsonb"
+        },
+        {
+          "ordinal": 4,
+          "name": "complete",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
   "69a7b66ffbdc31f2e9cb49ba913253707dc70dccaa02fc0cfa6ab77048499ffa": {
     "query": "INSERT INTO game_participants (game_id, user_id) VALUES ($1, $2)",
     "describe": {
@@ -183,6 +242,40 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "6a62dbf381a862e48548c9950177e4c4372635ac3ae52a9764a36ff0f9e62d79": {
+    "query": "\n            SELECT SUM(p1.score) AS p1score, SUM(p2.score) AS p2score, count(p1.game_id) AS total_games\n                FROM game_participants p1\n                INNER JOIN game_participants p2 ON p1.game_id = p2.game_id\n                INNER JOIN games ON games.id = p1.game_id\n                WHERE games.complete = true\n                AND games.guild_id = $1\n                AND p1.user_id = $2\n                AND p2.user_id = $3\n        ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "p1score",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "p2score",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "total_games",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Int8",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        null,
+        null,
+        null
+      ]
     }
   },
   "6d3bee05616d2f07396640f61c3454f7036778b1c3f6f0b1045f1edd39ded6f8": {
@@ -230,42 +323,29 @@
       ]
     }
   },
-  "6dced4b0bf1fa7445c3268e8551994a060588b269b0c6936fb15e0a83683edae": {
-    "query": "\n            SELECT\n                id as \"id: _\",\n                guild_id as \"guild_id: _\",\n                game as \"game: _\",\n                state as \"state: _\"\n            FROM games\n            WHERE id = $1\n            ",
+  "754236243d34073a064622dd0283141895abc95d71010d168dcd7ffa73903053": {
+    "query": "DELETE FROM game_complete_votes WHERE game_id = $1",
     "describe": {
-      "columns": [
-        {
-          "ordinal": 0,
-          "name": "id: _",
-          "type_info": "Uuid"
-        },
-        {
-          "ordinal": 1,
-          "name": "guild_id: _",
-          "type_info": "Int8"
-        },
-        {
-          "ordinal": 2,
-          "name": "game: _",
-          "type_info": "Varchar"
-        },
-        {
-          "ordinal": 3,
-          "name": "state: _",
-          "type_info": "Jsonb"
-        }
-      ],
+      "columns": [],
       "parameters": {
         "Left": [
           "Uuid"
         ]
       },
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ]
+      "nullable": []
+    }
+  },
+  "79052d0e7912d3db8a59d987de1f092339cbe0bc0e09f62a1f7cc4eeb3479c31": {
+    "query": "UPDATE game_participants SET score = 1 WHERE game_id = $1 AND user_id = $2",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": []
     }
   },
   "80635965f624d4a998381c650503c1b1fc8dfcbb58c74b9ebf3c153c5067b778": {
@@ -441,6 +521,18 @@
       "nullable": []
     }
   },
+  "af6c308c7de3982432a5eb7087ecfe17d860f271f86de473b6dbc146adead6d9": {
+    "query": "UPDATE games SET complete = true WHERE id = $1",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": []
+    }
+  },
   "b074b0e69f05c9d340a403c3b9d8f9f8ac91dcb9c4e1f4c7c897b7085a6bc1e4": {
     "query": "\n            UPDATE game_servers\n            SET name = $1\n            WHERE name = $2\n            ",
     "describe": {
@@ -503,6 +595,38 @@
         ]
       },
       "nullable": []
+    }
+  },
+  "bd2353ff5f7a20aa2d28e439b46b9ac6e13cc973dd4bb71fb7fb5c9ae6ef9563": {
+    "query": "SELECT user_id as \"id: UserId\", is_challenger, score FROM game_participants WHERE game_id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id: UserId",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "is_challenger",
+          "type_info": "Bool"
+        },
+        {
+          "ordinal": 2,
+          "name": "score",
+          "type_info": "Int4"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
     }
   },
   "c4a27e62a09401fd0f27af7fe131396dd86b024ee2a726c9cc18ada7b01f37b7": {

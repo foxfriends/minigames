@@ -1,14 +1,18 @@
 import type { ApiRequest } from "./types.ts";
 
-export type CreateChallenge = {
+export type CreateChallengeRequest = {
   guildId: BigInt;
   challengerId: BigInt;
   challengedId: BigInt;
   game?: string;
 };
 
+export type CreateChallengeResponse = {
+  gameId: string;
+};
+
 export function createChallenge(
-  { guildId, challengerId, challengedId, game }: CreateChallenge,
+  { guildId, challengerId, challengedId, game }: CreateChallengeRequest,
 ): ApiRequest {
   return {
     path: "/api/v1/challenge",

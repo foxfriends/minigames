@@ -9,6 +9,7 @@ pub struct Game {
     pub guild_id: GuildId,
     pub game: GameName,
     pub state: GameState,
+    pub complete: bool,
 }
 
 impl Game {
@@ -31,7 +32,8 @@ impl Game {
                 id as "id: _",
                 guild_id as "guild_id: _",
                 game as "game: _",
-                state as "state: _"
+                state as "state: _",
+                complete
             "#,
             guild_id as GuildId,
             game as GameName,
@@ -81,29 +83,14 @@ impl Game {
     ) -> anyhow::Result<Vec<GameParticipant>> {
         Ok(sqlx::query_as!(
             GameParticipant,
-            r#"SELECT user_id as "id: UserId", is_challenger FROM game_participants WHERE game_id = $1"#,
+            r#"SELECT user_id as "id: UserId", is_challenger, score FROM game_participants WHERE game_id = $1"#,
             self.id as GameId,
         )
         .fetch_all(conn)
         .await?)
     }
 
-    pub async fn vote_result(
-        &self,
-        voter_id: UserId,
-        winner_id: Option<UserId>,
-        conn: &mut PgConnection,
-    ) -> anyhow::Result<()> {
-        sqlx::query!(
-            "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
-            self.id as GameId,
-            voter_id as UserId,
-            winner_id as Option<UserId>,
-        ).execute(conn).await?;
-        Ok(())
-    }
-
-    pub async fn check_winner<Conn>(&self, mut conn: Conn) -> anyhow::Result<Option<Option<UserId>>>
+    async fn check_winner<Conn>(&self, mut conn: Conn) -> anyhow::Result<Option<Option<UserId>>>
     where
         Conn: std::ops::DerefMut,
         for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
@@ -129,6 +116,52 @@ impl Game {
         }
     }
 
+    pub async fn vote_result<Conn>(
+        &mut self,
+        voter_id: UserId,
+        winner_id: Option<UserId>,
+        mut conn: Conn,
+    ) -> anyhow::Result<Option<Option<UserId>>>
+    where
+        Conn: std::ops::DerefMut,
+        for<'t> &'t mut Conn::Target: Executor<'t, Database = Postgres>,
+    {
+        sqlx::query!(
+            "INSERT INTO game_complete_votes (game_id, user_id, winner_id) VALUES ($1, $2, $3) ON CONFLICT (game_id, user_id) DO UPDATE SET winner_id = $3",
+            self.id as GameId,
+            voter_id as UserId,
+            winner_id as Option<UserId>,
+        ).execute(&mut *conn).await?;
+
+        if let Some(winner) = self.check_winner(&mut *conn).await? {
+            self.complete = true;
+            if let Some(winner) = &winner {
+                sqlx::query!(
+                    "UPDATE game_participants SET score = 1 WHERE game_id = $1 AND user_id = $2",
+                    &self.id as &GameId,
+                    winner as &UserId,
+                )
+                .execute(&mut *conn)
+                .await?;
+            }
+            sqlx::query!(
+                "UPDATE games SET complete = true WHERE id = $1",
+                &self.id as &GameId
+            )
+            .execute(&mut *conn)
+            .await?;
+            sqlx::query!(
+                "DELETE FROM game_complete_votes WHERE game_id = $1",
+                &self.id as &GameId
+            )
+            .execute(&mut *conn)
+            .await?;
+            return Ok(Some(winner));
+        }
+
+        Ok(None)
+    }
+
     pub async fn load(game_id: GameId, conn: &mut PgConnection) -> anyhow::Result<Self> {
         let game = sqlx::query_as!(
             Self,
@@ -137,7 +170,8 @@ impl Game {
                 id as "id: _",
                 guild_id as "guild_id: _",
                 game as "game: _",
-                state as "state: _"
+                state as "state: _",
+                complete
             FROM games
             WHERE id = $1
             "#,

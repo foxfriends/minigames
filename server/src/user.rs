@@ -1,3 +1,4 @@
+use rocket::form::{self, FromFormField, ValueField};
 use serde::de::Error as _;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use sqlx::decode::Decode;
@@ -22,6 +23,12 @@ impl FromStr for UserId {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Self(s.parse()?))
+    }
+}
+
+impl<'r> FromFormField<'r> for UserId {
+    fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
+        Ok(Self(field.value.parse()?))
     }
 }
 

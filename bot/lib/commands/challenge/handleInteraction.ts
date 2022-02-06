@@ -7,7 +7,7 @@ import {
 } from "../../../deps/discordeno.ts";
 import { userOption } from "../utils.ts";
 import { respond, Task, task } from "../../runtime.ts";
-import pickRandomGame from "./pickRandomGame.ts";
+import pickRandomGame from "../tasks/pickRandomGame.ts";
 import createChallenge from "./createChallenge.ts";
 
 export default function handleInteraction({ guildId, user, data }: DiscordenoInteraction): Task {

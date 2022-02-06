@@ -6,4 +6,5 @@ use serde::{Deserialize, Serialize};
 pub struct GameParticipant {
     pub id: UserId,
     pub is_challenger: bool,
+    pub score: i32,
 }

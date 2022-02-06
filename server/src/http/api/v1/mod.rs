@@ -3,7 +3,7 @@ use rocket::Route;
 pub mod complete_game;
 pub mod create_challenge;
 pub mod get_game;
-pub mod leaderboard;
+pub mod get_score;
 pub mod list_games;
 
 pub mod describe_game_server;
@@ -18,7 +18,7 @@ pub fn routes() -> impl Into<Vec<Route>> {
         // Bot APIs
         describe_game_server::describe_game_server,
         create_challenge::create_challenge,
-        leaderboard::leaderboard,
+        get_score::get_score,
         list_games::list_games,
         // Game server APIs
         mark_game_server_available::mark_game_server_available,

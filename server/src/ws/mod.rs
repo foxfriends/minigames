@@ -33,6 +33,9 @@ async fn handle_action(context: &HandlerContext<'_>, action: Action) -> anyhow::
         Action::Set(game_id, new_state) => {
             let mut conn = context.conn().await?;
             let game = Game::load(game_id, &mut conn).await?;
+            if game.complete {
+                anyhow::bail!("This game is already complete");
+            }
             let is_participant = context.is_participant(&game, &mut conn).await?;
             anyhow::ensure!(is_participant, "Spectators may not participate in the game");
             Game::update(game_id, new_state.clone(), &mut conn).await?;

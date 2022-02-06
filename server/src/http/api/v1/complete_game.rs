@@ -28,7 +28,14 @@ pub async fn complete_game(
     body: Json<CompleteGameRequest>,
 ) -> Response<Json<Option<CompleteGameResponse>>> {
     let mut conn = db.begin().await?;
-    let game = Game::load(body.game_id, &mut conn).await?;
+    let mut game = Game::load(body.game_id, &mut conn).await?;
+    if game.complete {
+        return Err(ResponseError::new(
+            Status::Conflict,
+            "GameAlreadyComplete".to_owned(),
+            "This game is already completed, no further votes may be cast".to_owned(),
+        ));
+    }
     if let Some(winner_id) = body.winner_id {
         if !game.is_participant(winner_id, &mut conn).await? {
             return Err(ResponseError::new(
@@ -38,9 +45,9 @@ pub async fn complete_game(
             ));
         }
     }
-    game.vote_result(auth.user_id(), body.winner_id, &mut conn)
+    let winner_id = game
+        .vote_result(auth.user_id(), body.winner_id, &mut conn)
         .await?;
-    let winner_id = game.check_winner(&mut conn).await?;
     conn.commit().await?;
     Ok(Json(
         winner_id.map(|winner_id| CompleteGameResponse { winner_id }),

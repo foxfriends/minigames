@@ -38,7 +38,11 @@ pub async fn get_game(
     let mut conn = db.acquire().await?;
     let game = Game::load(id, &mut conn).await?;
     let participants = game.participants(&mut conn).await?;
-    let winner_id = game.check_winner(&mut conn).await?;
+
+    let winner_id = participants
+        .iter()
+        .find(|participant| participant.score > 0)
+        .map(|winner| winner.id);
 
     let mut players = Vec::with_capacity(participants.len());
     for participant in participants {
@@ -54,7 +58,7 @@ pub async fn get_game(
 
     Ok(Json(GetGameResponse {
         players,
-        is_complete: winner_id.is_some(),
-        winner_id: winner_id.flatten(),
+        is_complete: game.complete,
+        winner_id,
     }))
 }

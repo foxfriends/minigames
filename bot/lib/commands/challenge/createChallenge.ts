@@ -1,7 +1,7 @@
 import { invoke, Task, task } from "../../runtime.ts";
 import * as api from "../../api/mod.ts";
 
-export default function createChallenge(params: api.CreateChallenge): Task {
+export default function createChallenge(params: api.CreateChallengeRequest): Task {
   return task(async function* (): AsyncGenerator<Task, string, Response> {
     const response: Response = yield invoke(api.createChallenge(params));
     if (response.status === 200) {
